@@ -1,0 +1,1243 @@
+<title>FINC 351 Exam 2 Lab</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+/* Layout: study-desk app. Left rail = syllabus sessions (module nav + progress); right = one module at a time,
+   read top to bottom: objectives → numbered lesson steps → worked example → practice → concept check. */
+:root{
+  --bg:#f5f3f4; --surface:#ffffff; --sunk:#efebed; --ink:#1f1a1c; --muted:#625a5e; --line:#ded7da;
+  --accent:#6e1c2a; --accent-ink:#ffffff; --accent-soft:#f4e7e9;
+  --good:#1c6a46; --good-soft:#e2f1e9; --bad:#a3302a; --bad-soft:#f8e4e2;
+  --warn:#7d5300; --warn-soft:#fbf0d6; --c2:#2c5d8c;
+  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body:"IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  --f-math:"STIX Two Text", "Cambria Math", Cambria, Georgia, serif;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141113; --surface:#1d191b; --sunk:#181416; --ink:#efe8ea; --muted:#ab9fa4; --line:#372f33;
+  --accent:#e68c9b; --accent-ink:#1c0d10; --accent-soft:#3a2026;
+  --good:#71cf9f; --good-soft:#15301f; --bad:#f08b80; --bad-soft:#3a1c1a; --warn:#e8b95c; --warn-soft:#382b10; --c2:#82b3e3;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141113; --surface:#1d191b; --sunk:#181416; --ink:#efe8ea; --muted:#ab9fa4; --line:#372f33;
+  --accent:#e68c9b; --accent-ink:#1c0d10; --accent-soft:#3a2026;
+  --good:#71cf9f; --good-soft:#15301f; --bad:#f08b80; --bad-soft:#3a1c1a; --warn:#e8b95c; --warn-soft:#382b10; --c2:#82b3e3;
+  color-scheme:dark}
+*{box-sizing:border-box}
+html,body{background:var(--bg)}
+body{color:var(--ink);font-family:var(--f-body);font-size:15.5px;line-height:1.6}
+.shell{display:grid;grid-template-columns:250px minmax(0,1fr);min-height:100vh}
+aside.rail{position:sticky;top:env(safe-area-inset-top,0px);align-self:start;height:100vh;overflow:auto;border-right:1px solid var(--line);
+  padding-block:22px;padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:18px;display:flex;flex-direction:column;gap:18px}
+.brand{display:flex;flex-direction:column;gap:2px}
+.brand .course{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.brand .name{font-family:var(--f-display);font-weight:700;font-size:22px;line-height:1.15}
+.count{font-size:13px;color:var(--muted)}
+.count b{color:var(--ink);font-variant-numeric:tabular-nums}
+nav.mods{display:flex;flex-direction:column;gap:2px}
+nav.mods a{display:grid;grid-template-columns:1fr auto;gap:2px 8px;align-items:center;padding:8px 10px;border-radius:8px;color:var(--ink);text-decoration:none}
+nav.mods a:hover{background:var(--sunk)}
+nav.mods a[aria-current="page"]{background:var(--accent-soft)}
+nav.mods a[aria-current="page"] .mt{color:var(--accent)}
+nav.mods .mt{font-weight:600;font-size:14.5px}
+nav.mods .ms{grid-column:1/-1;font-size:11.5px;color:var(--muted);font-family:var(--f-mono)}
+nav.mods .mp{font-family:var(--f-mono);font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+nav.mods .mp.done{color:var(--good)}
+.bar{height:6px;background:var(--sunk);border-radius:99px;overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
+.rail-foot{margin-top:auto;font-size:12px;color:var(--muted)}
+main{padding-block:28px 80px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));min-width:0}
+.view{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+.view[hidden]{display:none!important}
+h1,h2,h3,h4{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(28px,4vw,38px);font-weight:700}
+h2{font-size:23px;font-weight:700}
+h3{font-size:18px;font-weight:700}
+h4{font-size:16px;font-weight:700}
+p{margin:0}
+.eyebrow{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.lede{font-size:17px;color:var(--muted);max-width:66ch}
+.head{display:flex;flex-direction:column;gap:8px}
+.block{display:flex;flex-direction:column;gap:14px}
+.prose{display:flex;flex-direction:column;gap:10px;max-width:68ch}
+.muted{color:var(--muted)}
+a{color:var(--accent)}
+ul,ol{margin:0;padding-left:1.3em}
+li+li{margin-top:4px}
+/* objectives */
+.obj{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;display:flex;flex-direction:column;gap:10px}
+.obj ul{list-style:none;padding:0;display:flex;flex-direction:column;gap:6px}
+.obj label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.obj input{margin-top:5px;accent-color:var(--accent);width:16px;height:16px;flex:none}
+/* lesson steps: a real sequence, so numbered */
+.lesson{display:flex;flex-direction:column;gap:0;counter-reset:ls}
+.ls{display:grid;grid-template-columns:40px minmax(0,1fr);gap:14px;padding:18px 0;border-top:1px solid var(--line)}
+.ls:first-child{border-top:0;padding-top:4px}
+.ls .n{width:32px;height:32px;border-radius:50%;border:1.5px solid var(--accent);color:var(--accent);display:grid;place-items:center;font-family:var(--f-mono);font-weight:500;font-size:14px}
+.ls .b{display:flex;flex-direction:column;gap:10px;min-width:0}
+.eq{font-family:var(--f-math);font-size:18px;background:var(--sunk);border-radius:8px;padding:12px 16px;overflow-x:auto;line-height:1.9;white-space:nowrap}
+.eq .lbl{font-family:var(--f-mono);font-size:11px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;display:block;line-height:1.4;white-space:normal}
+.m{font-family:var(--f-math);font-size:1.08em}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .15em;line-height:1.25}
+.fr>span:first-child{border-bottom:1px solid currentColor;padding:0 .25em 1px}
+.fr>span:last-child{padding:1px .25em 0}
+.note{border-radius:8px;padding:10px 14px;font-size:14.5px;display:flex;flex-direction:column;gap:4px}
+.note.trap{background:var(--warn-soft);color:var(--ink)}
+.note.trap b:first-child{color:var(--warn)}
+.note.prof{background:var(--accent-soft)}
+.note.prof b:first-child{color:var(--accent)}
+.tw{overflow-x:auto;max-width:100%}
+table{border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:14px}
+th,td{padding:6px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th{font-weight:600;color:var(--muted);font-size:12.5px;text-align:right}
+th:first-child,td:first-child{text-align:left}
+tr.tot td{font-weight:600;border-top:1.5px solid var(--ink)}
+table.wide td,table.wide th{white-space:normal;text-align:left}
+/* cards */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.card.walk{border-color:var(--accent)}
+.card-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.card-head>div{display:flex;flex-direction:column;gap:2px;min-width:0}
+.q{display:flex;flex-direction:column;gap:10px}
+.ans-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.ans-row label{font-family:var(--f-math);font-size:17px}
+.ans-row input{font:500 15px var(--f-mono);width:150px;padding:8px 10px;border:1.5px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+.ans-row input:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.ans-row .unit{font-family:var(--f-mono);color:var(--muted)}
+button{font:600 14px var(--f-body);border-radius:8px;padding:8px 14px;cursor:pointer;border:1.5px solid transparent}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.primary{background:var(--accent);color:var(--accent-ink)}
+.primary:hover{filter:brightness(1.08)}
+.ghost{background:transparent;border-color:var(--line);color:var(--ink)}
+.ghost:hover{border-color:var(--accent);color:var(--accent)}
+.fb:empty{display:none}
+.fb{border-radius:8px;padding:8px 12px;font-size:14.5px}
+.fb.ok{background:var(--good-soft);color:var(--good)}
+.fb.no{background:var(--bad-soft);color:var(--bad)}
+.steps{list-style:none;padding:0;display:flex;flex-direction:column;gap:8px;counter-reset:st}
+.steps li{counter-increment:st;display:grid;grid-template-columns:28px minmax(0,1fr);gap:8px;padding:10px 12px;background:var(--sunk);border-radius:8px;margin:0}
+.steps li::before{content:counter(st);font-family:var(--f-mono);font-size:12px;color:var(--accent);padding-top:2px}
+.steps li>div{min-width:0;overflow-x:auto}
+.step-ctrl{display:flex;flex-wrap:wrap;gap:8px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:14px}
+.stack{display:flex;flex-direction:column;gap:14px}
+/* mcq */
+.mcq{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;display:flex;flex-direction:column;gap:10px}
+.mcq .opts{display:flex;flex-direction:column;gap:6px}
+.mcq .opt{text-align:left;font-weight:400;background:var(--bg);border-color:var(--line);color:var(--ink);line-height:1.45}
+.mcq .opt:hover{border-color:var(--accent)}
+.mcq .opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+.mcq .opt.right{border-color:var(--good);background:var(--good-soft)}
+.mcq .opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.mcq .ex{font-size:14.5px;background:var(--sunk);border-radius:8px;padding:10px 12px}
+/* widgets */
+.widget{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:14px}
+.ctrls{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:10px 18px}
+.ctrls label{display:block;font-size:13.5px;color:var(--muted)}
+.ctrls output{font-family:var(--f-mono);color:var(--ink);float:right}
+.ctrls input[type=range]{width:100%;accent-color:var(--accent)}
+.readout{font-size:14.5px;background:var(--sunk);border-radius:8px;padding:10px 12px}
+svg.chart{width:100%;height:auto;display:block}
+.chart .grid{stroke:var(--line);stroke-width:1}
+.chart .axis{stroke:var(--muted);stroke-width:1.2}
+.chart .tick{fill:var(--muted);font:11px var(--f-mono)}
+.chart .alab{fill:var(--muted);font:12px var(--f-body)}
+.chart .ln{fill:none;stroke:var(--accent);stroke-width:2.5}
+.chart .ln2{fill:none;stroke:var(--c2);stroke-width:2.5}
+.chart .dash{stroke-dasharray:6 5;stroke-width:1.6}
+.chart .lnm{fill:none;stroke:var(--muted);stroke-width:1.5}
+.chart .pt{fill:var(--accent)}
+.chart .pt2{fill:var(--c2)}
+.chart .pt3{fill:var(--good)}
+.chart .ptb{fill:var(--bad)}
+.chart .plab{fill:var(--ink);font:600 12px var(--f-body)}
+/* plan */
+.plan-row{display:grid;grid-template-columns:120px minmax(0,1fr);gap:14px;padding:12px 0;border-top:1px solid var(--line)}
+.plan-row:first-child{border-top:0}
+.plan-row .d{font-family:var(--f-mono);font-size:13px;color:var(--accent)}
+.plan-row.exam .d{font-weight:600}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:12px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:4px}
+.tile .big{font-family:var(--f-display);font-size:28px;font-weight:700;font-variant-numeric:tabular-nums}
+/* formulas */
+.fgroup{display:flex;flex-direction:column;gap:10px}
+.frow{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:14px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.frow .eq{margin:0}
+.frow .use{font-size:14px;color:var(--muted)}
+.flash{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-height:190px;padding:24px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:10px;cursor:pointer;user-select:none}
+.flash .side{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.flash .front{font-family:var(--f-display);font-size:20px;font-weight:700;max-width:40ch}
+.flash .back{font-family:var(--f-math);font-size:19px;max-width:100%;overflow-x:auto}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.timer{font-family:var(--f-mono);font-size:15px;font-variant-numeric:tabular-nums}
+.score{font-family:var(--f-display);font-size:26px;font-weight:700}
+.pill{display:inline-block;font-family:var(--f-mono);font-size:11.5px;padding:2px 8px;border-radius:99px;background:var(--sunk);color:var(--muted)}
+.pill.good{background:var(--good-soft);color:var(--good)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+@media (max-width:860px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  aside.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;height:auto;border-right:0;border-bottom:1px solid var(--line);background:var(--bg);
+    padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));gap:8px}
+  body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+  .brand .name{font-size:17px}.brand{flex-direction:row;gap:10px;align-items:baseline}
+  .count,.rail-foot,.rail .bar{display:none}
+  nav.mods{flex-direction:row;overflow-x:auto;gap:4px;padding-bottom:2px}
+  nav.mods a{flex:none;grid-template-columns:auto;padding:6px 10px}
+  nav.mods .ms,nav.mods .mp{display:none}
+  .frow{grid-template-columns:minmax(0,1fr)}
+  .plan-row{grid-template-columns:minmax(0,1fr);gap:4px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="shell">
+<aside class="rail">
+  <div class="brand"><span class="course">FINC 351 · Dye</span><span class="name">Exam 2 Lab</span></div>
+  <p class="count" id="countdown">Exam 2: Mon, Nov 2, 8:30 AM</p>
+  <div class="bar" title="Objectives checked off"><i id="allbar"></i></div>
+  <nav class="mods" id="nav"></nav>
+  <p class="rail-foot">Progress is saved in this browser only.</p>
+</aside>
+
+<main>
+<!-- ============ PLAN ============ -->
+<section class="view" id="v-plan" data-view>
+  <div class="head">
+    <span class="eyebrow">Sessions 11–19 · Diversification → Index Models</span>
+    <h1>Exam 2 game plan</h1>
+    <p class="lede">Everything since Exam 1: diversification, the Capital Market Line, CAPM pricing, and the Single Index Model. Each module walks you through the ideas in order, then gives you unlimited practice with fresh numbers and step-by-step solutions.</p>
+  </div>
+  <div class="tiles" id="plan-tiles"></div>
+
+  <div class="block">
+    <h2>How to use each module</h2>
+    <ol class="prose">
+      <li><b>Learn.</b> Read the numbered steps in order. Each one builds on the one before it.</li>
+      <li><b>Worked example.</b> Click “Next step” and try to predict each step before you reveal it. Most of these come straight from Dr. Dye's lecture notes.</li>
+      <li><b>Practice.</b> Solve on paper with your financial calculator, then type the answer. Stuck? Reveal one step at a time. Click “New numbers” until you get three in a row right.</li>
+      <li><b>Concept check.</b> Expect these on the exam as always/sometimes/never or multiple-choice questions.</li>
+      <li><b>Tick the objectives</b> at the top of the module once you can do them cold. The bar on the left tracks them.</li>
+    </ol>
+  </div>
+
+  <div class="block">
+    <h2>Day-by-day schedule</h2>
+    <div>
+      <div class="plan-row"><span class="d">Tue Oct 27</span><div><a href="#tools">Exam 1 tools</a> refresher (45 min). You'll reuse covariance, double summation and Cov(r<sub>i</sub>, r<sub>p</sub>) constantly. Then <a href="#diversification">Diversification</a>.</div></div>
+      <div class="plan-row"><span class="d">Wed Oct 28</span><div>Go to the last Index Models lecture. Tonight: <a href="#cml">Capital Market Line</a>, including the “Puzzle” (total vs. systematic risk).</div></div>
+      <div class="plan-row"><span class="d">Thu Oct 29</span><div><a href="#capm">CAPM</a> steps 1–4: β, the SML, and E(r) vs. k pricing. Do at least 6 pricing and alpha problems.</div></div>
+      <div class="plan-row"><span class="d">Fri Oct 30</span><div>CAPM steps 5–7, then <a href="#index">Index Models</a> steps 1–4.</div></div>
+      <div class="plan-row"><span class="d">Sat Oct 31</span><div>Index Models steps 5–8. Redo the Stock J regression by hand <em>and</em> with calculator stats mode. Do the regression practice three times.</div></div>
+      <div class="plan-row"><span class="d">Sun Nov 1</span><div>Timed <a href="#mock">mock exam</a> (75 min). Review every miss, run the <a href="#formulas">flashcards</a>, then take a second mock.</div></div>
+      <div class="plan-row exam"><span class="d">Mon Nov 2</span><div><b>Exam 2, 8:30 AM, WCBA 182.</b> One 10-minute flashcard pass. Bring your financial calculator; Excel is not allowed.</div></div>
+    </div>
+  </div>
+
+  <div class="note trap"><b>Why it matters</b>Your best exam counts 33%, middle 31.5%, worst 30%. A strong Exam 2 also protects you if Exam 1 or 3 goes badly.</div>
+</section>
+
+<!-- ============ TOOLS ============ -->
+<section class="view" id="v-tools" data-view hidden>
+  <div class="head">
+    <span class="eyebrow">Exam 1 refresher · Sessions 1–9</span>
+    <h1>The tools Exam 2 is built on</h1>
+    <p class="lede">CAPM and the index model are built from covariances. If these mechanics are solid, the new material is mostly new interpretation.</p>
+  </div>
+  <div class="obj" data-objs="tools">
+    <h3>You're ready when you can…</h3>
+    <ul>
+      <li><label><input type="checkbox" id="o-tools-1"><span>Compute E(r), σ, Cov and ρ from scenarios or from historical data (n − 1).</span></label></li>
+      <li><label><input type="checkbox" id="o-tools-2"><span>Compute a two-asset portfolio's σ using the double summation.</span></label></li>
+      <li><label><input type="checkbox" id="o-tools-3"><span>Compute Cov(r<sub>i</sub>, r<sub>p</sub>) and use σ<sub>p</sub><sup>2</sup> = Σ w<sub>i</sub>Cov(r<sub>i</sub>, r<sub>p</sub>).</span></label></li>
+      <li><label><input type="checkbox" id="o-tools-4"><span>Use the CAL, the Sharpe ratio, and the min-variance and tangency weight formulas.</span></label></li>
+    </ul>
+  </div>
+  <div class="block">
+    <h2>Learn</h2>
+    <div class="lesson">
+      <div class="ls"><span class="n">1</span><div class="b">
+        <h3>Expected return, variance, standard deviation</h3>
+        <p>Two versions. For <b>scenarios</b>, weight by probabilities. For <b>historical data</b>, average and divide squared deviations by <i>n</i> − 1.</p>
+        <div class="eq"><span class="lbl">Scenarios</span>E(r) = Σ p<sub>s</sub>r<sub>s</sub> &nbsp;&nbsp; σ<sup>2</sup> = Σ p<sub>s</sub>[r<sub>s</sub> − E(r)]<sup>2</sup></div>
+        <div class="eq"><span class="lbl">Historical sample</span>r̄ = <span class="fr"><span>1</span><span>n</span></span>Σ r<sub>t</sub> &nbsp;&nbsp; σ<sup>2</sup> = <span class="fr"><span>1</span><span>n − 1</span></span>Σ (r<sub>t</sub> − r̄)<sup>2</sup></div>
+        <div class="note trap"><b>Trap</b>Square decimals, not percents. A 20% σ means variance 0.04, not 400.</div>
+      </div></div>
+      <div class="ls"><span class="n">2</span><div class="b">
+        <h3>Covariance and correlation</h3>
+        <p>Covariance tells you whether two returns move together. Correlation rescales it to between −1 and +1.</p>
+        <div class="eq">Cov(r<sub>i</sub>, r<sub>j</sub>) = Σ p<sub>s</sub>[r<sub>i,s</sub> − E(r<sub>i</sub>)][r<sub>j,s</sub> − E(r<sub>j</sub>)] &nbsp;&nbsp; ρ<sub>i,j</sub> = <span class="fr"><span>Cov(r<sub>i</sub>, r<sub>j</sub>)</span><span>σ<sub>i</sub>σ<sub>j</sub></span></span></div>
+        <p>Two facts you'll use all the time: <span class="m">Cov(r<sub>i</sub>, r<sub>j</sub>) = ρσ<sub>i</sub>σ<sub>j</sub></span>, and <span class="m">Cov(r<sub>i</sub>, r<sub>i</sub>) = σ<sub>i</sub><sup>2</sup></span>.</p>
+      </div></div>
+      <div class="ls"><span class="n">3</span><div class="b">
+        <h3>The double summation</h3>
+        <p>Portfolio variance is the sum of every cell of the covariance matrix, each multiplied by both weights. With one asset (w<sub>1</sub> = 1), it collapses to σ<sub>1</sub><sup>2</sup>.</p>
+        <div class="eq">σ<sub>p</sub><sup>2</sup> = Σ<sub>i</sub> Σ<sub>j</sub> w<sub>i</sub>w<sub>j</sub>Cov(r<sub>i</sub>, r<sub>j</sub>) &nbsp;⟹&nbsp; two assets: w<sub>1</sub><sup>2</sup>σ<sub>1</sub><sup>2</sup> + w<sub>2</sub><sup>2</sup>σ<sub>2</sub><sup>2</sup> + 2w<sub>1</sub>w<sub>2</sub>Cov(r<sub>1</sub>, r<sub>2</sub>)</div>
+        <p>Group the matrix by rows and each row becomes one asset's covariance with the portfolio:</p>
+        <div class="eq">Cov(r<sub>i</sub>, r<sub>p</sub>) = Σ<sub>j</sub> w<sub>j</sub>Cov(r<sub>i</sub>, r<sub>j</sub>) &nbsp;&nbsp; σ<sub>p</sub><sup>2</sup> = Σ<sub>i</sub> w<sub>i</sub>Cov(r<sub>i</sub>, r<sub>p</sub>)</div>
+        <div class="note prof"><b>From the lecture notes</b>“The variance of the portfolio is the weighted average of each asset's covariance with the portfolio.” An asset's risk on its own is σ<sub>i</sub><sup>2</sup>. As a member of a portfolio, its risk is Cov(r<sub>i</sub>, r<sub>p</sub>). This one idea leads straight to β.</div>
+      </div></div>
+      <div class="ls"><span class="n">4</span><div class="b">
+        <h3>CAL, Sharpe ratio, special weights</h3>
+        <p>Combining a risky portfolio T with the risk-free asset traces a straight line. Its slope is T's Sharpe ratio. The tangency portfolio has the steepest CAL.</p>
+        <div class="eq">CAL: E(r<sub>P</sub>) = r<sub>f</sub> + <span class="fr"><span>E(r<sub>T</sub>) − r<sub>f</sub></span><span>σ<sub>T</sub></span></span>σ<sub>P</sub> &nbsp;&nbsp; weight in T: y = σ<sub>P</sub>/σ<sub>T</sub></div>
+        <div class="eq">w<sub>i</sub>(min) = <span class="fr"><span>σ<sub>j</sub><sup>2</sup> − Cov(r<sub>i</sub>, r<sub>j</sub>)</span><span>σ<sub>i</sub><sup>2</sup> + σ<sub>j</sub><sup>2</sup> − 2Cov(r<sub>i</sub>, r<sub>j</sub>)</span></span></div>
+        <div class="eq">w<sub>i</sub>(tan) = <span class="fr"><span>[E(r<sub>i</sub>) − r<sub>f</sub>]σ<sub>j</sub><sup>2</sup> − [E(r<sub>j</sub>) − r<sub>f</sub>]Cov(r<sub>i</sub>, r<sub>j</sub>)</span><span>[E(r<sub>i</sub>) − r<sub>f</sub>]σ<sub>j</sub><sup>2</sup> + [E(r<sub>j</sub>) − r<sub>f</sub>]σ<sub>i</sub><sup>2</sup> − [E(r<sub>i</sub>) − r<sub>f</sub> + E(r<sub>j</sub>) − r<sub>f</sub>]Cov(r<sub>i</sub>, r<sub>j</sub>)</span></span></div>
+      </div></div>
+    </div>
+  </div>
+  <div class="block"><h2>Worked example</h2><div class="worked" data-gen="f_scen" data-fixed="1"></div></div>
+  <div class="block"><h2>Practice</h2><div class="practice stack" data-mod="tools"></div></div>
+  <div class="block"><h2>Concept check</h2><div class="mcqs stack" data-mod="tools"></div></div>
+</section>
+
+<!-- ============ DIVERSIFICATION ============ -->
+<section class="view" id="v-diversification" data-view hidden>
+  <div class="head">
+    <span class="eyebrow">Session 11 · Diversification</span>
+    <h1>Diversification</h1>
+    <p class="lede">Why big portfolios care about covariance and not variance, and why one kind of risk never goes away.</p>
+  </div>
+  <div class="obj" data-objs="diversification">
+    <h3>You're ready when you can…</h3>
+    <ul>
+      <li><label><input type="checkbox" id="o-div-1"><span>Explain firm-specific (unique) vs. systematic (market) risk, and which one diversification removes.</span></label></li>
+      <li><label><input type="checkbox" id="o-div-2"><span>Compute σ<sub>p</sub> for an equally weighted portfolio of <i>n</i> stocks, and its limit as <i>n</i> → ∞.</span></label></li>
+      <li><label><input type="checkbox" id="o-div-3"><span>Compute each asset's Cov(r<sub>i</sub>, r<sub>p</sub>) and its share of portfolio variance.</span></label></li>
+      <li><label><input type="checkbox" id="o-div-4"><span>State why the market portfolio is the only risky portfolio with zero firm-specific risk.</span></label></li>
+    </ul>
+  </div>
+  <div class="block">
+    <h2>Learn</h2>
+    <div class="lesson">
+      <div class="ls"><span class="n">1</span><div class="b">
+        <h3>Two kinds of risk</h3>
+        <p><b>Firm-specific risk</b> (also called unique, idiosyncratic or diversifiable) comes from news about one company: a lawsuit, a CEO leaving, a product flop. <b>Systematic risk</b> (market or nondiversifiable risk) comes from economy-wide forces that hit almost every stock at once: recessions, interest rates, inflation.</p>
+        <div class="note prof"><b>From the lecture notes</b>“Covariance measures systematic risk, variance measures total risk. The larger the portfolio, the lower its firm-specific risk.” Total risk = systematic + firm-specific.</div>
+      </div></div>
+      <div class="ls"><span class="n">2</span><div class="b">
+        <h3>What happens as you add stocks</h3>
+        <p>Take an equally weighted portfolio (w = 1/n). The <i>n</i> × <i>n</i> covariance matrix has <i>n</i> variance cells on the diagonal and <i>n</i>(<i>n</i> − 1) covariance cells off it. Each cell is multiplied by (1/n)(1/n). Group them:</p>
+        <div class="eq">σ<sub>p</sub><sup>2</sup> = <span class="fr"><span>1</span><span>n</span></span>·(avg variance) + <span class="fr"><span>n − 1</span><span>n</span></span>·(avg covariance)</div>
+        <p>As <i>n</i> grows, the first term goes to zero and the second goes to the average covariance. <b>For big portfolios, covariances are all that matter.</b> When every stock has the same σ and the same pairwise ρ, avg covariance = ρσ<sup>2</sup>, so the floor is <span class="m">σ√ρ</span>.</p>
+        <div class="note trap"><b>Trap</b>Portfolio σ is <em>not</em> the weighted average of the σ's unless ρ = +1. With ρ = +1 there is no diversification benefit at all.</div>
+      </div></div>
+      <div class="ls"><span class="n">3</span><div class="b">
+        <h3>Each asset's contribution to portfolio risk</h3>
+        <p>From the double summation, σ<sub>p</sub><sup>2</sup> = Σ w<sub>i</sub>Cov(r<sub>i</sub>, r<sub>p</sub>). So asset <i>i</i> contributes <span class="m">w<sub>i</sub>Cov(r<sub>i</sub>, r<sub>p</sub>)</span>, and its share of portfolio variance is:</p>
+        <div class="eq">share<sub>i</sub> = <span class="fr"><span>w<sub>i</sub>Cov(r<sub>i</sub>, r<sub>p</sub>)</span><span>σ<sub>p</sub><sup>2</sup></span></span> &nbsp;&nbsp;(shares add up to 100%)</div>
+        <p>A stock's own variance barely matters inside a big portfolio. What matters is how it co-moves with everything else. That's why a high-σ stock can still <em>lower</em> portfolio risk if its covariance with the portfolio is low.</p>
+      </div></div>
+      <div class="ls"><span class="n">4</span><div class="b">
+        <h3>The end point is the market</h3>
+        <p>Keep diversifying and you end up holding everything: the <b>market portfolio</b>. It's the only risky portfolio with zero firm-specific risk, so its risk is 100% systematic. In the lecture sketch of σ vs. <i>n</i>, a single stock X sits high, B and A sit lower, and M sits at the bottom. σ<sub>M</sub> is the floor.</p>
+      </div></div>
+    </div>
+  </div>
+  <div class="block">
+    <h2>Explore: watch risk fall</h2>
+    <div class="widget">
+      <div class="ctrls">
+        <div><label for="wd-s">Average stock σ <output id="wd-so"></output></label><input type="range" id="wd-s" min="0.10" max="0.60" step="0.01" value="0.40"></div>
+        <div><label for="wd-r">Average pairwise ρ <output id="wd-ro"></output></label><input type="range" id="wd-r" min="0" max="1" step="0.05" value="0.30"></div>
+      </div>
+      <div id="wd-chart"></div>
+      <p class="readout" id="wd-read"></p>
+    </div>
+  </div>
+  <div class="block"><h2>Worked example</h2><div class="worked" data-gen="d_contrib" data-fixed="1"></div></div>
+  <div class="block"><h2>Practice</h2><div class="practice stack" data-mod="diversification"></div></div>
+  <div class="block"><h2>Concept check</h2><div class="mcqs stack" data-mod="diversification"></div></div>
+</section>
+
+<!-- ============ CML ============ -->
+<section class="view" id="v-cml" data-view hidden>
+  <div class="head">
+    <span class="eyebrow">Sessions 12–13 · Capital Market Line</span>
+    <h1>The Capital Market Line</h1>
+    <p class="lede">If everyone agrees on the inputs, everyone holds the same risky portfolio. That portfolio has to be the market.</p>
+  </div>
+  <div class="obj" data-objs="cml">
+    <h3>You're ready when you can…</h3>
+    <ul>
+      <li><label><input type="checkbox" id="o-cml-1"><span>Explain why the tangency portfolio is the market portfolio in equilibrium.</span></label></li>
+      <li><label><input type="checkbox" id="o-cml-2"><span>Use the CML to find E(r<sub>p</sub>) from σ<sub>p</sub>, or σ<sub>p</sub> and the weight in M from a target return.</span></label></li>
+      <li><label><input type="checkbox" id="o-cml-3"><span>Say which assets plot on the CML and which plot below it, and why.</span></label></li>
+      <li><label><input type="checkbox" id="o-cml-4"><span>Solve the lecture “Puzzle”: which asset is riskier in total risk vs. systematic risk.</span></label></li>
+    </ul>
+  </div>
+  <div class="block">
+    <h2>Learn</h2>
+    <div class="lesson">
+      <div class="ls"><span class="n">1</span><div class="b">
+        <h3>From CAL to CML</h3>
+        <p>Under the CAPM assumptions, every investor uses the same expected returns, σ's and correlations and the same risk-free rate. So everyone draws the same efficient frontier and picks the same tangency portfolio. The market is just everyone's holdings added together, so <b>the tangency portfolio is the market portfolio M</b>. The CAL through M is the CML.</p>
+        <div class="eq">CML: E(r<sub>p</sub>) = r<sub>f</sub> + <span class="fr"><span>E(r<sub>M</sub>) − r<sub>f</sub></span><span>σ<sub>M</sub></span></span>σ<sub>p</sub></div>
+        <p>The slope is the <b>market Sharpe ratio</b>, the reward per unit of total risk. No portfolio can beat it: “The only way to get the biggest possible Sharpe ratio is to diversify as much as possible by holding the market portfolio.”</p>
+      </div></div>
+      <div class="ls"><span class="n">2</span><div class="b">
+        <h3>Where you sit on the line</h3>
+        <p>Let y be the fraction of wealth in M, with the rest in the risk-free asset.</p>
+        <div class="eq">σ<sub>p</sub> = yσ<sub>M</sub> &nbsp;&nbsp; E(r<sub>p</sub>) = r<sub>f</sub> + y[E(r<sub>M</sub>) − r<sub>f</sub>] &nbsp;&nbsp; β<sub>p</sub> = y</div>
+        <ul>
+          <li>y &lt; 1: lending (part of your money in T-bills). Left of M.</li>
+          <li>y = 1: hold exactly M.</li>
+          <li>y &gt; 1: borrowing at r<sub>f</sub> to buy more M (leverage). Right of M. Dollars borrowed = (y − 1) × wealth.</li>
+        </ul>
+        <p>The <b>separation property</b>: the risky portfolio (M) is the same for everyone. Only y differs, and more risk-averse investors pick a smaller y.</p>
+      </div></div>
+      <div class="ls"><span class="n">3</span><div class="b">
+        <h3>Only efficient portfolios are on the CML</h3>
+        <p>Individual stocks and inefficient portfolios plot <b>below</b> the CML. They carry firm-specific risk, which raises σ without raising expected return because nobody is compensated for it. That's why the CML can't price an individual stock. You need the SML, which uses β.</p>
+        <div class="note prof"><b>Lecture quiz</b>“Asset A plots on the CML. ρ<sub>A,M</sub> = +1.” <b>Always.</b> Anything on the CML is a mix of r<sub>f</sub> and M, so it moves in lockstep with M.</div>
+      </div></div>
+      <div class="ls"><span class="n">4</span><div class="b">
+        <h3>The Puzzle: total vs. systematic risk</h3>
+        <p>In the lecture figure, M, A, B and X all have the same E(r<sub>M</sub>) but sit further and further right (more σ). All of them are correctly priced. How can more σ earn no more return? Because the extra σ is firm-specific, and the market doesn't pay for it. Same E(r) means same β means same systematic risk.</p>
+        <div class="tw"><table>
+          <thead><tr><th>Which is riskier?</th><th>Total risk (σ)</th><th>Systematic risk (β)</th></tr></thead>
+          <tbody>
+            <tr><td>M or X?</td><td>X</td><td>Same (β = 1)</td></tr>
+            <tr><td>V or Y?</td><td>Y</td><td>Same (β = 0.5)</td></tr>
+            <tr><td>M or V?</td><td>Same σ</td><td>M</td></tr>
+            <tr><td>W, X, Y or Z?</td><td>Same σ</td><td>W &gt; X &gt; Y &gt; Z</td></tr>
+            <tr><td>F (risk-free) or Z?</td><td>Z</td><td>Same (β = 0)</td></tr>
+          </tbody></table></div>
+        <p>Dr. Dye crossed out the total-risk column on purpose. <b>Only systematic risk determines expected return.</b> Read E(r) off the vertical axis and you know β: points at the same height have the same β.</p>
+      </div></div>
+    </div>
+  </div>
+  <div class="block">
+    <h2>Explore: the CML and the SML side by side</h2>
+    <div class="widget" id="w-cs">
+      <div class="ctrls">
+        <div><label for="cs-rf">Risk-free rate r<sub>f</sub> <output id="cs-rfo"></output></label><input type="range" id="cs-rf" min="0" max="0.06" step="0.005" value="0.04"></div>
+        <div><label for="cs-em">E(r<sub>M</sub>) <output id="cs-emo"></output></label><input type="range" id="cs-em" min="0.06" max="0.16" step="0.005" value="0.12"></div>
+        <div><label for="cs-sm">σ<sub>M</sub> <output id="cs-smo"></output></label><input type="range" id="cs-sm" min="0.10" max="0.30" step="0.01" value="0.20"></div>
+        <div><label for="cs-b">Stock X: β <output id="cs-bo"></output></label><input type="range" id="cs-b" min="-0.5" max="2.5" step="0.05" value="1.2"></div>
+        <div><label for="cs-fe">Stock X: analyst forecast E(r) <output id="cs-feo"></output></label><input type="range" id="cs-fe" min="0" max="0.30" step="0.005" value="0.14"></div>
+      </div>
+      <div class="grid2"><div id="cs-cml"></div><div id="cs-sml"></div></div>
+      <p class="readout" id="cs-read"></p>
+    </div>
+  </div>
+  <div class="block"><h2>Worked example</h2><div class="worked" data-gen="c_target" data-fixed="1"></div></div>
+  <div class="block"><h2>Practice</h2><div class="practice stack" data-mod="cml"></div></div>
+  <div class="block"><h2>Concept check</h2><div class="mcqs stack" data-mod="cml"></div></div>
+</section>
+
+<!-- ============ CAPM ============ -->
+<section class="view" id="v-capm" data-view hidden>
+  <div class="head">
+    <span class="eyebrow">Sessions 14–16 · Capital Asset Pricing Model</span>
+    <h1>CAPM and the Security Market Line</h1>
+    <p class="lede">Required return depends only on systematic risk. Once you know what an asset's return <em>should</em> be, you know what its price should be.</p>
+  </div>
+  <div class="obj" data-objs="capm">
+    <h3>You're ready when you can…</h3>
+    <ul>
+      <li><label><input type="checkbox" id="o-capm-1"><span>Derive β from the market's double summation and explain why Σ w<sub>i</sub>β<sub>i</sub> = 1.</span></label></li>
+      <li><label><input type="checkbox" id="o-capm-2"><span>Compute β from Cov, from ρ, or from a covariance matrix; compute portfolio β.</span></label></li>
+      <li><label><input type="checkbox" id="o-capm-3"><span>Use the SML to get the required return k.</span></label></li>
+      <li><label><input type="checkbox" id="o-capm-4"><span>Tell forecast E(r) apart from required k; compute α and V<sub>0</sub>; say buy, sell or hold.</span></label></li>
+      <li><label><input type="checkbox" id="o-capm-5"><span>List the CAPM assumptions and the implications for equilibrium.</span></label></li>
+    </ul>
+  </div>
+  <div class="block">
+    <h2>Learn</h2>
+    <div class="lesson">
+      <div class="ls"><span class="n">1</span><div class="b">
+        <h3>Where β comes from</h3>
+        <p>Apply the row trick to the market portfolio:</p>
+        <div class="eq">σ<sub>M</sub><sup>2</sup> = w<sub>1</sub>Cov(r<sub>1</sub>, r<sub>M</sub>) + w<sub>2</sub>Cov(r<sub>2</sub>, r<sub>M</sub>) + … + w<sub>n</sub>Cov(r<sub>n</sub>, r<sub>M</sub>)</div>
+        <p>Hold asset <i>i</i> alone and your risk is σ<sub>i</sub><sup>2</sup>. Hold it inside the market and your exposure is only <b>Cov(r<sub>i</sub>, r<sub>M</sub>)</b>, its systematic risk. Divide both sides by σ<sub>M</sub><sup>2</sup>:</p>
+        <div class="eq">β<sub>i</sub> ≡ <span class="fr"><span>Cov(r<sub>i</sub>, r<sub>M</sub>)</span><span>σ<sub>M</sub><sup>2</sup></span></span> = ρ<sub>i,M</sub><span class="fr"><span>σ<sub>i</sub></span><span>σ<sub>M</sub></span></span> &nbsp;⟹&nbsp; 1 = w<sub>1</sub>β<sub>1</sub> + … + w<sub>n</sub>β<sub>n</sub> = β<sub>M</sub></div>
+        <p>So β is an asset's systematic risk relative to the market's (“SYS<sub>i</sub> / SYS<sub>M</sub>”). β<sub>M</sub> = 1 and β<sub>r<sub>f</sub></sub> = 0.</p>
+      </div></div>
+      <div class="ls"><span class="n">2</span><div class="b">
+        <h3>Why only systematic risk is priced</h3>
+        <p>Under the CML, every investor holds the market, so nobody is exposed to any asset's firm-specific risk. And because everyone holds the <em>same</em> portfolio, everyone agrees on each asset's risk: Cov(r<sub>i</sub>, r<sub>M</sub>). (Remember the car dealer and the dentist who bought GM: they disagree on its risk only because they hold different portfolios.)</p>
+        <div class="note prof"><b>From the lecture notes</b>“Total risk plays no part whatsoever because no one is exposed to total risk since everyone is diversified (holds the market).”</div>
+      </div></div>
+      <div class="ls"><span class="n">3</span><div class="b">
+        <h3>The Security Market Line</h3>
+        <p>In equilibrium, every asset pays the same reward per unit of systematic risk as the market:</p>
+        <div class="eq"><span class="fr"><span>E(r<sub>i</sub>) − r<sub>f</sub></span><span>Cov(r<sub>i</sub>, r<sub>M</sub>)</span></span> = <span class="fr"><span>E(r<sub>M</sub>) − r<sub>f</sub></span><span>Cov(r<sub>M</sub>, r<sub>M</sub>)</span></span> &nbsp;⟹&nbsp; <b>SML: k<sub>i</sub> = r<sub>f</sub> + β<sub>i</sub>[E(r<sub>M</sub>) − r<sub>f</sub>]</b></div>
+        <p>Read it as y = b + mx: the intercept is r<sub>f</sub>, the slope is the market risk premium, and the x-axis is <b>β</b>, not σ. Portfolio β is a simple weighted average, β<sub>p</sub> = Σ w<sub>i</sub>β<sub>i</sub>. For example, 60% in the market and 40% in T-bills gives β = 0.6(1) + 0.4(0) = 0.6.</p>
+        <div class="note trap"><b>Trap</b>β<sub>p</sub> is a weighted average. σ<sub>p</sub><sup>2</sup> is never Σ w<sub>i</sub>σ<sub>i</sub><sup>2</sup>; it's the double summation.</div>
+      </div></div>
+      <div class="ls"><span class="n">4</span><div class="b">
+        <h3>Same notation, different meanings: E(r) vs. k</h3>
+        <div class="tw"><table class="wide">
+          <thead><tr><th>Security analysis: expected return</th><th>CAPM: required return k</th></tr></thead>
+          <tbody>
+            <tr><td>Uses today's price and forecast cash flows</td><td>Uses β and current market conditions</td></tr>
+            <tr><td class="m">E(r) = [E(P<sub>1</sub>) + E(Div<sub>1</sub>) − P<sub>0</sub>] / P<sub>0</sub></td><td class="m">k = r<sub>f</sub> + β[E(r<sub>M</sub>) − r<sub>f</sub>]</td></tr>
+            <tr><td>A forecast: what we think the return <em>will</em> be</td><td>Not a forecast: what the return <em>should</em> be</td></tr>
+          </tbody></table></div>
+        <p>Given the cash flows, price and expected return move in opposite directions. The <b>correct price</b> V<sub>0</sub> is the price that makes E(r) = k:</p>
+        <div class="eq">P<sub>0</sub> = <span class="fr"><span>E(CF<sub>1</sub>)</span><span>1 + E(r)</span></span> &nbsp;&nbsp; V<sub>0</sub> = <span class="fr"><span>E(CF<sub>1</sub>)</span><span>1 + k</span></span> &nbsp;&nbsp; α ≡ E(r) − k &nbsp;&nbsp; NPV = −P<sub>0</sub> + V<sub>0</sub></div>
+        <p>Lecture example: analysts expect Stock Z to pay $12 and trade at $450 next year, so E(CF<sub>1</sub>) = $462. If CAPM says k = 12.5%, then V<sub>0</sub> = 462 / 1.125 = <b>$412.50</b>. At P<sub>0</sub> = $440, E(r) = 5%, which is too low, so the price is too high.</p>
+        <div class="tw"><table>
+          <thead><tr><th></th><th>Overpriced</th><th>Correctly priced</th><th>Underpriced</th></tr></thead>
+          <tbody>
+            <tr><td>Deal</td><td>Bad deal</td><td>Fair deal</td><td>Good deal</td></tr>
+            <tr><td>Return</td><td>E(r) &lt; k</td><td>E(r) = k</td><td>E(r) &gt; k</td></tr>
+            <tr><td>Price</td><td>P<sub>0</sub> &gt; V<sub>0</sub></td><td>P<sub>0</sub> = V<sub>0</sub></td><td>P<sub>0</sub> &lt; V<sub>0</sub></td></tr>
+            <tr><td>Market</td><td>Q<sub>D</sub> &lt; Q<sub>S</sub></td><td>Q<sub>D</sub> = Q<sub>S</sub></td><td>Q<sub>D</sub> &gt; Q<sub>S</sub></td></tr>
+            <tr><td>Action</td><td>Sell</td><td>Hold</td><td>Buy</td></tr>
+            <tr><td>Alpha</td><td>α &lt; 0</td><td>α = 0</td><td>α &gt; 0</td></tr>
+            <tr><td>IRR / NPV</td><td>IRR &lt; k, NPV &lt; 0</td><td>IRR = k, NPV = 0</td><td>IRR &gt; k, NPV &gt; 0</td></tr>
+            <tr><td>On the SML plot</td><td>Below SML</td><td>On SML</td><td>Above SML</td></tr>
+          </tbody></table></div>
+      </div></div>
+      <div class="ls"><span class="n">5</span><div class="b">
+        <h3>β from a covariance matrix</h3>
+        <p>When you're handed a covariance matrix and market weights, use the row trick. For a two-asset market:</p>
+        <div class="eq">Cov(r<sub>1</sub>, r<sub>M</sub>) = w<sub>1</sub>σ<sub>1</sub><sup>2</sup> + w<sub>2</sub>Cov(r<sub>1</sub>, r<sub>2</sub>) &nbsp;&nbsp; σ<sub>M</sub><sup>2</sup> = w<sub>1</sub>Cov(r<sub>1</sub>, r<sub>M</sub>) + w<sub>2</sub>Cov(r<sub>2</sub>, r<sub>M</sub>)</div>
+        <p>Then β<sub>1</sub> = Cov(r<sub>1</sub>, r<sub>M</sub>)/σ<sub>M</sub><sup>2</sup>. Check your work: w<sub>1</sub>β<sub>1</sub> + w<sub>2</sub>β<sub>2</sub> must equal 1.</p>
+      </div></div>
+      <div class="ls"><span class="n">6</span><div class="b">
+        <h3>Solving backwards on the SML</h3>
+        <p>Two correctly priced assets pin down the line. Slope: MRP = [E(r<sub>1</sub>) − E(r<sub>2</sub>)] / (β<sub>1</sub> − β<sub>2</sub>). Intercept: r<sub>f</sub> = E(r<sub>1</sub>) − β<sub>1</sub>·MRP. To hit a target β with two assets: w<sub>A</sub> = (β<sub>target</sub> − β<sub>B</sub>)/(β<sub>A</sub> − β<sub>B</sub>).</p>
+      </div></div>
+      <div class="ls"><span class="n">7</span><div class="b">
+        <h3>Assumptions and implications</h3>
+        <div class="grid2">
+          <div class="prose"><b>Assumptions</b><ol>
+            <li>Investors are price takers (perfect competition).</li>
+            <li>One identical holding period.</li>
+            <li>Same set of assets for all, including risk-free borrowing and lending.</li>
+            <li>No taxes or transaction costs.</li>
+            <li>Mean-variance optimizers (everyone looks for the efficient frontier).</li>
+            <li>Homogeneous expectations: identical E(r), σ and ρ estimates.</li>
+          </ol></div>
+          <div class="prose"><b>Implications for equilibrium</b><ol>
+            <li>Identical risky portfolios for all investors (follows from 2, 3, 5, 6).</li>
+            <li>Everyone holds the market portfolio.</li>
+            <li>The market portfolio is value-weighted and includes all traded assets.</li>
+            <li>The market is the tangency portfolio; complete portfolios lie on the CML.</li>
+            <li>No investor is exposed to unique risk.</li>
+            <li>Risk premiums depend on systematic risk only.</li>
+            <li>The market risk premium rises with σ<sub>M</sub><sup>2</sup> and with aggregate risk aversion.</li>
+          </ol></div>
+        </div>
+      </div></div>
+    </div>
+  </div>
+  <div class="block"><h2>Worked example</h2><div class="worked" data-gen="k_alpha" data-fixed="1"></div></div>
+  <div class="block"><h2>Practice</h2><div class="practice stack" data-mod="capm"></div></div>
+  <div class="block"><h2>Concept check</h2><div class="mcqs stack" data-mod="capm"></div></div>
+</section>
+
+<!-- ============ INDEX ============ -->
+<section class="view" id="v-index" data-view hidden>
+  <div class="head">
+    <span class="eyebrow">Sessions 17–19 · Single Index Model (SIM)</span>
+    <h1>The Single Index Model</h1>
+    <p class="lede">Regress a stock's excess return on the market's. The slope is β, the intercept is α, and the leftovers are firm-specific risk.</p>
+  </div>
+  <div class="obj" data-objs="index">
+    <h3>You're ready when you can…</h3>
+    <ul>
+      <li><label><input type="checkbox" id="o-idx-1"><span>State the single-factor assumptions and write the SIM equations.</span></label></li>
+      <li><label><input type="checkbox" id="o-idx-2"><span>Fit the SIM by hand from a small data set: means, variances, Cov, β, α, residuals, σ<sub>e</sub><sup>2</sup>, R<sup>2</sup>, ρ.</span></label></li>
+      <li><label><input type="checkbox" id="o-idx-3"><span>Read an Excel regression output (Multiple R, R Square, ANOVA SS, coefficients).</span></label></li>
+      <li><label><input type="checkbox" id="o-idx-4"><span>Split total risk into systematic and firm-specific; compute Cov(R<sub>i</sub>, R<sub>j</sub>) = β<sub>i</sub>β<sub>j</sub>σ<sub>M</sub><sup>2</sup>.</span></label></li>
+      <li><label><input type="checkbox" id="o-idx-5"><span>Use E(R<sub>i</sub>) = α<sub>i</sub> + β<sub>i</sub>E(R<sub>M</sub>) and connect α to CAPM.</span></label></li>
+    </ul>
+  </div>
+  <div class="block">
+    <h2>Learn</h2>
+    <div class="lesson">
+      <div class="ls"><span class="n">1</span><div class="b">
+        <h3>Factor models</h3>
+        <p>A factor model explains stock returns by their relationship to a systematic factor f (interest rates, GDP, inflation…). It lets you <b>estimate</b> E(r), variances and covariances, and <b>partition</b> total risk into factor and non-factor parts.</p>
+        <div class="eq">r<sub>i,t</sub> = a<sub>i</sub> + b<sub>i</sub>f<sub>t</sub> + e<sub>i,t</sub> &nbsp;&nbsp; (actual = predicted by factor + residual)</div>
+        <p><b>Assumptions:</b> (1) exactly one systematic factor explains returns; (2) returns are linearly related to that factor; (3) residuals are random, with E(e<sub>i</sub>) = 0 and Cov(e<sub>i</sub>, e<sub>j</sub>) = 0 for i ≠ j.</p>
+        <p>Lecture example: with a<sub>i</sub> = 0.04 and b<sub>i</sub> = 1.26, period 26 had r = 11.2% and f = 2.5%. Predicted = 0.04 + 1.26(0.025) = 0.0715, so the residual e = 0.112 − 0.0715 = <b>0.0405</b>.</p>
+      </div></div>
+      <div class="ls"><span class="n">2</span><div class="b">
+        <h3>The SIM uses the market and excess returns</h3>
+        <p>The SIM picks a market index (like the S&amp;P 500) as the factor and uses <b>excess returns</b>: R<sub>i</sub> = r<sub>i</sub> − r<sub>f</sub> and R<sub>M</sub> = r<sub>M</sub> − r<sub>f</sub>. The parameters are renamed α and β.</p>
+        <div class="tw"><table class="wide">
+          <thead><tr><th>Generic single factor</th><th>Single Index Model</th></tr></thead>
+          <tbody>
+            <tr><td class="m">r<sub>i,t</sub> = a<sub>i</sub> + b<sub>i</sub>f<sub>t</sub> + e<sub>i,t</sub></td><td class="m">R<sub>i,t</sub> = α<sub>i</sub> + β<sub>i</sub>R<sub>M,t</sub> + e<sub>i,t</sub></td></tr>
+            <tr><td class="m">E(r<sub>i</sub>) = a<sub>i</sub> + b<sub>i</sub>E(f)</td><td class="m">E(R<sub>i</sub>) = α<sub>i</sub> + β<sub>i</sub>E(R<sub>M</sub>)</td></tr>
+            <tr><td class="m">σ<sub>i</sub><sup>2</sup> = b<sub>i</sub><sup>2</sup>σ<sub>f</sub><sup>2</sup> + σ<sub>e<sub>i</sub></sub><sup>2</sup></td><td class="m">σ<sub>i</sub><sup>2</sup> = β<sub>i</sub><sup>2</sup>σ<sub>M</sub><sup>2</sup> + σ<sub>e<sub>i</sub></sub><sup>2</sup></td></tr>
+            <tr><td class="m">Cov(r<sub>i</sub>, r<sub>j</sub>) = b<sub>i</sub>b<sub>j</sub>σ<sub>f</sub><sup>2</sup> + Cov(e<sub>i</sub>, e<sub>j</sub>)</td><td class="m">Cov(R<sub>i</sub>, R<sub>j</sub>) = β<sub>i</sub>β<sub>j</sub>σ<sub>M</sub><sup>2</sup> + Cov(e<sub>i</sub>, e<sub>j</sub>)</td></tr>
+            <tr><td class="m">R-SQR = b<sub>i</sub><sup>2</sup>σ<sub>f</sub><sup>2</sup>/σ<sub>i</sub><sup>2</sup></td><td class="m">R-SQR = β<sub>i</sub><sup>2</sup>σ<sub>M</sub><sup>2</sup>/σ<sub>i</sub><sup>2</sup></td></tr>
+          </tbody></table></div>
+        <p><b>Link to CAPM:</b> CAPM says E(r<sub>i</sub>) − r<sub>f</sub> = β<sub>i</sub>[E(r<sub>M</sub>) − r<sub>f</sub>], which is E(R<sub>i</sub>) = β<sub>i</sub>E(R<sub>M</sub>). That's the SIM with α = 0. If CAPM is correct, R̄<sub>i</sub> = β<sub>i</sub>R̄<sub>M</sub>, so a nonzero α is ex-post evidence of mispricing.</p>
+      </div></div>
+      <div class="ls"><span class="n">3</span><div class="b">
+        <h3>The line of best fit</h3>
+        <p>We want residuals as small as possible. Their plain sum always cancels to zero, so OLS minimizes the <b>sum of squared errors (SSE)</b>. The best-fit line (1) passes through (R̄<sub>M</sub>, R̄<sub>i</sub>) and (2) has slope Cov/Var:</p>
+        <div class="eq">β<sub>i</sub> = <span class="fr"><span>Cov(R<sub>i</sub>, R<sub>M</sub>)</span><span>σ<sub>M</sub><sup>2</sup></span></span> &nbsp;&nbsp; α<sub>i</sub> = R̄<sub>i</sub> − β<sub>i</sub>R̄<sub>M</sub> &nbsp;&nbsp; σ<sub>e<sub>i</sub></sub><sup>2</sup> = <span class="fr"><span>1</span><span>n − 1</span></span>Σ e<sub>i,t</sub><sup>2</sup> = <span class="fr"><span>SSE</span><span>n − 1</span></span></div>
+        <p>Because Σ e<sub>t</sub> = 0, the mean residual is zero. Two stat facts get used: Var(c) = 0 and Var(cx) = c<sup>2</sup>Var(x).</p>
+      </div></div>
+      <div class="ls"><span class="n">4</span><div class="b">
+        <h3>Partitioning risk (ANOVA)</h3>
+        <p>Var(R<sub>i</sub>) = Var(β<sub>i</sub>R<sub>M</sub>) + Var(e<sub>i</sub>), so:</p>
+        <div class="eq">σ<sub>i</sub><sup>2</sup> &nbsp;=&nbsp; β<sub>i</sub><sup>2</sup>σ<sub>M</sub><sup>2</sup> &nbsp;+&nbsp; σ<sub>e<sub>i</sub></sub><sup>2</sup> &nbsp;&nbsp;⟺&nbsp;&nbsp; <span class="fr"><span>SST</span><span>n − 1</span></span> = <span class="fr"><span>SS Reg</span><span>n − 1</span></span> + <span class="fr"><span>SSE</span><span>n − 1</span></span><span class="lbl">total = systematic + firm-specific (unique)</span></div>
+        <p>Systematic risk depends on how volatile the market is (σ<sub>M</sub><sup>2</sup>) and how sensitive the stock is to it (β). <b>R-square</b> is systematic risk as a share of total risk, and it equals the squared correlation:</p>
+        <div class="eq">R<sup>2</sup> = <span class="fr"><span>β<sub>i</sub><sup>2</sup>σ<sub>M</sub><sup>2</sup></span><span>σ<sub>i</sub><sup>2</sup></span></span> = <span class="fr"><span>SS Reg</span><span>SST</span></span> = ρ<sub>i,M</sub><sup>2</sup> &nbsp;&nbsp;(β = ρσ<sub>i</sub>/σ<sub>M</sub> ⟹ β<sup>2</sup>σ<sub>M</sub><sup>2</sup> = ρ<sup>2</sup>σ<sub>i</sub><sup>2</sup>)</div>
+      </div></div>
+      <div class="ls"><span class="n">5</span><div class="b">
+        <h3>Worked: Stock J from the lecture</h3>
+        <p>This is the “Fitting the SIM” extended example. Use the regression card below with its fixed data and click through every step. Check figures: R̄<sub>J</sub> = 3%, R̄<sub>M</sub> = 2%, σ<sub>J</sub><sup>2</sup> = 0.0021, σ<sub>M</sub><sup>2</sup> = 0.0024, Cov = 0.0017, β = 0.70833, α = 0.015833, σ<sub>e</sub><sup>2</sup> = 0.00089583, R<sup>2</sup> = 57.34%, ρ = 0.757.</p>
+        <div class="worked" data-gen="i_reg" data-fixed="1"></div>
+      </div></div>
+      <div class="ls"><span class="n">6</span><div class="b">
+        <h3>Reading Excel regression output</h3>
+        <div class="tw"><table class="wide">
+          <thead><tr><th>Excel label</th><th>What it is</th></tr></thead>
+          <tbody>
+            <tr><td>Multiple R</td><td>ρ<sub>i,M</sub> (take the sign from β)</td></tr>
+            <tr><td>R Square</td><td>ρ<sup>2</sup> = systematic share of total risk</td></tr>
+            <tr><td>ANOVA SS: Regression</td><td>SS Reg (systematic)</td></tr>
+            <tr><td>ANOVA SS: Residual</td><td>SSE = Σ e<sup>2</sup> (firm-specific)</td></tr>
+            <tr><td>ANOVA SS: Total</td><td>SST = Σ (R<sub>i</sub> − R̄<sub>i</sub>)<sup>2</sup>; df = n − 1</td></tr>
+            <tr><td>Coefficients: Intercept</td><td>α<sub>i</sub></td></tr>
+            <tr><td>Coefficients: X Variable 1</td><td>β<sub>i</sub></td></tr>
+          </tbody></table></div>
+        <p>Then σ<sub>i</sub><sup>2</sup> = SST/(n − 1), σ<sub>e</sub><sup>2</sup> = SSE/(n − 1), and systematic variance = SS Reg/(n − 1). For Stock J: σ<sub>J</sub><sup>2</sup> = 0.0084/4 = 0.0021 and σ<sub>e</sub><sup>2</sup> = 0.00358/4 = 0.000896.</p>
+        <div class="note trap"><b>Trap</b>Excel's “Standard Error” and its residual MS divide by n − 2. Dr. Dye squiggled these out. Use n − 1, as on the formula sheet.</div>
+      </div></div>
+      <div class="ls"><span class="n">7</span><div class="b">
+        <h3>Covariances, expected returns and portfolios</h3>
+        <p>Residuals are assumed uncorrelated, so Cov(e<sub>i</sub>, e<sub>j</sub>) = 0 and <b>Cov(R<sub>i</sub>, R<sub>j</sub>) = β<sub>i</sub>β<sub>j</sub>σ<sub>M</sub><sup>2</sup></b>. Lecture: Cov(GOOG, GS) = 1.16478 × 1.62593 × 0.001236 = 0.002340. Correlation follows as ρ<sub>ij</sub> = Cov/(σ<sub>i</sub>σ<sub>j</sub>) = ρ<sub>iM</sub>ρ<sub>jM</sub>.</p>
+        <p>Expected total return: E(r<sub>i</sub>) = r<sub>f</sub> + α<sub>i</sub> + β<sub>i</sub>[E(r<sub>M</sub>) − r<sub>f</sub>].</p>
+        <p>For portfolios, β<sub>p</sub> = Σ w<sub>i</sub>β<sub>i</sub>, α<sub>p</sub> = Σ w<sub>i</sub>α<sub>i</sub>, and residual variance σ<sub>e<sub>p</sub></sub><sup>2</sup> = Σ w<sub>i</sub><sup>2</sup>σ<sub>e<sub>i</sub></sub><sup>2</sup>. That last one shrinks toward zero as you diversify. So σ<sub>p</sub><sup>2</sup> = β<sub>p</sub><sup>2</sup>σ<sub>M</sub><sup>2</sup> + σ<sub>e<sub>p</sub></sub><sup>2</sup>.</p>
+        <p>Why bother? For <i>n</i> stocks, the SIM needs n α's + n β's + n σ<sub>e</sub>'s + E(R<sub>M</sub>) + σ<sub>M</sub><sup>2</sup> = 3n + 2 estimates, instead of n(n − 1)/2 separate covariances.</p>
+      </div></div>
+      <div class="ls"><span class="n">8</span><div class="b">
+        <h3>Calculator shortcut (no Excel on exams)</h3>
+        <p><b>TI BA II Plus:</b> [2nd][DATA] (the 7 key). Clear old data with [2nd][CLR WORK]. Enter X01 = R<sub>M</sub> for period 1, Y01 = R<sub>i</sub>, and so on. Then press [2nd][STAT] (the 8 key) and, if needed, cycle with [2nd][SET] until it reads <b>LIN</b>. Arrow down for n, x̄, Sx, σx, ȳ, Sy, σy, <b>a</b> (= α), <b>b</b> (= β) and <b>r</b> (= ρ).</p>
+        <p><b>TI-83/84:</b> STAT → EDIT, put R<sub>M</sub> in L1 and R<sub>i</sub> in L2, then STAT → CALC → LinReg(a+bx). Turn on DiagnosticOn to see r and r<sup>2</sup>.</p>
+        <p>Use <b>Sx and Sy</b> (the n − 1 versions), not σx. Then Cov = r·Sx·Sy, σ<sub>M</sub><sup>2</sup> = Sx<sup>2</sup>, and σ<sub>e</sub><sup>2</sup> = (1 − r<sup>2</sup>)Sy<sup>2</sup>.</p>
+      </div></div>
+    </div>
+  </div>
+  <div class="block"><h2>Practice</h2><div class="practice stack" data-mod="index"></div></div>
+  <div class="block"><h2>Concept check</h2><div class="mcqs stack" data-mod="index"></div></div>
+</section>
+
+<!-- ============ MOCK ============ -->
+<section class="view" id="v-mock" data-view hidden>
+  <div class="head">
+    <span class="eyebrow">Timed practice · 75 minutes like class</span>
+    <h1>Mock exam</h1>
+    <p class="lede">12 calculation problems and 8 concept questions drawn from all four Exam 2 modules. No hints until you grade. Use your calculator and the formula sheet, nothing else.</p>
+  </div>
+  <div class="row"><button class="primary" type="button" id="mock-new">Start a new mock exam</button><span class="timer" id="mock-timer"></span></div>
+  <div class="stack" id="mock-body"></div>
+  <div class="row" id="mock-foot" hidden><button class="primary" type="button" id="mock-grade">Grade my exam</button></div>
+  <div id="mock-result"></div>
+</section>
+
+<!-- ============ FORMULAS ============ -->
+<section class="view" id="v-formulas" data-view hidden>
+  <div class="head">
+    <span class="eyebrow">Exam 2 rows of your formula sheet</span>
+    <h1>Formulas and flashcards</h1>
+    <p class="lede">You get the formula sheet in the exam. What you need to memorize is <em>when</em> to use each formula, plus the concepts that aren't on the sheet.</p>
+  </div>
+  <div class="block">
+    <h2>Flashcards</h2>
+    <div class="flash" id="fc" tabindex="0" role="button" aria-label="Flip card"></div>
+    <div class="row"><button class="ghost" type="button" id="fc-prev">Previous</button><button class="primary" type="button" id="fc-flip">Flip</button><button class="ghost" type="button" id="fc-next">Next</button><button class="ghost" type="button" id="fc-shuf">Shuffle</button><span class="pill" id="fc-pos"></span></div>
+  </div>
+  <div class="block">
+    <h2>When to use what</h2>
+    <div class="fgroup" id="flist"></div>
+  </div>
+  <div class="block">
+    <h2>Top exam traps</h2>
+    <ul class="prose">
+      <li>CML uses <b>σ</b> and holds only efficient portfolios. SML uses <b>β</b> and prices every asset. Never put a single stock's σ into the CML to get its required return.</li>
+      <li>α = forecast E(r) − required k. Positive α means the stock is above the SML: underpriced, so buy.</li>
+      <li>Same β means same required return, whatever the σ. Higher σ at the same β is just more firm-specific risk.</li>
+      <li>Only M has both β = 1 and ρ = +1. Another asset with β = 1 usually has ρ &lt; 1.</li>
+      <li>The SIM regression uses <b>excess</b> returns. Convert back to total returns by adding r<sub>f</sub>.</li>
+      <li>Variances use n − 1 on this formula sheet, including σ<sub>e</sub><sup>2</sup> = SSE/(n − 1).</li>
+      <li>β<sub>p</sub> and α<sub>p</sub> are weighted averages. σ<sub>p</sub> never is (unless ρ = 1).</li>
+      <li>Under SIM, Cov(R<sub>i</sub>, R<sub>j</sub>) = β<sub>i</sub>β<sub>j</sub>σ<sub>M</sub><sup>2</sup>. Don't add residual covariance unless you're told it's nonzero.</li>
+      <li>R<sup>2</sup> = ρ<sup>2</sup>, so ρ = ±√R<sup>2</sup> with the same sign as β.</li>
+    </ul>
+  </div>
+</section>
+</main>
+</div>
+
+<script>
+/* ---------- helpers ---------- */
+const MINUS='−';
+const rnd=(a,b,s=1)=>{const k=Math.round((b-a)/s);return +(a+s*Math.floor(Math.random()*(k+1))).toFixed(8)};
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const sum=a=>a.reduce((x,y)=>x+y,0);
+const dot=(a,b)=>sum(a.map((x,i)=>x*b[i]));
+const mean=a=>sum(a)/a.length;
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+function fx(x,d=4){if(Math.abs(x)<0.5*Math.pow(10,-d))x=0;const s=(+x).toFixed(d);return s[0]==='-'?MINUS+s.slice(1):s}
+const pc=(x,d=2)=>fx(x*100,d)+'%';
+const pr=(x,d=4)=>x<0?'('+fx(x,d)+')':fx(x,d);
+const money=x=>(x<0?MINUS:'')+'$'+Math.abs(x).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const r4=x=>Math.round(x*1e4)/1e4;
+function tbl(head,rows,cls=''){return `<div class="tw"><table class="${cls}"><thead><tr>${head.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr${r.tot?' class="tot"':''}>${(r.cells||r).map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`}
+const SC=['Boom','Normal','Recession'];
+const PROBS=[[.3,.4,.3],[.25,.5,.25],[.2,.5,.3],[.3,.5,.2],[.2,.6,.2]];
+const RF='r<sub>f</sub>',ERM='E(r<sub>M</sub>)',SM='σ<sub>M</sub>';
+const ST={get(){try{return JSON.parse(localStorage.getItem('finc351-ex2')||'{}')}catch(e){return{}}},set(v){try{localStorage.setItem('finc351-ex2',JSON.stringify(v))}catch(e){}}};
+let S=ST.get();S.obj=S.obj||{};S.stats=S.stats||{};
+
+/* ---------- SVG chart ---------- */
+function ticks(a,b,c=5){const sp=b-a,s0=sp/c,mg=Math.pow(10,Math.floor(Math.log10(s0))),e=s0/mg;const st=(e>=7.5?10:e>=3.5?5:e>=1.5?2:1)*mg;const t=[];for(let v=Math.ceil(a/st-1e-9)*st;v<=b+1e-9;v+=st)t.push(+v.toFixed(10));return t}
+function chart(o){
+  const W=o.w||560,H=o.h||300,L=58,R=18,T=18,B=46,[x0,x1]=o.x,[y0,y1]=o.y;
+  const sx=v=>L+(v-x0)/(x1-x0)*(W-L-R),sy=v=>H-B-(v-y0)/(y1-y0)*(H-T-B);
+  let s=`<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${o.label||'chart'}">`;
+  for(const t of ticks(y0,y1,o.yt||5)){s+=`<line class="grid" x1="${L}" x2="${W-R}" y1="${sy(t)}" y2="${sy(t)}"/><text class="tick" x="${L-8}" y="${sy(t)+4}" text-anchor="end">${o.yf(t)}</text>`}
+  for(const t of ticks(x0,x1,o.xt||6)){s+=`<line class="grid" x1="${sx(t)}" x2="${sx(t)}" y1="${T}" y2="${H-B}" opacity=".5"/><text class="tick" x="${sx(t)}" y="${H-B+17}" text-anchor="middle">${o.xf(t)}</text>`}
+  s+=`<line class="axis" x1="${L}" x2="${W-R}" y1="${sy(Math.max(y0,Math.min(0,y1)))}" y2="${sy(Math.max(y0,Math.min(0,y1)))}"/><line class="axis" x1="${sx(Math.max(x0,Math.min(0,x1)))}" x2="${sx(Math.max(x0,Math.min(0,x1)))}" y1="${T}" y2="${H-B}"/>`;
+  s+=`<text class="alab" x="${(L+W-R)/2}" y="${H-8}" text-anchor="middle">${o.xl}</text><text class="alab" transform="translate(14 ${(T+H-B)/2}) rotate(-90)" text-anchor="middle">${o.yl}</text>`;
+  s+=`<defs><clipPath id="cp${o.id||'x'}"><rect x="${L}" y="${T}" width="${W-L-R}" height="${H-T-B}"/></clipPath></defs><g clip-path="url(#cp${o.id||'x'})">`;
+  for(const l of (o.lines||[]))s+=`<path class="${l.c||'ln'}" d="${l.p.map((q,i)=>(i?'L':'M')+sx(q[0]).toFixed(1)+' '+sy(q[1]).toFixed(1)).join(' ')}"/>`;
+  s+='</g>';
+  for(const p of (o.pts||[])){const X=sx(p.x),Y=sy(p.y);s+=`<circle class="${p.c||'pt'}" cx="${X}" cy="${Y}" r="${p.r||5}"/>`;if(p.l)s+=`<text class="plab" x="${X+(p.dx??8)}" y="${Y+(p.dy??-8)}" text-anchor="${p.a||'start'}">${p.l}</text>`}
+  return s+'</svg>';
+}
+
+/* ---------- problem generators ---------- */
+const GEN={
+/* ===== tools ===== */
+f_scen:{mod:'tools',topic:'Scenarios',fn(fixed){
+  const p=fixed?[.3,.4,.3]:pick(PROBS);
+  const r=fixed?[.30,.10,-.12]:[rnd(18,36),rnd(6,14),rnd(-20,-4)].map(x=>x/100);
+  const E=dot(p,r),d=r.map(x=>x-E),v=sum(p.map((q,i)=>q*d[i]**2)),s=Math.sqrt(v);
+  return{title:'Expected return and σ from scenarios',
+  q:`<p>A stock's return depends on the economy:</p>${tbl(['State','Probability','Return'],SC.map((n,i)=>[n,fx(p[i],2),pc(r[i],0)]))}<p>What is the stock's standard deviation?</p>`,
+  ask:'σ =',unit:'%',ans:s*100,steps:[
+  `Expected return first: E(r) = Σ p<sub>s</sub>r<sub>s</sub> = ${p.map((q,i)=>`${fx(q,2)}×${pr(r[i],2)}`).join(' + ')} = <b>${fx(E,4)}</b> (${pc(E)}).`,
+  `Deviation in each state, r<sub>s</sub> − E(r): ${d.map((x,i)=>`${SC[i]} ${fx(x,4)}`).join(' · ')}.`,
+  `Square each one, weight by probability, and add: σ<sup>2</sup> = ${p.map((q,i)=>`${fx(q,2)}×${pr(d[i])}<sup>2</sup>`).join(' + ')} = <b>${fx(v,6)}</b>.`,
+  `Take the square root: σ = √${fx(v,6)} = <b>${fx(s,4)} = ${pc(s)}</b>.`]}}},
+f_corr:{mod:'tools',topic:'Scenarios',fn(){
+  const p=pick(PROBS),a=[rnd(15,35),rnd(5,12),rnd(-18,-2)].map(x=>x/100),hedge=Math.random()<.4;
+  const b=(hedge?[rnd(-6,4),rnd(4,9),rnd(8,18)]:[rnd(10,22),rnd(4,10),rnd(-8,3)]).map(x=>x/100);
+  const Ea=dot(p,a),Eb=dot(p,b),da=a.map(x=>x-Ea),db=b.map(x=>x-Eb);
+  const va=sum(p.map((q,i)=>q*da[i]**2)),vb=sum(p.map((q,i)=>q*db[i]**2)),cv=sum(p.map((q,i)=>q*da[i]*db[i])),sa=Math.sqrt(va),sb=Math.sqrt(vb),rho=cv/(sa*sb);
+  return{title:'Covariance and correlation from scenarios',
+  q:`${tbl(['State','Probability','Stock A','Stock B'],SC.map((n,i)=>[n,fx(p[i],2),pc(a[i],0),pc(b[i],0)]))}<p>What is the correlation between A and B?</p>`,
+  ask:'ρ<sub>A,B</sub> =',unit:'',ans:rho,tol:.01,steps:[
+  `Expected returns: E(r<sub>A</sub>) = ${fx(Ea)}, E(r<sub>B</sub>) = ${fx(Eb)}.`,
+  `Deviations. A: ${da.map(x=>fx(x)).join(', ')}. B: ${db.map(x=>fx(x)).join(', ')}.`,
+  `Covariance: Σ p<sub>s</sub>(dev<sub>A</sub>)(dev<sub>B</sub>) = ${p.map((q,i)=>`${fx(q,2)}${pr(da[i])}${pr(db[i])}`).join(' + ')} = <b>${fx(cv,6)}</b>.`,
+  `Standard deviations: σ<sub>A</sub> = √${fx(va,6)} = ${fx(sa)}; σ<sub>B</sub> = √${fx(vb,6)} = ${fx(sb)}.`,
+  `ρ = Cov/(σ<sub>A</sub>σ<sub>B</sub>) = ${fx(cv,6)}/(${fx(sa)}×${fx(sb)}) = <b>${fx(rho,3)}</b>. ${rho<0?'Negative: B tends to do well when A does badly, so B is a hedge.':'Positive: they tend to move together.'}`]}}},
+f_port:{mod:'tools',topic:'Portfolio risk',fn(){
+  const w=rnd(.2,.8,.1),sA=rnd(.15,.35,.01),sB=rnd(.10,.30,.01),rho=rnd(-.4,.7,.1),cv=rho*sA*sB,wB=1-w;
+  const v=w*w*sA*sA+wB*wB*sB*sB+2*w*wB*cv,s=Math.sqrt(v);
+  return{title:'Two-asset portfolio σ',
+  q:`<p>You put ${pc(w,0)} in Stock A (σ = ${pc(sA,0)}) and the rest in Stock B (σ = ${pc(sB,0)}). The correlation is ${fx(rho,1)}. What is the portfolio's standard deviation?</p>`,
+  ask:'σ<sub>p</sub> =',unit:'%',ans:s*100,steps:[
+  `Covariance: Cov = ρσ<sub>A</sub>σ<sub>B</sub> = ${fx(rho,1)}×${fx(sA,2)}×${fx(sB,2)} = <b>${fx(cv,4)}</b>.`,
+  `Double summation for two assets: σ<sub>p</sub><sup>2</sup> = w<sub>A</sub><sup>2</sup>σ<sub>A</sub><sup>2</sup> + w<sub>B</sub><sup>2</sup>σ<sub>B</sub><sup>2</sup> + 2w<sub>A</sub>w<sub>B</sub>Cov.`,
+  `= ${fx(w,2)}<sup>2</sup>(${fx(sA*sA,4)}) + ${fx(wB,2)}<sup>2</sup>(${fx(sB*sB,4)}) + 2(${fx(w,2)})(${fx(wB,2)})${pr(cv)} = ${fx(w*w*sA*sA,6)} + ${fx(wB*wB*sB*sB,6)} + ${pr(2*w*wB*cv,6)} = <b>${fx(v,6)}</b>.`,
+  `σ<sub>p</sub> = √${fx(v,6)} = <b>${pc(s)}</b>. Compare that with the weighted average of the σ's, ${pc(w*sA+wB*sB)}. Diversification shaved off the difference.`]}}},
+f_min:{mod:'tools',topic:'Special weights',fn(){
+  const sA=rnd(.15,.35,.01),sB=rnd(.10,.30,.01),rho=rnd(-.3,.6,.1),cv=r4(rho*sA*sB);
+  const num=sB*sB-cv,den=sA*sA+sB*sB-2*cv,w=num/den;
+  return{title:'Minimum-variance weight',
+  q:`<p>σ<sub>A</sub> = ${pc(sA,0)}, σ<sub>B</sub> = ${pc(sB,0)}, Cov(r<sub>A</sub>, r<sub>B</sub>) = ${fx(cv,4)}. What weight in A gives the minimum-variance portfolio?</p>`,
+  ask:'w<sub>A</sub>(min) =',unit:'%',ans:w*100,steps:[
+  `Use w<sub>A</sub>(min) = [σ<sub>B</sub><sup>2</sup> − Cov] / [σ<sub>A</sub><sup>2</sup> + σ<sub>B</sub><sup>2</sup> − 2Cov]. Note the <em>other</em> asset's variance goes on top.`,
+  `Numerator: ${fx(sB*sB,4)} − ${pr(cv)} = ${fx(num,4)}. Denominator: ${fx(sA*sA,4)} + ${fx(sB*sB,4)} − 2${pr(cv)} = ${fx(den,4)}.`,
+  `w<sub>A</sub> = ${fx(num,4)}/${fx(den,4)} = <b>${pc(w)}</b>, and w<sub>B</sub> = ${pc(1-w)}.`]}}},
+f_tan:{mod:'tools',topic:'Special weights',fn(){
+  const E1=rnd(.08,.14,.01),E2=rnd(.12,.20,.01),s1=rnd(.12,.22,.01),s2=rnd(.22,.38,.01),rho=rnd(0,.4,.1),rf=rnd(.02,.05,.01),cv=r4(rho*s1*s2);
+  const a=E1-rf,b=E2-rf,num=a*s2*s2-b*cv,den=a*s2*s2+b*s1*s1-(a+b)*cv,w=num/den;
+  const ET=w*E1+(1-w)*E2,sT=Math.sqrt(w*w*s1*s1+(1-w)**2*s2*s2+2*w*(1-w)*cv);
+  return{title:'Tangency portfolio weight',
+  q:`<p>Stock 1: E(r) = ${pc(E1,0)}, σ = ${pc(s1,0)}. Stock 2: E(r) = ${pc(E2,0)}, σ = ${pc(s2,0)}. Cov = ${fx(cv,4)}, r<sub>f</sub> = ${pc(rf,0)}. What weight in Stock 1 gives the tangency portfolio?</p>`,
+  ask:'w<sub>1</sub>(tan) =',unit:'%',ans:w*100,steps:[
+  `Excess returns: E(r<sub>1</sub>) − r<sub>f</sub> = ${fx(a,2)}; E(r<sub>2</sub>) − r<sub>f</sub> = ${fx(b,2)}.`,
+  `Numerator: ${fx(a,2)}(${fx(s2*s2,4)}) − ${fx(b,2)}${pr(cv)} = ${fx(num,6)}.`,
+  `Denominator: ${fx(a,2)}(${fx(s2*s2,4)}) + ${fx(b,2)}(${fx(s1*s1,4)}) − (${fx(a,2)} + ${fx(b,2)})${pr(cv)} = ${fx(den,6)}.`,
+  `w<sub>1</sub> = ${fx(num,6)}/${fx(den,6)} = <b>${pc(w)}</b>. Then E(r<sub>T</sub>) = ${pc(ET)}, σ<sub>T</sub> = ${pc(sT)}, and Sharpe = ${fx((ET-rf)/sT,3)}.`]}}},
+f_cal:{mod:'tools',topic:'CAL',fn(){
+  const rf=rnd(.02,.05,.005),ET=rnd(.09,.16,.005),sT=rnd(.15,.30,.01),sp=rnd(.06,.36,.01),S=(ET-rf)/sT,y=sp/sT;
+  return{title:'Moving along the CAL',
+  q:`<p>Risky portfolio T has E(r) = ${pc(ET,1)} and σ = ${pc(sT,0)}. r<sub>f</sub> = ${pc(rf,1)}. You want a complete portfolio with σ = ${pc(sp,0)}. What is its expected return?</p>`,
+  ask:'E(r<sub>P</sub>) =',unit:'%',ans:(rf+S*sp)*100,steps:[
+  `Sharpe ratio (CAL slope): [${fx(ET,3)} − ${fx(rf,3)}]/${fx(sT,2)} = <b>${fx(S,4)}</b>.`,
+  `CAL: E(r<sub>P</sub>) = ${fx(rf,3)} + ${fx(S,4)}×${fx(sp,2)} = <b>${pc(rf+S*sp)}</b>.`,
+  `Weight in T: y = σ<sub>P</sub>/σ<sub>T</sub> = ${fx(y,4)}. ${y>1?'That is more than 100%, so you borrow at r<sub>f</sub>.':'The rest goes in T-bills.'}`]}}},
+
+/* ===== diversification ===== */
+d_eq:{mod:'diversification',topic:'Diversification',fn(){
+  const s=rnd(.25,.55,.05),rho=rnd(.1,.5,.05),n=pick([4,5,8,10,20,25,40,50]),aV=s*s,aC=rho*s*s,v=aV/n+(n-1)/n*aC,form=Math.random()<.5;
+  const q=form?`<p>You form an equally weighted portfolio of ${n} stocks. Each has σ = ${pc(s,0)}, and every pair has correlation ${fx(rho,2)}. What is the portfolio's σ?</p>`
+    :`<p>For a universe of stocks, the average variance is ${fx(aV,4)} and the average covariance is ${fx(aC,4)}. What is σ for an equally weighted portfolio of ${n} of them?</p>`;
+  return{title:`Equally weighted portfolio of ${n} stocks`,q,ask:'σ<sub>p</sub> =',unit:'%',ans:Math.sqrt(v)*100,steps:[
+  form?`Convert to averages: avg variance = σ<sup>2</sup> = ${fx(aV,4)}; avg covariance = ρσ<sup>2</sup> = ${fx(rho,2)}×${fx(aV,4)} = ${fx(aC,6)}.`:`You already have the averages: avg variance ${fx(aV,4)}, avg covariance ${fx(aC,4)}.`,
+  `σ<sub>p</sub><sup>2</sup> = (1/n)(avg variance) + ((n − 1)/n)(avg covariance) = (1/${n})(${fx(aV,4)}) + (${n-1}/${n})(${fx(aC,6)}).`,
+  `= ${fx(aV/n,6)} + ${fx((n-1)/n*aC,6)} = <b>${fx(v,6)}</b>, so σ<sub>p</sub> = <b>${pc(Math.sqrt(v))}</b>.`,
+  `For comparison, the floor as n → ∞ is √(avg cov) = ${pc(Math.sqrt(aC))}. That is market (systematic) risk, and no amount of diversifying gets below it.`]}}},
+d_floor:{mod:'diversification',topic:'Diversification',fn(){
+  const s=rnd(.25,.60,.05),rho=rnd(.05,.6,.05),floor=s*Math.sqrt(rho),mode=Math.random()<.5;
+  if(mode)return{title:'The diversification floor',q:`<p>Every stock has σ = ${pc(s,0)} and every pair has ρ = ${fx(rho,2)}. What is the lowest σ an equally weighted portfolio can reach as n → ∞?</p>`,ask:'σ<sub>min</sub> =',unit:'%',ans:floor*100,steps:[
+    `As n → ∞, the (1/n)·variance term vanishes and σ<sub>p</sub><sup>2</sup> → avg covariance = ρσ<sup>2</sup> = ${fx(rho,2)}×${fx(s*s,4)} = ${fx(rho*s*s,6)}.`,
+    `σ<sub>min</sub> = √${fx(rho*s*s,6)} = σ√ρ = <b>${pc(floor)}</b>.`,
+    `So ${pc(1-rho,0)} of a single stock's variance (1 − ρ) is diversifiable and ${pc(rho,0)} is systematic.`]};
+  return{title:'Back out the average correlation',q:`<p>A typical stock has σ = ${pc(s,0)}. A huge, equally weighted portfolio of these stocks has σ = ${pc(floor,2)}. What is the average pairwise correlation?</p>`,ask:'ρ =',unit:'',ans:rho,tol:.01,steps:[
+    `For a huge portfolio, σ<sub>p</sub><sup>2</sup> ≈ avg covariance = ρσ<sup>2</sup>.`,
+    `ρ = σ<sub>p</sub><sup>2</sup>/σ<sup>2</sup> = ${fx(floor*floor,6)}/${fx(s*s,4)} = <b>${fx(rho,3)}</b>.`]}}},
+d_contrib:{mod:'diversification',topic:'Risk contribution',fn(fixed){
+  const s=fixed?[.20,.30,.15]:[rnd(.15,.30,.01),rnd(.20,.40,.01),rnd(.10,.25,.01)];
+  const rh=fixed?[.4,.1,.3]:[rnd(.1,.6,.1),rnd(-.2,.4,.1),rnd(0,.5,.1)];
+  const w=fixed?[.5,.3,.2]:pick([[.5,.3,.2],[.4,.4,.2],[.3,.5,.2],[.2,.3,.5],[.4,.35,.25],[.25,.25,.5]]);
+  const C=[[s[0]**2,rh[0]*s[0]*s[1],rh[1]*s[0]*s[2]],[0,s[1]**2,rh[2]*s[1]*s[2]],[0,0,s[2]**2]].map(r=>r.map(r4));C[1][0]=C[0][1];C[2][0]=C[0][2];C[2][1]=C[1][2];
+  const cp=C.map(r=>dot(w,r)),vp=dot(w,cp),k=fixed?1:Math.floor(Math.random()*3),sh=w[k]*cp[k]/vp;
+  return{title:'Each asset’s share of portfolio risk',
+  q:`<p>Covariance matrix and portfolio weights:</p>${tbl(['','Asset 1','Asset 2','Asset 3','Weight'],[0,1,2].map(i=>['Asset '+(i+1),...C[i].map(c=>fx(c,4)),pc(w[i],0)]))}<p>What percentage of the portfolio's variance comes from Asset ${k+1}?</p>`,
+  ask:`share<sub>${k+1}</sub> =`,unit:'%',ans:sh*100,steps:[
+  `Row trick: Cov(r<sub>i</sub>, r<sub>p</sub>) = Σ<sub>j</sub> w<sub>j</sub>Cov(r<sub>i</sub>, r<sub>j</sub>). Weight each entry of a row by the column asset's weight.`,
+  ...[0,1,2].map(i=>`Cov(r<sub>${i+1}</sub>, r<sub>p</sub>) = ${w.map((wj,j)=>`${fx(wj,2)}${pr(C[i][j])}`).join(' + ')} = <b>${fx(cp[i],6)}</b>`),
+  `σ<sub>p</sub><sup>2</sup> = Σ w<sub>i</sub>Cov(r<sub>i</sub>, r<sub>p</sub>) = ${cp.map((c,i)=>`${fx(w[i],2)}${pr(c,6)}`).join(' + ')} = <b>${fx(vp,6)}</b> (σ<sub>p</sub> = ${pc(Math.sqrt(vp))}).`,
+  `Share of Asset ${k+1} = w<sub>${k+1}</sub>Cov(r<sub>${k+1}</sub>, r<sub>p</sub>)/σ<sub>p</sub><sup>2</sup> = ${fx(w[k]*cp[k],6)}/${fx(vp,6)} = <b>${pc(sh)}</b>. All three shares: ${cp.map((c,i)=>pc(w[i]*c/vp,1)).join(', ')}. They add to 100%.`,
+  `Bridge to CAPM: Cov(r<sub>${k+1}</sub>, r<sub>p</sub>)/σ<sub>p</sub><sup>2</sup> = ${fx(cp[k]/vp,3)} is Asset ${k+1}'s beta <em>relative to this portfolio</em>. When the portfolio is the market, that's the CAPM β.`]}}},
+
+/* ===== CML ===== */
+c_sig:{mod:'cml',topic:'CML',fn(){
+  const rf=rnd(.02,.05,.005),em=rnd(.08,.13,.005),sm=rnd(.15,.22,.01),sp=rnd(.06,.34,.01),S=(em-rf)/sm,y=sp/sm;
+  return{title:'Expected return on the CML',
+  q:`<p>r<sub>f</sub> = ${pc(rf,1)}, E(r<sub>M</sub>) = ${pc(em,1)}, σ<sub>M</sub> = ${pc(sm,0)}. An efficient portfolio has σ = ${pc(sp,0)}. What is its expected return?</p>`,
+  ask:'E(r<sub>p</sub>) =',unit:'%',ans:(rf+S*sp)*100,steps:[
+  `CML slope (market Sharpe ratio) = [${ERM} − ${RF}]/${SM} = (${fx(em,3)} − ${fx(rf,3)})/${fx(sm,2)} = <b>${fx(S,4)}</b>.`,
+  `E(r<sub>p</sub>) = ${fx(rf,3)} + ${fx(S,4)}×${fx(sp,2)} = <b>${pc(rf+S*sp)}</b>.`,
+  `Position: y = σ<sub>p</sub>/σ<sub>M</sub> = ${fx(y,3)} in M. ${y>1?`You borrow ${pc(y-1,1)} of your wealth at r<sub>f</sub> (leveraged, right of M).`:`You lend ${pc(1-y,1)} at r<sub>f</sub> (left of M).`} Portfolio β = y = ${fx(y,3)}.`]}}},
+c_target:{mod:'cml',topic:'CML',fn(fixed){
+  const rf=fixed?.04:rnd(.02,.05,.005),em=fixed?.12:rnd(.09,.14,.005),sm=fixed?.20:rnd(.15,.24,.01),W=fixed?50000:rnd(10,100,5)*1000;
+  const et=fixed?.15:rnd(rf+.01,em+.06,.005),y=(et-rf)/(em-rf),sp=y*sm,askS=fixed?true:Math.random()<.5;
+  return{title:'Hitting a target return on the CML',
+  q:`<p>r<sub>f</sub> = ${pc(rf,1)}, E(r<sub>M</sub>) = ${pc(em,1)}, σ<sub>M</sub> = ${pc(sm,0)}. You have ${money(W)} and want an expected return of ${pc(et,1)} using only T-bills and the market portfolio. ${askS?'What is your portfolio’s σ?':'How many dollars do you put in the market portfolio?'}</p>`,
+  ask:askS?'σ<sub>p</sub> =':'$ in M =',unit:askS?'%':'$',ans:askS?sp*100:y*W,steps:[
+  `On the CML, E(r<sub>p</sub>) = r<sub>f</sub> + y[E(r<sub>M</sub>) − r<sub>f</sub>]. Solve for y: y = (${fx(et,3)} − ${fx(rf,3)})/(${fx(em,3)} − ${fx(rf,3)}) = <b>${fx(y,4)}</b>.`,
+  `Risk: σ<sub>p</sub> = yσ<sub>M</sub> = ${fx(y,4)}×${fx(sm,2)} = <b>${pc(sp)}</b>.`,
+  `Dollars: ${fx(y,4)}×${money(W)} = <b>${money(y*W)}</b> in M. ${y>1?`That's more than you have, so you borrow ${money((y-1)*W)} at r<sub>f</sub>.`:`The remaining ${money((1-y)*W)} goes into T-bills (lending).`}`]}}},
+c_ineff:{mod:'cml',topic:'CML',fn(){
+  const rf=rnd(.02,.05,.005),em=rnd(.09,.13,.005),sm=rnd(.15,.22,.01),S=(em-rf)/sm,es=rnd(em-.02,em+.03,.005),sStar=(es-rf)/S,ss=r4(sStar*rnd(1.4,2.2,.1));
+  return{title:'A single stock vs. the CML',
+  q:`<p>r<sub>f</sub> = ${pc(rf,1)}, E(r<sub>M</sub>) = ${pc(em,1)}, σ<sub>M</sub> = ${pc(sm,0)}. Stock Q is correctly priced, with E(r) = ${pc(es,1)} and σ = ${pc(ss,1)}. An efficient portfolio with the same expected return as Q would have what σ?</p>`,
+  ask:'σ<sub>CML</sub> =',unit:'%',ans:sStar*100,steps:[
+  `Market Sharpe ratio = (${fx(em,3)} − ${fx(rf,3)})/${fx(sm,2)} = ${fx(S,4)}.`,
+  `Solve the CML for σ: σ = [E(r) − r<sub>f</sub>]/Sharpe = (${fx(es,3)} − ${fx(rf,3)})/${fx(S,4)} = <b>${pc(sStar)}</b>.`,
+  `Q has σ = ${pc(ss,1)}, so it plots ${pc(ss-sStar,1)} to the right of the CML. That extra σ is <b>firm-specific risk</b>, and it earns nothing. Q's Sharpe ratio is ${fx((es-rf)/ss,3)}, below the market's ${fx(S,3)}. Q is not mispriced. It's just inefficient on its own.`]}}},
+c_back:{mod:'cml',topic:'CML',fn(){
+  const rf=rnd(.02,.05,.005),S=rnd(.3,.6,.05),s1=rnd(.06,.14,.01),s2=rnd(.2,.35,.01),e1=r4(rf+S*s1),e2=r4(rf+S*s2);
+  return{title:'Recover r<sub>f</sub> from two efficient portfolios',
+  q:`<p>Two efficient portfolios: P<sub>1</sub> has E(r) = ${pc(e1,2)}, σ = ${pc(s1,0)}; P<sub>2</sub> has E(r) = ${pc(e2,2)}, σ = ${pc(s2,0)}. What is the risk-free rate?</p>`,
+  ask:'r<sub>f</sub> =',unit:'%',ans:rf*100,steps:[
+  `Both lie on the CML, a straight line. Slope = (${fx(e2,4)} − ${fx(e1,4)})/(${fx(s2,2)} − ${fx(s1,2)}) = <b>${fx(S,4)}</b>. That's the market Sharpe ratio.`,
+  `Intercept: r<sub>f</sub> = E(r<sub>1</sub>) − slope×σ<sub>1</sub> = ${fx(e1,4)} − ${fx(S,4)}×${fx(s1,2)} = <b>${pc(rf)}</b>.`]}}},
+
+/* ===== CAPM ===== */
+k_beta:{mod:'capm',topic:'Beta',fn(){
+  const sm=rnd(.15,.22,.01),si=rnd(.2,.5,.01),rho=rnd(.3,.9,.05),useCov=Math.random()<.5,cv=r4(rho*si*sm),b=useCov?cv/(sm*sm):rho*si/sm;
+  return{title:'Compute beta',
+  q:useCov?`<p>Cov(r<sub>i</sub>, r<sub>M</sub>) = ${fx(cv,4)} and σ<sub>M</sub> = ${pc(sm,0)}. What is stock i's beta?</p>`:`<p>Stock i has σ = ${pc(si,0)} and correlation ${fx(rho,2)} with the market. σ<sub>M</sub> = ${pc(sm,0)}. What is its beta?</p>`,
+  ask:'β<sub>i</sub> =',unit:'',ans:b,steps:useCov?[
+  `β<sub>i</sub> = Cov(r<sub>i</sub>, r<sub>M</sub>)/σ<sub>M</sub><sup>2</sup>. Square σ<sub>M</sub> as a decimal: ${fx(sm,2)}<sup>2</sup> = ${fx(sm*sm,4)}.`,
+  `β = ${fx(cv,4)}/${fx(sm*sm,4)} = <b>${fx(b,4)}</b>.`]:[
+  `β<sub>i</sub> = ρ<sub>i,M</sub>σ<sub>i</sub>/σ<sub>M</sub>. The σ<sub>M</sub> in the denominator is <em>not</em> squared here, because one σ<sub>M</sub> canceled.`,
+  `β = ${fx(rho,2)}×${fx(si,2)}/${fx(sm,2)} = <b>${fx(b,4)}</b>. Despite σ<sub>i</sub> = ${pc(si,0)}, only the correlated part counts.`]}}},
+k_sml:{mod:'capm',topic:'SML',fn(){
+  const rf=rnd(.02,.05,.005),em=rnd(.08,.13,.005),b=rnd(.4,2,.05),k=rf+b*(em-rf);
+  return{title:'Required return from the SML',
+  q:`<p>r<sub>f</sub> = ${pc(rf,1)}, E(r<sub>M</sub>) = ${pc(em,1)}, and β = ${fx(b,2)}. What is the required return?</p>`,
+  ask:'k =',unit:'%',ans:k*100,steps:[
+  `Market risk premium: E(r<sub>M</sub>) − r<sub>f</sub> = ${pc(em-rf,1)}.`,
+  `k = r<sub>f</sub> + β×MRP = ${fx(rf,3)} + ${fx(b,2)}×${fx(em-rf,3)} = <b>${pc(k)}</b>.`]}}},
+k_alpha:{mod:'capm',topic:'Pricing',fn(fixed){
+  if(fixed)return{title:'Lecture pricing example: buy, sell or hold?',
+    q:`<p>An analyst forecasts E(r<sub>X</sub>) = 14%. β<sub>X</sub> = 1.2, r<sub>f</sub> = 4%, E(r<sub>M</sub>) = 12%. What is X's alpha, and should the analyst recommend buy, sell or hold?</p>`,ask:'α =',unit:'%',ans:.4,steps:[
+    `Spot which number is which. The 14% is a <b>forecast</b> (security analysis E(r)). CAPM gives the <b>required</b> return k.`,
+    `k = 0.04 + 1.2(0.12 − 0.04) = 0.04 + 0.096 = <b>13.6%</b>.`,
+    `α ≡ E(r) − k = 14% − 13.6% = <b>+0.40%</b>.`,
+    `E(r) &gt; k means X plots above the SML: underpriced, a good deal, NPV &gt; 0. <b>Buy.</b> As people buy, P<sub>0</sub> rises and E(r) falls until it equals 13.6%.`]};
+  const rf=rnd(.02,.05,.005),em=rnd(.09,.13,.005),b=rnd(.5,1.8,.05),k=rf+b*(em-rf),P0=rnd(20,120,1),D1=rnd(0,4,.25);
+  let at=rnd(-.04,.04,.005);if(Math.abs(at)<.004)at=.015;
+  const P1=Math.round((P0*(1+k+at)-D1)*100)/100,E=(D1+P1-P0)/P0,a=E-k;
+  return{title:'Alpha from a price forecast',
+  q:`<p>A stock sells for ${money(P0)}. Analysts expect a ${money(D1)} dividend and a price of ${money(P1)} in one year. β = ${fx(b,2)}, r<sub>f</sub> = ${pc(rf,1)}, E(r<sub>M</sub>) = ${pc(em,1)}. What is the stock's alpha?</p>`,
+  ask:'α =',unit:'%',ans:a*100,steps:[
+  `Forecast (expected) return: E(r) = [E(P<sub>1</sub>) + E(Div<sub>1</sub>) − P<sub>0</sub>]/P<sub>0</sub> = (${fx(P1,2)} + ${fx(D1,2)} − ${fx(P0,2)})/${fx(P0,2)} = <b>${pc(E)}</b>.`,
+  `Required return: k = ${fx(rf,3)} + ${fx(b,2)}(${fx(em,3)} − ${fx(rf,3)}) = <b>${pc(k)}</b>.`,
+  `α = E(r) − k = ${pc(E)} − ${pc(k)} = <b>${pc(a)}</b>.`,
+  a>0?`α &gt; 0: above the SML, underpriced (P<sub>0</sub> &lt; V<sub>0</sub>). <b>Buy.</b> Correct price V<sub>0</sub> = ${fx(P1+D1,2)}/(1 + ${fx(k,4)}) = ${money((P1+D1)/(1+k))}.`:`α &lt; 0: below the SML, overpriced (P<sub>0</sub> &gt; V<sub>0</sub>). <b>Sell.</b> Correct price V<sub>0</sub> = ${fx(P1+D1,2)}/(1 + ${fx(k,4)}) = ${money((P1+D1)/(1+k))}.`]}}},
+k_price:{mod:'capm',topic:'Pricing',fn(){
+  const rf=rnd(.02,.05,.005),em=rnd(.09,.13,.005),b=rnd(.5,1.8,.05),D1=rnd(0,6,.5),P1=rnd(30,480,1),k=rf+b*(em-rf),V=(D1+P1)/(1+k);
+  return{title:'Correct price V<sub>0</sub>',
+  q:`<p>Analysts predict a stock will pay a ${money(D1)} dividend and sell for ${money(P1)} in one year. Its β is ${fx(b,2)}, r<sub>f</sub> = ${pc(rf,1)}, and E(r<sub>M</sub>) = ${pc(em,1)}. What is the correct price today?</p>`,
+  ask:'V<sub>0</sub> =',unit:'$',ans:V,steps:[
+  `Required return: k = ${fx(rf,3)} + ${fx(b,2)}(${fx(em-rf,3)}) = <b>${pc(k)}</b>.`,
+  `Expected cash flow: E(CF<sub>1</sub>) = ${fx(D1,2)} + ${fx(P1,2)} = ${money(D1+P1)}.`,
+  `V<sub>0</sub> = E(CF<sub>1</sub>)/(1 + k) = ${fx(D1+P1,2)}/${fx(1+k,4)} = <b>${money(V)}</b>. If the market price is above this, the stock is overpriced (sell). If below, it's underpriced (buy).`]}}},
+k_port:{mod:'capm',topic:'Portfolio beta',fn(){
+  const rf=rnd(.02,.05,.005),em=rnd(.09,.13,.005),amt=[rnd(5,40),rnd(5,40),rnd(5,40)].map(x=>x*1000),tb=Math.random()<.5?rnd(5,25)*1000:0,b=[rnd(.5,1.8,.05),rnd(.3,1.4,.05),rnd(.8,2,.05)];
+  const tot=sum(amt)+tb,w=amt.map(a=>a/tot),bp=dot(w,b),E=rf+bp*(em-rf);
+  const rows=amt.map((a,i)=>['Stock '+'ABC'[i],money(a),fx(b[i],2)]);if(tb)rows.push(['T-bills',money(tb),'0.00']);
+  return{title:'Portfolio beta and expected return',
+  q:`${tbl(['Holding','Invested','β'],rows)}<p>r<sub>f</sub> = ${pc(rf,1)}, E(r<sub>M</sub>) = ${pc(em,1)}. If CAPM holds, what is the portfolio's expected return?</p>`,
+  ask:'E(r<sub>p</sub>) =',unit:'%',ans:E*100,steps:[
+  `Total invested = ${money(tot)}. Weights: ${w.map((x,i)=>'ABC'[i]+' '+fx(x,4)).join(', ')}${tb?`, T-bills ${fx(tb/tot,4)}`:''}.`,
+  `β<sub>p</sub> = Σ w<sub>i</sub>β<sub>i</sub> = ${w.map((x,i)=>`${fx(x,4)}(${fx(b[i],2)})`).join(' + ')}${tb?' + '+fx(tb/tot,4)+'(0)':''} = <b>${fx(bp,4)}</b>.`,
+  `SML: E(r<sub>p</sub>) = ${fx(rf,3)} + ${fx(bp,4)}(${fx(em-rf,3)}) = <b>${pc(E)}</b>.`]}}},
+k_solve:{mod:'capm',topic:'SML algebra',fn(){
+  const rf=rnd(.02,.05,.005),mrp=rnd(.05,.09,.005),b1=rnd(.5,1,.1),b2=rnd(1.2,2,.1),e1=rf+b1*mrp,e2=rf+b2*mrp,askRf=Math.random()<.5;
+  return{title:'Back out the SML from two stocks',
+  q:`<p>Two correctly priced stocks: A has β = ${fx(b1,1)} and E(r) = ${pc(e1,2)}; B has β = ${fx(b2,1)} and E(r) = ${pc(e2,2)}. ${askRf?'What is the risk-free rate?':'What is the expected return on the market?'}</p>`,
+  ask:askRf?'r<sub>f</sub> =':'E(r<sub>M</sub>) =',unit:'%',ans:(askRf?rf:rf+mrp)*100,steps:[
+  `Correctly priced means both sit on the SML, a line in (β, E(r)) space.`,
+  `Slope = MRP = (${fx(e2,4)} − ${fx(e1,4)})/(${fx(b2,1)} − ${fx(b1,1)}) = <b>${pc(mrp)}</b>.`,
+  `Intercept: r<sub>f</sub> = E(r<sub>A</sub>) − β<sub>A</sub>×MRP = ${fx(e1,4)} − ${fx(b1,1)}×${fx(mrp,4)} = <b>${pc(rf)}</b>.`,
+  `E(r<sub>M</sub>) is the SML at β = 1: r<sub>f</sub> + MRP = <b>${pc(rf+mrp)}</b>.`]}}},
+k_mkt:{mod:'capm',topic:'Beta from matrix',fn(){
+  const w1=rnd(.3,.7,.05),w2=1-w1,s1=rnd(.15,.35,.01),s2=rnd(.12,.30,.01),rho=rnd(-.1,.6,.1),c12=r4(rho*s1*s2),v1=r4(s1*s1),v2=r4(s2*s2);
+  const c1M=w1*v1+w2*c12,c2M=w1*c12+w2*v2,vM=w1*c1M+w2*c2M,b1=c1M/vM,b2=c2M/vM,k=Math.random()<.5?1:2;
+  return{title:'β from a two-asset market',
+  q:`<p>The whole market consists of two stocks, with market-value weights ${pc(w1,0)} (Stock 1) and ${pc(w2,0)} (Stock 2).</p>${tbl(['','Stock 1','Stock 2'],[['Stock 1',fx(v1,4),fx(c12,4)],['Stock 2',fx(c12,4),fx(v2,4)]])}<p>What is the beta of Stock ${k}?</p>`,
+  ask:`β<sub>${k}</sub> =`,unit:'',ans:k===1?b1:b2,steps:[
+  `Row trick with market weights. Cov(r<sub>1</sub>, r<sub>M</sub>) = w<sub>1</sub>σ<sub>1</sub><sup>2</sup> + w<sub>2</sub>Cov<sub>12</sub> = ${fx(w1,2)}(${fx(v1,4)}) + ${fx(w2,2)}${pr(c12)} = <b>${fx(c1M,6)}</b>.`,
+  `Cov(r<sub>2</sub>, r<sub>M</sub>) = w<sub>1</sub>Cov<sub>12</sub> + w<sub>2</sub>σ<sub>2</sub><sup>2</sup> = ${fx(w1,2)}${pr(c12)} + ${fx(w2,2)}(${fx(v2,4)}) = <b>${fx(c2M,6)}</b>.`,
+  `σ<sub>M</sub><sup>2</sup> = w<sub>1</sub>Cov(r<sub>1</sub>, r<sub>M</sub>) + w<sub>2</sub>Cov(r<sub>2</sub>, r<sub>M</sub>) = ${fx(w1,2)}(${fx(c1M,6)}) + ${fx(w2,2)}(${fx(c2M,6)}) = <b>${fx(vM,6)}</b>.`,
+  `β<sub>1</sub> = ${fx(c1M,6)}/${fx(vM,6)} = ${fx(b1,4)}; β<sub>2</sub> = ${fx(c2M,6)}/${fx(vM,6)} = ${fx(b2,4)}. So β<sub>${k}</sub> = <b>${fx(k===1?b1:b2,4)}</b>.`,
+  `Check: w<sub>1</sub>β<sub>1</sub> + w<sub>2</sub>β<sub>2</sub> = ${fx(w1*b1+w2*b2,4)} = β<sub>M</sub> = 1. ✓`]}}},
+k_target:{mod:'capm',topic:'Portfolio beta',fn(){
+  const useRf=Math.random()<.5;
+  if(useRf){const b=rnd(.8,1.8,.05),t=rnd(.3,1.6,.1),y=t/b;return{title:'Hit a target beta with T-bills',
+    q:`<p>You hold only Stock S (β = ${fx(b,2)}) and T-bills. What weight in S gives a portfolio β of ${fx(t,2)}?</p>`,ask:'w<sub>S</sub> =',unit:'%',ans:y*100,steps:[
+    `β<sub>p</sub> = w<sub>S</sub>β<sub>S</sub> + (1 − w<sub>S</sub>)(0), since T-bills have β = 0.`,
+    `w<sub>S</sub> = ${fx(t,2)}/${fx(b,2)} = <b>${pc(y)}</b>${y>1?'. More than 100%, so you borrow at r<sub>f</sub>.':'.'}`]}}
+  const bA=rnd(1.2,2,.05),bB=rnd(.3,.9,.05),t=rnd(.6,1.4,.05),w=(t-bB)/(bA-bB);
+  return{title:'Hit a target beta with two stocks',
+  q:`<p>Stock A has β = ${fx(bA,2)} and Stock B has β = ${fx(bB,2)}. What weight in A gives a portfolio β of ${fx(t,2)}?</p>`,ask:'w<sub>A</sub> =',unit:'%',ans:w*100,steps:[
+  `β<sub>p</sub> = w<sub>A</sub>β<sub>A</sub> + (1 − w<sub>A</sub>)β<sub>B</sub>. Solve: w<sub>A</sub> = (β<sub>p</sub> − β<sub>B</sub>)/(β<sub>A</sub> − β<sub>B</sub>).`,
+  `w<sub>A</sub> = (${fx(t,2)} − ${fx(bB,2)})/(${fx(bA,2)} − ${fx(bB,2)}) = <b>${pc(w)}</b>, and w<sub>B</sub> = ${pc(1-w)}.`]}}},
+
+/* ===== INDEX ===== */
+i_reg:{mod:'index',topic:'Fitting the SIM',fn(fixed){
+  let RM,Ri;
+  if(fixed){RM=[4,-2,8,-4,4];Ri=[2,3,6,-4,8]}
+  else{do{RM=shuffle([-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9]).slice(0,5);const b=rnd(.5,1.6,.1),a=rnd(-1,1.5,.5);Ri=RM.map(x=>Math.round(a+b*x+rnd(-3,3)))}while(new Set(Ri).size<3)}
+  const n=5,m=RM.map(x=>x/100),y=Ri.map(x=>x/100),mb=mean(m),yb=mean(y),dm=m.map(x=>x-mb),dy=y.map(x=>x-yb);
+  const Sxy=dot(dm,dy),Sxx=dot(dm,dm),Syy=dot(dy,dy),cv=Sxy/(n-1),vM=Sxx/(n-1),vI=Syy/(n-1),beta=Sxy/Sxx,alpha=yb-beta*mb;
+  const pred=m.map(x=>alpha+beta*x),e=y.map((x,i)=>x-pred[i]),SSE=dot(e,e),ve=SSE/(n-1),R2=beta*beta*vM/vI,rho=cv/Math.sqrt(vI*vM);
+  const ask=fixed?'beta':pick(['beta','alpha','r2','se']);
+  const A={beta:['β =','',beta,.01],alpha:['α =','%',alpha*100,.06],r2:['R<sup>2</sup> =','%',R2*100,.3],se:['σ<sub>e</sub> =','%',Math.sqrt(ve)*100,.06]}[ask];
+  const lo=Math.min(...m,0)-.02,hi=Math.max(...m)+.02,ylo=Math.min(...y,0)-.02,yhi=Math.max(...y)+.02;
+  const pts=m.map((x,i)=>({x,y:y[i],c:'pt2',r:5}));
+  const scatter=chart({id:'rg'+Math.random().toString(36).slice(2,7),x:[lo,hi],y:[ylo,yhi],xl:'Market excess return R<sub>M</sub>',yl:'Stock excess return',xf:t=>fx(t*100,0)+'%',yf:t=>fx(t*100,0)+'%',pts,h:260,label:'Scatter of stock vs market excess returns'});
+  const fit=chart({id:'rf'+Math.random().toString(36).slice(2,7),x:[lo,hi],y:[ylo,yhi],xl:'Market excess return R<sub>M</sub>',yl:'Stock excess return',xf:t=>fx(t*100,0)+'%',yf:t=>fx(t*100,0)+'%',lines:[{p:[[lo,alpha+beta*lo],[hi,alpha+beta*hi]],c:'ln'}],pts:[...pts,{x:mb,y:yb,c:'pt',r:5,l:'(R̄M, R̄i)'}],h:260,label:'Line of best fit'});
+  const askTxt={beta:'Estimate the stock’s beta.',alpha:'Estimate the stock’s alpha (as a %).',r2:'What percentage of the stock’s variance does the market explain (R-square)?',se:'What is the standard deviation of the residuals, σ<sub>e</sub> (use n − 1)?'}[ask];
+  return{title:fixed?'Fitting the SIM: Stock J (lecture example)':'Fit the Single Index Model by hand',
+  q:`<p>Excess returns for ${fixed?'Stock J':'a stock'} and the market index over five periods:</p>${tbl(['t','R<sub>i,t</sub>','R<sub>M,t</sub>'],m.map((x,i)=>[i+1,fx(y[i],2),fx(x,2)]))}${scatter}<p>${askTxt}</p>`,
+  ask:A[0],unit:A[1],ans:A[2],tol:A[3],steps:[
+  `Averages: R̄<sub>i</sub> = (${y.map(v=>pr(v,2)).join(' + ')})/5 = <b>${fx(yb,4)}</b>; R̄<sub>M</sub> = (${m.map(v=>pr(v,2)).join(' + ')})/5 = <b>${fx(mb,4)}</b>.`,
+  `Deviation table:${tbl(['t','R<sub>i</sub> − R̄<sub>i</sub>','R<sub>M</sub> − R̄<sub>M</sub>','(R<sub>i</sub> − R̄<sub>i</sub>)<sup>2</sup>','(R<sub>M</sub> − R̄<sub>M</sub>)<sup>2</sup>','product'],[...m.map((x,i)=>[i+1,fx(dy[i]),fx(dm[i]),fx(dy[i]**2,6),fx(dm[i]**2,6),fx(dy[i]*dm[i],6)]),{tot:1,cells:['Sum','0','0',`${fx(Syy,6)} = SST`,fx(Sxx,6),fx(Sxy,6)]}])}`,
+  `Divide by n − 1 = 4: σ<sub>i</sub><sup>2</sup> = ${fx(Syy,6)}/4 = <b>${fx(vI,6)}</b> (σ<sub>i</sub> = ${pc(Math.sqrt(vI),3)}); σ<sub>M</sub><sup>2</sup> = ${fx(Sxx,6)}/4 = <b>${fx(vM,6)}</b> (σ<sub>M</sub> = ${pc(Math.sqrt(vM),3)}); Cov = ${fx(Sxy,6)}/4 = <b>${fx(cv,6)}</b>.`,
+  `Slope: β = Cov/σ<sub>M</sub><sup>2</sup> = ${fx(cv,6)}/${fx(vM,6)} = <b>${fx(beta,5)}</b>. Intercept: α = R̄<sub>i</sub> − βR̄<sub>M</sub> = ${fx(yb,4)} − ${fx(beta,5)}(${fx(mb,4)}) = <b>${fx(alpha,6)}</b> (${pc(alpha,3)}).${fit}`,
+  `Predicted values and residuals, e<sub>t</sub> = R<sub>i,t</sub> − (α + βR<sub>M,t</sub>):${tbl(['t','Predicted','Residual e','e<sup>2</sup>'],[...m.map((x,i)=>[i+1,fx(pred[i],6),fx(e[i],6),fx(e[i]**2,6)]),{tot:1,cells:['Sum',fx(sum(pred),4),fx(sum(e),4),`${fx(SSE,6)} = SSE`]}])}The residuals sum to zero, as they always do for the best-fit line.`,
+  `Residual variance: σ<sub>e</sub><sup>2</sup> = SSE/(n − 1) = ${fx(SSE,6)}/4 = <b>${fx(ve,8)}</b>, so σ<sub>e</sub> = <b>${pc(Math.sqrt(ve),3)}</b>. Check: β<sup>2</sup>σ<sub>M</sub><sup>2</sup> + σ<sub>e</sub><sup>2</sup> = ${fx(beta*beta*vM,6)} + ${fx(ve,6)} = ${fx(beta*beta*vM+ve,6)} = σ<sub>i</sub><sup>2</sup> ✓`,
+  `R<sup>2</sup> = β<sup>2</sup>σ<sub>M</sub><sup>2</sup>/σ<sub>i</sub><sup>2</sup> = ${fx(beta*beta*vM,6)}/${fx(vI,6)} = <b>${pc(R2)}</b>. The market explains ${pc(R2)} of the variation. Correlation ρ = Cov/(σ<sub>i</sub>σ<sub>M</sub>) = <b>${fx(rho,4)}</b>, and ρ<sup>2</sup> = ${fx(rho*rho,4)} = R<sup>2</sup> ✓`]}}},
+i_var:{mod:'index',topic:'Partition risk',fn(){
+  const b=rnd(.6,1.6,.05),sm=rnd(.15,.22,.01),se=rnd(.15,.40,.01),sys=b*b*sm*sm,v=sys+se*se,askR=Math.random()<.5;
+  return{title:'Partition total risk',
+  q:`<p>From the SIM, a stock has β = ${fx(b,2)} and residual standard deviation σ<sub>e</sub> = ${pc(se,0)}. The market's σ<sub>M</sub> = ${pc(sm,0)}. ${askR?'What is the stock’s R-square?':'What is the stock’s total standard deviation?'}</p>`,
+  ask:askR?'R<sup>2</sup> =':'σ<sub>i</sub> =',unit:'%',ans:(askR?sys/v:Math.sqrt(v))*100,steps:[
+  `Systematic variance: β<sup>2</sup>σ<sub>M</sub><sup>2</sup> = ${fx(b,2)}<sup>2</sup>×${fx(sm*sm,4)} = <b>${fx(sys,6)}</b>.`,
+  `Firm-specific variance: σ<sub>e</sub><sup>2</sup> = ${fx(se,2)}<sup>2</sup> = <b>${fx(se*se,4)}</b>.`,
+  `Total: σ<sub>i</sub><sup>2</sup> = ${fx(sys,6)} + ${fx(se*se,4)} = ${fx(v,6)}, so σ<sub>i</sub> = <b>${pc(Math.sqrt(v))}</b>.`,
+  `R<sup>2</sup> = systematic/total = ${fx(sys,6)}/${fx(v,6)} = <b>${pc(sys/v)}</b>. The other ${pc(1-sys/v)} is diversifiable.`]}}},
+i_cov:{mod:'index',topic:'SIM covariance',fn(){
+  const bi=rnd(.6,1.6,.05),bj=rnd(.5,1.5,.05),sm=rnd(.15,.22,.01),sei=rnd(.2,.4,.01),sej=rnd(.15,.35,.01),vM=r4(sm*sm);
+  const cv=bi*bj*vM,si=Math.sqrt(bi*bi*vM+sei*sei),sj=Math.sqrt(bj*bj*vM+sej*sej),rho=cv/(si*sj),askC=Math.random()<.5;
+  return{title:'Covariance and correlation under the SIM',
+  q:`${tbl(['','β','σ<sub>e</sub>'],[['Stock i',fx(bi,2),pc(sei,0)],['Stock j',fx(bj,2),pc(sej,0)]])}<p>σ<sub>M</sub><sup>2</sup> = ${fx(vM,4)}. Assuming the SIM holds, ${askC?'what is Cov(R<sub>i</sub>, R<sub>j</sub>)? (Enter a decimal such as 0.0123.)':'what is the correlation between i and j?'}</p>`,
+  ask:askC?'Cov =':'ρ<sub>ij</sub> =',unit:'',ans:askC?cv:rho,tol:askC?Math.max(.0002,cv*.01):.01,steps:[
+  `SIM assumes Cov(e<sub>i</sub>, e<sub>j</sub>) = 0, so Cov(R<sub>i</sub>, R<sub>j</sub>) = β<sub>i</sub>β<sub>j</sub>σ<sub>M</sub><sup>2</sup> = ${fx(bi,2)}×${fx(bj,2)}×${fx(vM,4)} = <b>${fx(cv,6)}</b>.`,
+  `Total σ's: σ<sub>i</sub> = √(${fx(bi*bi*vM,6)} + ${fx(sei*sei,4)}) = ${fx(si,4)}; σ<sub>j</sub> = √(${fx(bj*bj*vM,6)} + ${fx(sej*sej,4)}) = ${fx(sj,4)}.`,
+  `ρ<sub>ij</sub> = Cov/(σ<sub>i</sub>σ<sub>j</sub>) = ${fx(cv,6)}/(${fx(si,4)}×${fx(sj,4)}) = <b>${fx(rho,4)}</b>. Equivalently ρ<sub>iM</sub>ρ<sub>jM</sub> = ${fx(bi*sm/si,4)}×${fx(bj*sm/sj,4)}.`]}}},
+i_er:{mod:'index',topic:'SIM expected return',fn(){
+  const rf=rnd(.02,.05,.005),em=rnd(.08,.13,.005),a=rnd(-.03,.03,.005),b=rnd(.5,1.7,.05),ER=a+b*(em-rf),E=rf+ER;
+  return{title:'Expected return from the SIM',
+  q:`<p>A stock's SIM regression (on excess returns) gives α = ${pc(a,1)} and β = ${fx(b,2)}. You forecast E(r<sub>M</sub>) = ${pc(em,1)}, and r<sub>f</sub> = ${pc(rf,1)}. What is the stock's expected <em>total</em> return?</p>`,
+  ask:'E(r<sub>i</sub>) =',unit:'%',ans:E*100,steps:[
+  `Market expected excess return: E(R<sub>M</sub>) = ${pc(em,1)} − ${pc(rf,1)} = ${pc(em-rf,1)}.`,
+  `E(R<sub>i</sub>) = α + βE(R<sub>M</sub>) = ${fx(a,3)} + ${fx(b,2)}(${fx(em-rf,3)}) = <b>${pc(ER)}</b>. This is an <em>excess</em> return.`,
+  `Add back r<sub>f</sub>: E(r<sub>i</sub>) = ${pc(rf,1)} + ${pc(ER)} = <b>${pc(E)}</b>. CAPM's required return is ${pc(rf+b*(em-rf))}; the difference is α = ${pc(a,1)}.`]}}},
+i_port:{mod:'index',topic:'SIM portfolio',fn(){
+  const w=rnd(.3,.7,.1),b=[rnd(.6,1.5,.05),rnd(.8,1.8,.05)],se=[rnd(.2,.4,.01),rnd(.2,.45,.01)],sm=rnd(.15,.22,.01),W=[w,1-w];
+  const bp=dot(W,b),vep=W[0]**2*se[0]**2+W[1]**2*se[1]**2,vp=bp*bp*sm*sm+vep;
+  return{title:'Portfolio risk under the SIM',
+  q:`${tbl(['','Weight','β','σ<sub>e</sub>'],[['Stock 1',pc(W[0],0),fx(b[0],2),pc(se[0],0)],['Stock 2',pc(W[1],0),fx(b[1],2),pc(se[1],0)]])}<p>σ<sub>M</sub> = ${pc(sm,0)}. Assuming residuals are uncorrelated, what is the portfolio's σ?</p>`,
+  ask:'σ<sub>p</sub> =',unit:'%',ans:Math.sqrt(vp)*100,steps:[
+  `β<sub>p</sub> = Σ w<sub>i</sub>β<sub>i</sub> = ${fx(W[0],2)}(${fx(b[0],2)}) + ${fx(W[1],2)}(${fx(b[1],2)}) = <b>${fx(bp,4)}</b>.`,
+  `Residual variance: σ<sub>e<sub>p</sub></sub><sup>2</sup> = Σ w<sub>i</sub><sup>2</sup>σ<sub>e<sub>i</sub></sub><sup>2</sup> = ${fx(W[0],2)}<sup>2</sup>(${fx(se[0]**2,4)}) + ${fx(W[1],2)}<sup>2</sup>(${fx(se[1]**2,4)}) = <b>${fx(vep,6)}</b>. Weights are squared, which is why this term shrinks as you diversify.`,
+  `σ<sub>p</sub><sup>2</sup> = β<sub>p</sub><sup>2</sup>σ<sub>M</sub><sup>2</sup> + σ<sub>e<sub>p</sub></sub><sup>2</sup> = ${fx(bp*bp*sm*sm,6)} + ${fx(vep,6)} = ${fx(vp,6)}, so σ<sub>p</sub> = <b>${pc(Math.sqrt(vp))}</b>.`]}}},
+i_anova:{mod:'index',topic:'Regression output',fn(){
+  const n=pick([24,36,60]),b=rnd(.6,1.6,.01),sm=rnd(.035,.06,.001),se=rnd(.04,.09,.001);
+  const SSR=r4(b*b*sm*sm*(n-1)*1e2)/1e2,SSE=r4(se*se*(n-1)*1e2)/1e2,SST=SSR+SSE,R2=SSR/SST;
+  const ask=pick(['r2','si','se','rho']);
+  const A={r2:['R<sup>2</sup> =','%',R2*100,.3],si:['σ<sub>i</sub> =','%',Math.sqrt(SST/(n-1))*100,.06],se:['σ<sub>e</sub> =','%',Math.sqrt(SSE/(n-1))*100,.06],rho:['ρ<sub>i,M</sub> =','',Math.sqrt(R2),.01]}[ask];
+  const askT={r2:'What is R-square?',si:'What is the stock’s total (monthly) standard deviation of excess returns?',se:'What is the stock’s firm-specific (residual) standard deviation? Use n − 1.',rho:'What is the correlation between the stock and the market?'}[ask];
+  return{title:'Read the ANOVA table',
+  q:`<p>A SIM regression on ${n} months of excess returns gives β = ${fx(b,2)} and this ANOVA table:</p>${tbl(['','df','SS'],[['Regression','1',fx(SSR,6)],['Residual',String(n-2),fx(SSE,6)],['Total',String(n-1),fx(SST,6)]])}<p>${askT}</p>`,
+  ask:A[0],unit:A[1],ans:A[2],tol:A[3],steps:[
+  `Label the pieces: SS Reg = ${fx(SSR,6)} (systematic), SSE = ${fx(SSE,6)} (firm-specific), SST = ${fx(SST,6)} (total).`,
+  `Divide each by n − 1 = ${n-1}: total σ<sub>i</sub><sup>2</sup> = ${fx(SST/(n-1),6)}, systematic β<sup>2</sup>σ<sub>M</sub><sup>2</sup> = ${fx(SSR/(n-1),6)}, residual σ<sub>e</sub><sup>2</sup> = ${fx(SSE/(n-1),6)}. Ignore Excel's n − 2.`,
+  `σ<sub>i</sub> = <b>${pc(Math.sqrt(SST/(n-1)))}</b>; σ<sub>e</sub> = <b>${pc(Math.sqrt(SSE/(n-1)))}</b>.`,
+  `R<sup>2</sup> = SS Reg/SST = ${fx(SSR,6)}/${fx(SST,6)} = <b>${pc(R2)}</b>, so ρ = √R<sup>2</sup> = <b>${fx(Math.sqrt(R2),4)}</b> (positive because β &gt; 0). Bonus: σ<sub>M</sub><sup>2</sup> = (SS Reg/(n − 1))/β<sup>2</sup> = ${fx(SSR/(n-1)/(b*b),6)}.`]}}},
+};
+
+/* ---------- concept questions ---------- */
+const MCQ={
+tools:[
+ {q:'Two stocks have ρ = 0.4, σ<sub>A</sub> = 20% and σ<sub>B</sub> = 30%. Cov(r<sub>A</sub>, r<sub>B</sub>) is:',o:['0.024','0.24','2.40','0.06'],a:0,e:'Cov = ρσ<sub>A</sub>σ<sub>B</sub> = 0.4 × 0.20 × 0.30 = 0.024. Always work in decimals.'},
+ {q:'With historical (sample) data, the variance formula on your sheet divides by:',o:['n','n − 1','n − 2','The probabilities'],a:1,e:'Sample variance and covariance divide by n − 1. Probabilities are only for scenario problems.'},
+ {q:'Which portfolio on the efficient frontier has the highest Sharpe ratio?',o:['Minimum-variance portfolio','Tangency portfolio','Highest-return portfolio','Equally weighted portfolio'],a:1,e:'The tangency portfolio gives the steepest CAL, which means the largest reward per unit of σ.'},
+ {q:'In the double summation, how do you get Cov(r<sub>i</sub>, r<sub>p</sub>)?',o:['Add up row i of the covariance matrix with each cell weighted by w<sub>j</sub>','Multiply σ<sub>i</sub> by σ<sub>p</sub>','Add up the diagonal of the matrix','Multiply w<sub>i</sub> by σ<sub>i</sub><sup>2</sup>'],a:0,e:'Cov(r<sub>i</sub>, r<sub>p</sub>) = Σ<sub>j</sub> w<sub>j</sub>Cov(r<sub>i</sub>, r<sub>j</sub>), a weighted sum across row i. Then σ<sub>p</sub><sup>2</sup> = Σ w<sub>i</sub>Cov(r<sub>i</sub>, r<sub>p</sub>).'},
+],
+diversification:[
+ {q:'As n → ∞, the variance of an equally weighted portfolio approaches:',o:['Zero','The average variance','The average covariance','The variance of the riskiest stock'],a:2,e:'σ<sub>p</sub><sup>2</sup> = (1/n)(avg var) + ((n − 1)/n)(avg cov). The first term vanishes, leaving the average covariance: systematic risk.'},
+ {q:'Which risk does the market compensate investors for bearing?',o:['Firm-specific risk','Systematic risk','Total risk','None of them'],a:1,e:'Firm-specific risk can be diversified away for free, so the market doesn’t pay for it. Only systematic (market) risk earns a premium.'},
+ {q:'If every pair of stocks has ρ = +1, an equally weighted portfolio’s σ is:',o:['Lower than every stock’s σ','The weighted average of the σ’s, so there is no diversification benefit','Zero','Higher than every stock’s σ'],a:1,e:'With perfect correlation, σ<sub>p</sub> = Σ w<sub>i</sub>σ<sub>i</sub>. Diversification only helps when ρ &lt; 1.'},
+ {q:'In a large portfolio, what mostly determines how much one stock adds to portfolio risk?',o:['Its own variance','Its covariance with the portfolio','Its expected return','Its share price'],a:1,e:'Its contribution is w<sub>i</sub>Cov(r<sub>i</sub>, r<sub>p</sub>). Its own variance is one tiny diagonal cell among n<sup>2</sup>.'},
+ {q:'Can adding a stock whose σ is higher than every stock you own <em>lower</em> your portfolio’s σ?',o:['Never','Yes, if its covariance with your portfolio is low enough','Only if its expected return is higher','Only if you own fewer than 10 stocks'],a:1,e:'What matters is co-movement with the portfolio. A volatile stock with low or negative covariance reduces risk.'},
+ {q:'The only risky portfolio with zero firm-specific risk is:',o:['The minimum-variance portfolio','Any portfolio of 30 or more stocks','The market portfolio','An equally weighted portfolio'],a:2,e:'From the notes: “The only portfolio of risky assets with zero firm-specific risk is the market portfolio. The risk of the market is 100% systematic.”'},
+],
+cml:[
+ {q:'The slope of the CML is:',o:['β of the market','The market’s Sharpe ratio, [E(r<sub>M</sub>) − r<sub>f</sub>]/σ<sub>M</sub>','The market risk premium','σ<sub>M</sub>'],a:1,e:'The CML is the CAL through M, so its slope is the market Sharpe ratio, the reward per unit of total risk. (The SML’s slope is the MRP.)'},
+ {q:'Which assets or portfolios lie on the CML?',o:['All correctly priced assets','Efficient portfolios: mixes of r<sub>f</sub> and M','Every stock with β = 1','Every portfolio of risky assets'],a:1,e:'Only combinations of the risk-free asset and M. Individual stocks plot below the CML because they carry unrewarded firm-specific risk.'},
+ {q:'A portfolio on the CML to the right of M:',o:['Lends at r<sub>f</sub>','Borrows at r<sub>f</sub> to hold more than 100% in M','Holds no M','Has β &lt; 1'],a:1,e:'Right of M means σ<sub>p</sub> &gt; σ<sub>M</sub>, so y &gt; 1. You are leveraged, with β = y &gt; 1.'},
+ {q:'“Asset A plots on the CML. The correlation between A and M is +1.” This is:',o:['Always true','Sometimes true','Never true'],a:0,e:'Anything on the CML is a mix of r<sub>f</sub> and M, so its return is a fixed multiple of M’s plus a constant. Perfect correlation. (From the lecture CAPM quiz.)'},
+ {q:'Why is the tangency portfolio the market portfolio in equilibrium?',o:['Because the market has the highest expected return','Because, with identical inputs, everyone holds the same tangency portfolio, and summing everyone’s holdings gives the market','Because the market has the lowest σ','Because the government requires it'],a:1,e:'Homogeneous expectations mean identical frontiers and identical tangency portfolios. The market is the aggregate of all portfolios, so it must equal that common portfolio.'},
+ {q:'In the lecture puzzle, M and X have the same E(r) but X has a much larger σ. Both are correctly priced. Which is true?',o:['X is overpriced','X has a higher β than M','X and M have the same systematic risk; X’s extra σ is firm-specific','X should have a higher expected return'],a:2,e:'Same E(r) on the SML means same β. The extra total risk is diversifiable, so it earns nothing.'},
+ {q:'Separation property: what differs across investors?',o:['Which risky portfolio they hold','Only the split between r<sub>f</sub> and M (set by risk aversion)','Their estimate of β','Their risk-free rate'],a:1,e:'Everyone holds M. More risk-averse investors put more in the risk-free asset.'},
+],
+capm:[
+ {q:'A stock plots above the SML. It is:',o:['Overpriced: sell','Underpriced: buy','Correctly priced','Impossible to say without σ'],a:1,e:'Above the SML means E(r) &gt; k and α &gt; 0. Price is too low (P<sub>0</sub> &lt; V<sub>0</sub>), NPV &gt; 0. Buy.'},
+ {q:'The x-axis of the SML is:',o:['σ','β','σ<sup>2</sup>','R<sup>2</sup>'],a:1,e:'SML: E(r) vs. β (systematic risk). CML: E(r) vs. σ (total risk).'},
+ {q:'“Asset B plots on the SML. The correlation between B and the market is +1.” This is:',o:['Always true','Sometimes true','Never true'],a:1,e:'Every correctly priced asset is on the SML, including individual stocks with ρ &lt; 1. Only assets also on the CML (like M) have ρ = +1.'},
+ {q:'“In CAPM equilibrium, expected return equals required return.” This is:',o:['Always true','Sometimes true','Never true'],a:0,e:'That is the definition of equilibrium: E(r) = k, P<sub>0</sub> = V<sub>0</sub>, α = 0, Q<sub>D</sub> = Q<sub>S</sub>.'},
+ {q:'Stocks C and D have σ<sub>C</sub> &gt; σ<sub>D</sub> but β<sub>C</sub> = β<sub>D</sub>. In equilibrium, E(r<sub>C</sub>) &gt; E(r<sub>D</sub>) is:',o:['Always true','Sometimes true','Never true'],a:2,e:'Required return depends only on β. Equal betas mean equal expected returns, whatever the σ.'},
+ {q:'Same C and D (σ<sub>C</sub> &gt; σ<sub>D</sub>, β<sub>C</sub> = β<sub>D</sub>). ρ<sub>C,M</sub> = ρ<sub>D,M</sub> is:',o:['Always true','Sometimes true','Never true'],a:2,e:'β = ρσ<sub>i</sub>/σ<sub>M</sub>. With equal β and different σ, the correlations must differ: ρ<sub>C,M</sub> &lt; ρ<sub>D,M</sub>.'},
+ {q:'A stock has β = 0 but σ = 60%. Under CAPM its required return is:',o:['Very high, because σ is huge','Equal to r<sub>f</sub>','Equal to E(r<sub>M</sub>)','Negative'],a:1,e:'k = r<sub>f</sub> + 0 × MRP = r<sub>f</sub>. All of its risk is diversifiable.'},
+ {q:'A stock has a negative β. Its required return is:',o:['Above E(r<sub>M</sub>)','Between r<sub>f</sub> and E(r<sub>M</sub>)','Below r<sub>f</sub>','Undefined'],a:2,e:'k = r<sub>f</sub> + (negative) × MRP &lt; r<sub>f</sub>. It hedges the market, so investors accept less.'},
+ {q:'An analyst’s E(r) = [E(P<sub>1</sub>) + E(Div<sub>1</sub>) − P<sub>0</sub>]/P<sub>0</sub> is:',o:['The required return','A forecast of the actual expected return','The same thing as the CAPM E(r)','The risk-free rate'],a:1,e:'Same notation, very different meanings. The security-analysis E(r) is a forecast; the CAPM E(r) is the required return k, which is not a forecast.'},
+ {q:'Under CAPM, which measure of an asset’s risk determines its required return?',o:['Its variance','Cov(r<sub>i</sub>, r<sub>M</sub>), scaled as β','Its residual variance','Its R-square'],a:1,e:'Everyone holds the market, so everyone’s exposure to asset i is Cov(r<sub>i</sub>, r<sub>M</sub>). β = Cov/σ<sub>M</sub><sup>2</sup>.'},
+ {q:'Which is NOT one of the CAPM assumptions?',o:['Investors are price takers','Homogeneous expectations','Unlimited borrowing and lending at r<sub>f</sub>','Investors prefer stocks with high firm-specific risk'],a:3,e:'The six assumptions: price takers, one holding period, the same assets including risk-free borrowing and lending, no taxes or costs, mean-variance optimizers, homogeneous expectations.'},
+],
+index:[
+ {q:'The SIM regression uses:',o:['Raw returns r<sub>i</sub> and r<sub>M</sub>','Excess returns R<sub>i</sub> = r<sub>i</sub> − r<sub>f</sub> and R<sub>M</sub> = r<sub>M</sub> − r<sub>f</sub>','Prices','Dividends'],a:1,e:'The SIM regresses excess returns. That’s what makes the intercept comparable to CAPM’s α (CAPM implies α = 0).'},
+ {q:'R-square in the SIM measures:',o:['The fraction of total variance that is systematic','The fraction that is firm-specific','β squared','The alpha'],a:0,e:'R<sup>2</sup> = β<sup>2</sup>σ<sub>M</sub><sup>2</sup>/σ<sub>i</sub><sup>2</sup> = SS Reg/SST = ρ<sup>2</sup>.'},
+ {q:'Under the SIM, Cov(R<sub>i</sub>, R<sub>j</sub>) equals:',o:['ρσ<sub>i</sub>σ<sub>j</sub> only with historical data','β<sub>i</sub>β<sub>j</sub>σ<sub>M</sub><sup>2</sup>','β<sub>i</sub>β<sub>j</sub>','σ<sub>e<sub>i</sub></sub>σ<sub>e<sub>j</sub></sub>'],a:1,e:'The model assumes Cov(e<sub>i</sub>, e<sub>j</sub>) = 0, so stocks co-move only through the market.'},
+ {q:'As a portfolio grows more diversified, which SIM term shrinks toward zero?',o:['β<sub>p</sub><sup>2</sup>σ<sub>M</sub><sup>2</sup>','σ<sub>e<sub>p</sub></sub><sup>2</sup> = Σ w<sub>i</sub><sup>2</sup>σ<sub>e<sub>i</sub></sub><sup>2</sup>','α<sub>p</sub>','σ<sub>M</sub><sup>2</sup>'],a:1,e:'Squared weights shrink fast. With equal weights, σ<sub>e<sub>p</sub></sub><sup>2</sup> = (avg σ<sub>e</sub><sup>2</sup>)/n.'},
+ {q:'For 50 stocks, how many estimates does the SIM need?',o:['152','1,225','1,325','100'],a:0,e:'3n + 2 = 50 α’s + 50 β’s + 50 σ<sub>e</sub>’s + E(R<sub>M</sub>) + σ<sub>M</sub><sup>2</sup> = 152. The full covariance approach needs 1,225 covariances alone.'},
+ {q:'A stock has σ = 40% and R<sup>2</sup> = 0.25. Its firm-specific σ is:',o:['10%','20%','30%','34.64%'],a:3,e:'σ<sub>e</sub><sup>2</sup> = (1 − R<sup>2</sup>)σ<sup>2</sup> = 0.75 × 0.16 = 0.12, so σ<sub>e</sub> = 34.64%. Systematic σ = 40% × √0.25 = 20%.'},
+ {q:'If CAPM is correct, a stock’s SIM regression should show:',o:['α = 0, so R̄<sub>i</sub> = β<sub>i</sub>R̄<sub>M</sub>','β = 1','R<sup>2</sup> = 1','σ<sub>e</sub> = 0'],a:0,e:'CAPM: E(R<sub>i</sub>) = β<sub>i</sub>E(R<sub>M</sub>), which is the SIM with α = 0. A nonzero α suggests ex-post mispricing.'},
+ {q:'The best-fit line always passes through:',o:['The origin','(R̄<sub>M</sub>, R̄<sub>i</sub>)','(0, β)','(1, α)'],a:1,e:'That’s why α = R̄<sub>i</sub> − βR̄<sub>M</sub>. Also, the residuals sum to zero.'},
+ {q:'In Excel output, “Multiple R” is:',o:['β','ρ<sub>i,M</sub>','SST','α'],a:1,e:'Multiple R is the correlation (for one regressor). R Square is its square.'},
+ {q:'Under the SIM, the correlation between two stocks equals:',o:['β<sub>i</sub>β<sub>j</sub>','ρ<sub>iM</sub>ρ<sub>jM</sub>','R<sub>i</sub><sup>2</sup> + R<sub>j</sub><sup>2</sup>','1'],a:1,e:'β<sub>i</sub>β<sub>j</sub>σ<sub>M</sub><sup>2</sup>/(σ<sub>i</sub>σ<sub>j</sub>) = (β<sub>i</sub>σ<sub>M</sub>/σ<sub>i</sub>)(β<sub>j</sub>σ<sub>M</sub>/σ<sub>j</sub>) = ρ<sub>iM</sub>ρ<sub>jM</sub>.'},
+]};
+
+/* ---------- modules ---------- */
+const MODS=[
+ {id:'plan',t:'Game plan',s:'Start here'},
+ {id:'tools',t:'Exam 1 tools',s:'Sessions 1–9 refresher'},
+ {id:'diversification',t:'Diversification',s:'Session 11'},
+ {id:'cml',t:'Capital Market Line',s:'Sessions 12–13'},
+ {id:'capm',t:'CAPM & SML',s:'Sessions 14–16'},
+ {id:'index',t:'Index Models',s:'Sessions 17–19'},
+ {id:'mock',t:'Mock exam',s:'Timed, 20 questions'},
+ {id:'formulas',t:'Formulas & flashcards',s:'Formula sheet rows'}];
+const LEARN=['tools','diversification','cml','capm','index'];
+
+function save(){ST.set(S)}
+function objCount(id){const box=document.querySelector(`[data-objs="${id}"]`);if(!box)return[0,0];const c=[...box.querySelectorAll('input')];return[c.filter(x=>x.checked).length,c.length]}
+function renderNav(){
+  const cur=(location.hash||'#plan').slice(1);
+  document.getElementById('nav').innerHTML=MODS.map(m=>{let p='';if(LEARN.includes(m.id)){const[a,b]=objCount(m.id);const st=S.stats[m.id]||{c:0};p=`<span class="mp ${a===b?'done':''}">${a}/${b}</span>`;m.s2=`${st.c||0} solved`}return`<a href="#${m.id}" ${cur===m.id?'aria-current="page"':''}><span class="mt">${m.t}</span>${p}<span class="ms">${m.s}${m.s2?' · '+m.s2:''}</span></a>`}).join('');
+  let a=0,b=0;LEARN.forEach(id=>{const[x,y]=objCount(id);a+=x;b+=y});document.getElementById('allbar').style.width=(b?a/b*100:0)+'%';
+  const tiles=document.getElementById('plan-tiles');
+  tiles.innerHTML=`<div class="tile"><span class="eyebrow">Exam 2</span><span class="big" id="t-days"></span><span class="muted">Mon Nov 2 · 8:30 AM · WCBA 182</span></div><div class="tile"><span class="eyebrow">Objectives mastered</span><span class="big">${a}/${b}</span><div class="bar"><i style="width:${b?a/b*100:0}%"></i></div></div><div class="tile"><span class="eyebrow">Problems solved</span><span class="big">${LEARN.reduce((s,id)=>s+((S.stats[id]||{}).c||0),0)}</span><span class="muted">${LEARN.reduce((s,id)=>s+((S.stats[id]||{}).a||0),0)} checks so far</span></div>`;
+  tick();
+}
+function tick(){
+  const ex=new Date('2026-11-02T08:30:00-06:00'),ms=ex-Date.now();
+  let txt;if(ms<=0)txt='Exam day';else{const d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5);txt=`${d}d ${h}h`}
+  document.getElementById('countdown').innerHTML=`Exam 2 in <b>${txt}</b> · Mon Nov 2, 8:30 AM`;
+  const t=document.getElementById('t-days');if(t)t.textContent=txt;
+}
+function route(){
+  let id=(location.hash||'#plan').slice(1);if(!MODS.some(m=>m.id===id))id='plan';
+  document.querySelectorAll('[data-view]').forEach(v=>v.hidden=v.id!=='v-'+id);
+  renderNav();window.scrollTo(0,0);
+}
+
+/* ---------- problem card ---------- */
+let seq=0;
+function parseNum(s){s=String(s).replace(/[−–]/g,'-').replace(/[,$%\s]/g,'');if(s==='')return NaN;return Number(s)}
+function makeCard(gid,mode,fixed){
+  const G=GEN[gid],el=document.createElement('article');el.className='card '+mode;const uid=`${mode}-${gid}-${seq++}`;let P,shown=0,solved=false;
+  el.render=function(){
+    P=G.fn(fixed);shown=0;solved=false;el.P=P;
+    const lab=mode==='walk'?'Worked example':mode==='exam'?'Exam question':'Practice';
+    el.innerHTML=`<div class="card-head"><div><span class="eyebrow">${lab} · ${G.topic}</span><h4>${P.title}</h4></div>${mode==='practice'?'<button class="ghost new" type="button">New numbers</button>':''}</div>
+    <div class="q">${P.q}</div>
+    <div class="ans-row"><label for="in-${uid}">${P.ask}</label>${P.unit==='$'?'<span class="unit">$</span>':''}<input id="in-${uid}" inputmode="decimal" autocomplete="off" placeholder="${P.unit==='%'?'e.g. 12.34':P.unit==='$'?'e.g. 45.67':'e.g. 1.234'}">${P.unit==='%'?'<span class="unit">%</span>':''}${mode!=='exam'?'<button class="primary check" type="button">Check</button>':''}</div>
+    <div class="fb" aria-live="polite"></div>
+    <ol class="steps"></ol>
+    <div class="step-ctrl" ${mode==='exam'?'hidden':''}><button class="ghost step-next" type="button"></button><button class="ghost step-all" type="button">Show full solution</button></div>`;
+    upd();
+    el.querySelector('.new')?.addEventListener('click',()=>el.render());
+    el.querySelector('.check')?.addEventListener('click',()=>el.grade(true));
+    el.querySelector('input').addEventListener('keydown',e=>{if(e.key==='Enter'&&mode!=='exam')el.grade(true)});
+    el.querySelector('.step-next').addEventListener('click',()=>{shown=Math.min(P.steps.length,shown+1);upd()});
+    el.querySelector('.step-all').addEventListener('click',()=>{shown=P.steps.length;upd()});
+  };
+  function upd(){
+    el.querySelector('.steps').innerHTML=P.steps.slice(0,shown).map(s=>`<li><div>${s}</div></li>`).join('');
+    const b=el.querySelector('.step-next');const N=P.steps.length;
+    b.textContent=shown>=N?'All steps shown':(mode==='walk'?`Next step (${shown+1} of ${N})`:`Hint: show step ${shown+1} of ${N}`);b.disabled=shown>=N;
+    el.querySelector('.step-all').hidden=shown>=N;
+  }
+  const fmtAns=()=>P.unit==='%'?fx(P.ans,2)+'%':P.unit==='$'?money(P.ans):fx(P.ans,4);
+  el.grade=function(record){
+    const v=parseNum(el.querySelector('input').value),fb=el.querySelector('.fb');
+    const tol=P.tol??(P.unit==='%'?Math.max(.06,Math.abs(P.ans)*.006):P.unit==='$'?Math.max(.06,Math.abs(P.ans)*.002):Math.max(.01,Math.abs(P.ans)*.01));
+    if(isNaN(v)){fb.className='fb no';fb.textContent='Enter a number first.';return false}
+    let ok=Math.abs(v-P.ans)<=tol,conv=false;
+    if(!ok&&P.unit==='%'&&Math.abs(v*100-P.ans)<=tol){ok=true;conv=true}
+    if(ok){fb.className='fb ok';fb.innerHTML=`Correct. Answer: <b>${fmtAns()}</b>.${conv?' (You typed a decimal; this box wants a percent, but the value is right.)':''}`}
+    else{fb.className='fb no';fb.innerHTML=mode==='exam'?`Incorrect. Answer: <b>${fmtAns()}</b>.`:`Not quite. Check your rounding, or reveal the next step.${shown>=P.steps.length?` Answer: <b>${fmtAns()}</b>.`:''}`}
+    if(record&&mode!=='walk'){const st=S.stats[G.mod]=S.stats[G.mod]||{a:0,c:0};st.a++;if(ok&&!solved){st.c++;solved=true}save();renderNav()}
+    return ok;
+  };
+  el.reveal=function(){el.querySelector('.step-ctrl').hidden=false;el.querySelector('input').disabled=true};
+  el.render();return el;
+}
+
+/* ---------- mcq ---------- */
+function makeMCQ(m,mode){
+  const el=document.createElement('div');el.className='mcq';let picked=-1;
+  el.innerHTML=`<p>${m.q}</p><div class="opts">${m.o.map((o,i)=>`<button class="opt" type="button" data-i="${i}">${o}</button>`).join('')}</div><div class="ex" hidden></div>`;
+  const opts=[...el.querySelectorAll('.opt')];
+  el.show=function(){opts.forEach((b,i)=>{b.classList.remove('sel');if(i===m.a)b.classList.add('right');else if(i===picked)b.classList.add('wrong');b.disabled=true});const ex=el.querySelector('.ex');ex.hidden=false;ex.innerHTML=(picked===m.a?'<b>Correct.</b> ':picked<0?'<b>Not answered.</b> ':'<b>Not quite.</b> ')+m.e};
+  el.ok=()=>picked===m.a;
+  opts.forEach(b=>b.addEventListener('click',()=>{picked=+b.dataset.i;if(mode==='exam'){opts.forEach(x=>x.classList.toggle('sel',x===b))}else el.show()}));
+  return el;
+}
+
+/* ---------- mount ---------- */
+document.querySelectorAll('.practice').forEach(box=>{Object.keys(GEN).filter(g=>GEN[g].mod===box.dataset.mod).forEach(g=>box.appendChild(makeCard(g,'practice')))});
+document.querySelectorAll('.worked').forEach(box=>box.appendChild(makeCard(box.dataset.gen,'walk',box.dataset.fixed==='1')));
+document.querySelectorAll('.mcqs').forEach(box=>(MCQ[box.dataset.mod]||[]).forEach(m=>box.appendChild(makeMCQ(m))));
+document.querySelectorAll('[data-objs] input').forEach(c=>{c.checked=!!S.obj[c.id];c.addEventListener('change',()=>{S.obj[c.id]=c.checked;save();renderNav()})});
+
+/* ---------- diversification widget ---------- */
+function drawDiv(){
+  const s=+document.getElementById('wd-s').value,r=+document.getElementById('wd-r').value;
+  document.getElementById('wd-so').textContent=pc(s,0);document.getElementById('wd-ro').textContent=fx(r,2);
+  const f=n=>Math.sqrt(s*s/n+(n-1)/n*r*s*s),pts=[];for(let n=1;n<=50;n++)pts.push([n,f(n)]);
+  const top=Math.ceil(s*10)/10,floor=s*Math.sqrt(r);
+  document.getElementById('wd-chart').innerHTML=chart({id:'div',x:[0,50],y:[0,top],xl:'Number of stocks (equal weights)',yl:'Portfolio σ',xf:t=>t,yf:t=>fx(t*100,0)+'%',lines:[{p:[[0,floor],[50,floor]],c:'ln2 dash'},{p:pts,c:'ln'}],pts:[{x:1,y:s,l:'one stock',r:4},{x:50,y:floor,c:'pt2',r:4,l:'market-risk floor σ√ρ',a:'end',dx:-6,dy:-10}],label:'Portfolio standard deviation falls as stocks are added'});
+  document.getElementById('wd-read').innerHTML=`One stock: σ = ${pc(s,1)}. Ten stocks: ${pc(f(10),1)}. Fifty: ${pc(f(50),1)}. Floor: ${pc(floor,1)}. ${pc(1-r,0)} of a single stock's variance is firm-specific and can be diversified away; the remaining ${pc(r,0)} is systematic.`;
+}
+['wd-s','wd-r'].forEach(id=>document.getElementById(id).addEventListener('input',drawDiv));drawDiv();
+
+/* ---------- CML / SML widget ---------- */
+function drawCS(){
+  const g=id=>+document.getElementById(id).value,rf=g('cs-rf'),em=Math.max(g('cs-em'),rf+.005),sm=g('cs-sm'),b=g('cs-b'),fe=g('cs-fe');
+  document.getElementById('cs-rfo').textContent=pc(rf,1);document.getElementById('cs-emo').textContent=pc(em,1);document.getElementById('cs-smo').textContent=pc(sm,0);document.getElementById('cs-bo').textContent=fx(b,2);document.getElementById('cs-feo').textContent=pc(fe,1);
+  const S=(em-rf)/sm,mrp=em-rf,k=rf+b*mrp,a=fe-k;
+  const ymax=Math.max(.25,rf+2.5*mrp+.02,fe+.02),ymin=Math.min(0,rf-.5*mrp-.02);
+  document.getElementById('cs-cml').innerHTML=chart({id:'cml',x:[0,.5],y:[0,ymax],xl:'σ (total risk)',yl:'E(r)',xf:t=>fx(t*100,0)+'%',yf:t=>fx(t*100,0)+'%',lines:[{p:[[0,rf],[.5,rf+S*.5]],c:'ln'}],pts:[{x:0,y:rf,l:'rf',dy:-8},{x:sm,y:em,l:'M',dx:-16,dy:-8}],h:280,label:'Capital Market Line'});
+  document.getElementById('cs-sml').innerHTML=chart({id:'sml',x:[-.5,2.5],y:[ymin,ymax],xl:'β (systematic risk)',yl:'E(r)',xf:t=>fx(t,1),yf:t=>fx(t*100,0)+'%',lines:[{p:[[-.5,rf-.5*mrp],[2.5,rf+2.5*mrp]],c:'ln'},{p:[[b,k],[b,fe]],c:'lnm dash'}],pts:[{x:0,y:rf,l:'rf',dy:-8},{x:1,y:em,l:'M',dx:-16,dy:-8},{x:b,y:fe,c:a>.0005?'pt3':a<-.0005?'ptb':'pt2',l:'X',dx:9,dy:4}],h:280,label:'Security Market Line'});
+  const v=a>.0005?'<b>above the SML</b>: underpriced, a good deal (α &gt; 0, P<sub>0</sub> &lt; V<sub>0</sub>). <b>Buy.</b>':a<-.0005?'<b>below the SML</b>: overpriced, a bad deal (α &lt; 0, P<sub>0</sub> &gt; V<sub>0</sub>). <b>Sell.</b>':'<b>on the SML</b>: correctly priced (α = 0). <b>Hold.</b>';
+  document.getElementById('cs-read').innerHTML=`CML slope (market Sharpe ratio) = ${fx(S,3)}. SML slope (market risk premium) = ${pc(mrp,1)}. Stock X's required return k = ${pc(rf,1)} + ${fx(b,2)}×${pc(mrp,1)} = <b>${pc(k)}</b>. The forecast is ${pc(fe,1)}, so α = <b>${pc(a)}</b> and X is ${v}`;
+}
+['cs-rf','cs-em','cs-sm','cs-b','cs-fe'].forEach(id=>document.getElementById(id).addEventListener('input',drawCS));drawCS();
+
+/* ---------- mock exam ---------- */
+let mockCards=[],mockMcq=[],mockT0=0,mockTimer=null;
+function newMock(){
+  const body=document.getElementById('mock-body');body.innerHTML='';document.getElementById('mock-result').innerHTML='';
+  const plan={diversification:2,cml:3,capm:4,index:3};mockCards=[];
+  Object.entries(plan).forEach(([mod,n])=>{shuffle(Object.keys(GEN).filter(g=>GEN[g].mod===mod)).slice(0,n).forEach(g=>mockCards.push(makeCard(g,'exam')))});
+  const pool=[];['diversification','cml','capm','index'].forEach(m=>MCQ[m].forEach(q=>pool.push(q)));mockMcq=shuffle(pool).slice(0,8).map(q=>makeMCQ(q,'exam'));
+  const h1=document.createElement('h2');h1.textContent='Part 1: Calculations';body.appendChild(h1);mockCards.forEach(c=>body.appendChild(c));
+  const h2=document.createElement('h2');h2.textContent='Part 2: Concepts';body.appendChild(h2);mockMcq.forEach(c=>body.appendChild(c));
+  document.getElementById('mock-foot').hidden=false;document.getElementById('mock-grade').disabled=false;
+  mockT0=Date.now();clearInterval(mockTimer);mockTimer=setInterval(()=>{const s=Math.floor((Date.now()-mockT0)/1000),left=75*60-s;document.getElementById('mock-timer').textContent=`${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')} elapsed · ${left>0?Math.floor(left/60)+' min left':'time is up'}`},1000);
+}
+function gradeMock(){
+  clearInterval(mockTimer);let c=0,m=0;
+  mockCards.forEach(k=>{const inp=k.querySelector('input');if(inp.value.trim()===''){const fb=k.querySelector('.fb');fb.className='fb no';fb.innerHTML=`Not answered. Answer: <b>${k.P.unit==='%'?fx(k.P.ans,2)+'%':k.P.unit==='$'?money(k.P.ans):fx(k.P.ans,4)}</b>.`}else if(k.grade(false))c++;k.reveal()});
+  mockMcq.forEach(q=>{if(q.ok())m++;q.show()});
+  const tot=c+m,N=mockCards.length+mockMcq.length,pct=tot/N*100;
+  document.getElementById('mock-grade').disabled=true;
+  document.getElementById('mock-result').innerHTML=`<div class="widget"><span class="eyebrow">Your score</span><span class="score">${tot}/${N} · ${fx(pct,0)}%</span><p>Calculations ${c}/${mockCards.length} · Concepts ${m}/${mockMcq.length} · Time ${document.getElementById('mock-timer').textContent.split(' ')[0]}</p><p class="muted">Open “Show full solution” on every miss and redo it on paper. Then go back to that module's practice and get two in a row right.</p></div>`;
+  document.getElementById('mock-result').scrollIntoView({behavior:'smooth'});
+}
+document.getElementById('mock-new').addEventListener('click',newMock);
+document.getElementById('mock-grade').addEventListener('click',gradeMock);
+
+/* ---------- formulas + flashcards ---------- */
+const FORM=[
+ ['Portfolio variance','σ<sub>p</sub><sup>2</sup> = Σ<sub>i</sub>Σ<sub>j</sub> w<sub>i</sub>w<sub>j</sub>Cov(r<sub>i</sub>, r<sub>j</sub>) = Σ w<sub>i</sub>Cov(r<sub>i</sub>, r<sub>p</sub>)','Any portfolio risk. The second form is quickest when you already have each asset’s Cov with the portfolio.'],
+ ['Cov with portfolio','Cov(r<sub>i</sub>, r<sub>p</sub>) = Σ<sub>j</sub> w<sub>j</sub>Cov(r<sub>i</sub>, r<sub>j</sub>)','Row of the covariance matrix weighted by w. Gives risk contributions, and β when p = M.'],
+ ['Equal-weight variance','σ<sub>p</sub><sup>2</sup> = (1/n)·avg var + ((n − 1)/n)·avg cov','Diversification questions with n stocks. Not on the sheet: memorize it.'],
+ ['CML','E(r<sub>p</sub>) = r<sub>f</sub> + [(E(r<sub>M</sub>) − r<sub>f</sub>)/σ<sub>M</sub>]σ<sub>p</sub>','Efficient portfolios only (r<sub>f</sub> + M). Uses σ. y = σ<sub>p</sub>/σ<sub>M</sub>.'],
+ ['Beta','β<sub>i</sub> = Cov(r<sub>i</sub>, r<sub>M</sub>)/σ<sub>M</sub><sup>2</sup> = ρ<sub>i,M</sub>σ<sub>i</sub>/σ<sub>M</sub>','Systematic risk relative to the market. β<sub>M</sub> = 1, β<sub>f</sub> = 0.'],
+ ['Portfolio beta','β<sub>p</sub> = Σ w<sub>i</sub>β<sub>i</sub>','Always a simple weighted average. T-bills count with β = 0.'],
+ ['SML','k<sub>i</sub> = r<sub>f</sub> + β<sub>i</sub>[E(r<sub>M</sub>) − r<sub>f</sub>]','Required return for any asset. Uses β.'],
+ ['Forecast return','E(r) = [E(P<sub>1</sub>) + E(Div<sub>1</sub>) − P<sub>0</sub>]/P<sub>0</sub>','Security analysis. Compare with k to get α. Not on the sheet; it is the HPR idea.'],
+ ['Correct price','V<sub>0</sub> = E(CF<sub>1</sub>)/(1 + k), &nbsp;α = E(r) − k','P<sub>0</sub> &lt; V<sub>0</sub> ⟺ α &gt; 0 ⟺ buy. Not on the sheet.'],
+ ['SIM','R<sub>i,t</sub> = α<sub>i</sub> + β<sub>i</sub>R<sub>M,t</sub> + e<sub>i,t</sub>','Excess returns. Residual = actual − predicted.'],
+ ['SIM estimates','β<sub>i</sub> = Cov(R<sub>i</sub>, R<sub>M</sub>)/σ<sub>M</sub><sup>2</sup>, &nbsp;α<sub>i</sub> = R̄<sub>i</sub> − β<sub>i</sub>R̄<sub>M</sub>','Fitting the line from data. Divide by n − 1.'],
+ ['Risk partition','σ<sub>i</sub><sup>2</sup> = β<sub>i</sub><sup>2</sup>σ<sub>M</sub><sup>2</sup> + σ<sub>e<sub>i</sub></sub><sup>2</sup> &nbsp;⟺&nbsp; SST = SS Reg + SSE','Total = systematic + firm-specific. Divide SS by n − 1.'],
+ ['Residual variance','σ<sub>e<sub>i</sub></sub><sup>2</sup> = Σ e<sub>i,t</sub><sup>2</sup>/(n − 1) = SSE/(n − 1)','Firm-specific risk from data or ANOVA.'],
+ ['R-square','R<sup>2</sup> = β<sub>i</sub><sup>2</sup>σ<sub>M</sub><sup>2</sup>/σ<sub>i</sub><sup>2</sup> = SS Reg/SST = ρ<sub>i,M</sub><sup>2</sup>','Share of risk that is systematic.'],
+ ['SIM covariance','Cov(R<sub>i</sub>, R<sub>j</sub>) = β<sub>i</sub>β<sub>j</sub>σ<sub>M</sub><sup>2</sup> + Cov(e<sub>i</sub>, e<sub>j</sub>)','The residual term is 0 under the SIM assumptions.'],
+ ['SIM expected return','E(R<sub>i</sub>) = α<sub>i</sub> + β<sub>i</sub>E(R<sub>M</sub>)','Excess. Add r<sub>f</sub> for total return. CAPM ⟹ α = 0.'],
+];
+document.getElementById('flist').innerHTML=FORM.map(f=>`<div class="frow"><div class="eq"><span class="lbl">${f[0]}</span>${f[1]}</div><p class="use">${f[2]}</p></div>`).join('');
+let CARDS=[
+ ...FORM.map(f=>({f:f[0]+': write the formula.',b:f[1]})),
+ {f:'Which risk is priced under CAPM?',b:'Systematic risk only: Cov(r<sub>i</sub>, r<sub>M</sub>), scaled as β.'},
+ {f:'Stock above the SML means…',b:'E(r) &gt; k · α &gt; 0 · P<sub>0</sub> &lt; V<sub>0</sub> · underpriced · buy'},
+ {f:'What lies on the CML?',b:'Only efficient portfolios (mixes of r<sub>f</sub> and M). ρ with M = +1.'},
+ {f:'The 6 CAPM assumptions',b:'Price takers · one period · same assets incl. r<sub>f</sub> borrow/lend · no taxes or costs · mean-variance optimizers · homogeneous expectations'},
+ {f:'Excel “Multiple R” and “R Square”',b:'ρ<sub>i,M</sub> and ρ<sup>2</sup> (the systematic share of variance)'},
+ {f:'SIM: number of estimates for n stocks',b:'3n + 2'},
+ {f:'Only asset with β = 1 AND ρ = +1',b:'The market portfolio M'},
+];
+let fi=0,flipped=false;
+function drawFC(){const c=CARDS[fi];document.getElementById('fc').innerHTML=flipped?`<span class="side">Answer</span><div class="back">${c.b}</div>`:`<span class="side">Prompt</span><div class="front">${c.f}</div>`;document.getElementById('fc-pos').textContent=`${fi+1} / ${CARDS.length}`}
+const flip=()=>{flipped=!flipped;drawFC()};
+document.getElementById('fc').addEventListener('click',flip);
+document.getElementById('fc').addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();flip()}});
+document.getElementById('fc-flip').addEventListener('click',flip);
+document.getElementById('fc-next').addEventListener('click',()=>{fi=(fi+1)%CARDS.length;flipped=false;drawFC()});
+document.getElementById('fc-prev').addEventListener('click',()=>{fi=(fi-1+CARDS.length)%CARDS.length;flipped=false;drawFC()});
+document.getElementById('fc-shuf').addEventListener('click',()=>{CARDS=shuffle(CARDS);fi=0;flipped=false;drawFC()});
+drawFC();
+
+window.addEventListener('hashchange',route);route();setInterval(tick,60000);
+</script>
