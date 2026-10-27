@@ -115,6 +115,12 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .ghost{background:transparent;border-color:var(--line);color:var(--ink)}
 .ghost:hover{border-color:var(--accent);color:var(--accent)}
 .fb:empty{display:none}
+.parts{display:flex;flex-direction:column;gap:8px}
+.pl{font-family:var(--f-mono);font-size:13px;color:var(--muted);min-width:24px}
+.ans-row input.ok{border-color:var(--good)}
+.ans-row input.no{border-color:var(--bad)}
+.calc-out{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:10px}
+.calc-out .tile .big{font-size:24px}
 .fb{border-radius:8px;padding:8px 12px;font-size:14.5px}
 .fb.ok{background:var(--good-soft);color:var(--good)}
 .fb.no{background:var(--bad-soft);color:var(--bad)}
@@ -214,11 +220,39 @@ svg.chart{width:100%;height:auto;display:block}
   <div class="tiles" id="plan-tiles"></div>
 
   <div class="block">
+    <h2>What the exam looks like</h2>
+    <div class="tw"><table class="wide">
+      <thead><tr><th>Part</th><th>Points</th><th>Time budget (75 min)</th><th>How this guide trains it</th></tr></thead>
+      <tbody>
+        <tr><td>16 multiple choice</td><td>2.5 each = 40</td><td>About 25 min (90 seconds each)</td><td>Concept checks in every module</td></tr>
+        <tr><td>3–5 workout problems</td><td>60 total</td><td>About 45 min</td><td>Multi-part workout problems on the Mock exam page</td></tr>
+        <tr><td>Review</td><td></td><td>About 5 min</td><td>Re-check units: decimals vs. percents</td></tr>
+      </tbody></table></div>
+    <p class="prose">Workout problems are 60% of the grade, and each one chains several steps (β → k → α → V<sub>0</sub>, or means → Cov → β → α → R<sup>2</sup>). One early slip can sink every later part. So the priority is getting the mechanics automatic, and the multi-part workout problems are built to train exactly that.</p>
+  </div>
+
+  <div class="block">
+    <h2>After Exam 1: what you need now</h2>
+    <p class="prose">Your 69 (after the curve) is very likely to end up as your <b>worst</b> exam, and the worst exam counts the least (30%). Exams 2 and 3 will carry 64.5% of your grade between them. Use the calculator to see what scores get you each letter. It assumes the curved exam score is what goes into the formula.</p>
+    <div class="widget">
+      <div class="ctrls">
+        <div><label for="gc-q">Quiz score <output id="gc-qo"></output></label><input type="range" id="gc-q" min="50" max="100" step="1" value="90"></div>
+        <div><label for="gc-e1">Exam 1 (curved) <output id="gc-e1o"></output></label><input type="range" id="gc-e1" min="0" max="100" step="1" value="69"></div>
+        <div><label for="gc-e2">Exam 2 <output id="gc-e2o"></output></label><input type="range" id="gc-e2" min="0" max="100" step="1" value="85"></div>
+        <div><label for="gc-e3">Exam 3 <output id="gc-e3o"></output></label><input type="range" id="gc-e3" min="0" max="100" step="1" value="85"></div>
+      </div>
+      <div class="calc-out" id="gc-out"></div>
+      <p class="readout" id="gc-need"></p>
+    </div>
+    <div class="note prof"><b>A raw 50 usually means the mechanics broke down, not the ideas.</b>Do the <a href="#tools">Exam 1 tools</a> module first, today, and don't skip it. Exam 2 problems are built from the same pieces: covariance, the double summation and Cov(r<sub>i</sub>, r<sub>p</sub>). Also, Dr. Dye's office hours are Mondays 2:45–4:15 PM (after the exam) <em>and by appointment</em>. Email tdye@tamu.edu today and ask for a short slot this week to go over what went wrong on Exam 1.</div>
+  </div>
+
+  <div class="block">
     <h2>How to use each module</h2>
     <ol class="prose">
       <li><b>Learn.</b> Read the numbered steps in order. Each one builds on the one before it.</li>
       <li><b>Worked example.</b> Click “Next step” and try to predict each step before you reveal it. Most of these come straight from Dr. Dye's lecture notes.</li>
-      <li><b>Practice.</b> Solve on paper with your financial calculator, then type the answer. Stuck? Reveal one step at a time. Click “New numbers” until you get three in a row right.</li>
+      <li><b>Practice.</b> Solve on paper (the exam is paper and calculator) with your financial calculator, then type the answer. Stuck? Reveal one step at a time. Click “New numbers” until you get three in a row right.</li>
       <li><b>Concept check.</b> Expect these on the exam as always/sometimes/never or multiple-choice questions.</li>
       <li><b>Tick the objectives</b> at the top of the module once you can do them cold. The bar on the left tracks them.</li>
     </ol>
@@ -227,12 +261,12 @@ svg.chart{width:100%;height:auto;display:block}
   <div class="block">
     <h2>Day-by-day schedule</h2>
     <div>
-      <div class="plan-row"><span class="d">Tue Oct 27</span><div><a href="#tools">Exam 1 tools</a> refresher (45 min). You'll reuse covariance, double summation and Cov(r<sub>i</sub>, r<sub>p</sub>) constantly. Then <a href="#diversification">Diversification</a>.</div></div>
+      <div class="plan-row"><span class="d">Tue Oct 27</span><div><a href="#tools">Exam 1 tools</a> refresher (60–90 min, and the most important session for you given Exam 1). Redo every practice card until you get it right twice in a row. Then <a href="#diversification">Diversification</a>. Email Dr. Dye for an appointment.</div></div>
       <div class="plan-row"><span class="d">Wed Oct 28</span><div>Go to the last Index Models lecture. Tonight: <a href="#cml">Capital Market Line</a>, including the “Puzzle” (total vs. systematic risk).</div></div>
       <div class="plan-row"><span class="d">Thu Oct 29</span><div><a href="#capm">CAPM</a> steps 1–4: β, the SML, and E(r) vs. k pricing. Do at least 6 pricing and alpha problems.</div></div>
       <div class="plan-row"><span class="d">Fri Oct 30</span><div>CAPM steps 5–7, then <a href="#index">Index Models</a> steps 1–4.</div></div>
       <div class="plan-row"><span class="d">Sat Oct 31</span><div>Index Models steps 5–8. Redo the Stock J regression by hand <em>and</em> with calculator stats mode. Do the regression practice three times.</div></div>
-      <div class="plan-row"><span class="d">Sun Nov 1</span><div>Timed <a href="#mock">mock exam</a> (75 min). Review every miss, run the <a href="#formulas">flashcards</a>, then take a second mock.</div></div>
+      <div class="plan-row"><span class="d">Sun Nov 1</span><div>Timed <a href="#mock">mock exam</a> in the real format (16 MC + 4 workout problems, 75 min). Review every miss, do the untimed workout problems you missed, run the <a href="#formulas">flashcards</a>, then take a second mock.</div></div>
       <div class="plan-row exam"><span class="d">Mon Nov 2</span><div><b>Exam 2, 8:30 AM, WCBA 182.</b> One 10-minute flashcard pass. Bring your financial calculator; Excel is not allowed.</div></div>
     </div>
   </div>
@@ -630,14 +664,19 @@ svg.chart{width:100%;height:auto;display:block}
 <!-- ============ MOCK ============ -->
 <section class="view" id="v-mock" data-view hidden>
   <div class="head">
-    <span class="eyebrow">Timed practice · 75 minutes like class</span>
+    <span class="eyebrow">Real format · 100 points · 75 minutes</span>
     <h1>Mock exam</h1>
-    <p class="lede">12 calculation problems and 8 concept questions drawn from all four Exam 2 modules. No hints until you grade. Use your calculator and the formula sheet, nothing else.</p>
+    <p class="lede">16 multiple-choice questions (2.5 points each = 40) and 4 multi-part workout problems (15 points each = 60), drawn from all four Exam 2 modules. Partial credit is awarded per part. No hints until you grade. Use your calculator and the formula sheet, nothing else.</p>
   </div>
   <div class="row"><button class="primary" type="button" id="mock-new">Start a new mock exam</button><span class="timer" id="mock-timer"></span></div>
   <div class="stack" id="mock-body"></div>
   <div class="row" id="mock-foot" hidden><button class="primary" type="button" id="mock-grade">Grade my exam</button></div>
   <div id="mock-result"></div>
+  <div class="block">
+    <h2>Workout problems, untimed</h2>
+    <p class="prose muted">The same multi-part problems as the mock, with step-by-step solutions available. Work each one until you get every part right, then click “New numbers” and do it again.</p>
+    <div class="practice stack" data-mod="workout"></div>
+  </div>
 </section>
 
 <!-- ============ FORMULAS ============ -->
@@ -804,8 +843,8 @@ d_contrib:{mod:'diversification',topic:'Risk contribution',fn(fixed){
   const C=[[s[0]**2,rh[0]*s[0]*s[1],rh[1]*s[0]*s[2]],[0,s[1]**2,rh[2]*s[1]*s[2]],[0,0,s[2]**2]].map(r=>r.map(r4));C[1][0]=C[0][1];C[2][0]=C[0][2];C[2][1]=C[1][2];
   const cp=C.map(r=>dot(w,r)),vp=dot(w,cp),k=fixed?1:Math.floor(Math.random()*3),sh=w[k]*cp[k]/vp;
   return{title:'Each asset’s share of portfolio risk',
-  q:`<p>Covariance matrix and portfolio weights:</p>${tbl(['','Asset 1','Asset 2','Asset 3','Weight'],[0,1,2].map(i=>['Asset '+(i+1),...C[i].map(c=>fx(c,4)),pc(w[i],0)]))}<p>What percentage of the portfolio's variance comes from Asset ${k+1}?</p>`,
-  ask:`share<sub>${k+1}</sub> =`,unit:'%',ans:sh*100,steps:[
+  q:`<p>Covariance matrix and portfolio weights:</p>${tbl(['','Asset 1','Asset 2','Asset 3','Weight'],[0,1,2].map(i=>['Asset '+(i+1),...C[i].map(c=>fx(c,4)),pc(w[i],0)]))}<p>Find (a)–(c) each asset's covariance with the portfolio (decimals), (d) the portfolio's σ, and (e) the percentage of portfolio variance that comes from Asset ${k+1}.</p>`,pts:15,
+  parts:[...[0,1,2].map(i=>({ask:`Cov(r<sub>${i+1}</sub>, r<sub>p</sub>) =`,unit:'',ans:cp[i],tol:Math.max(.0002,Math.abs(cp[i])*.01)})),{ask:'σ<sub>p</sub> =',unit:'%',ans:Math.sqrt(vp)*100},{ask:`share<sub>${k+1}</sub> =`,unit:'%',ans:sh*100}],steps:[
   `Row trick: Cov(r<sub>i</sub>, r<sub>p</sub>) = Σ<sub>j</sub> w<sub>j</sub>Cov(r<sub>i</sub>, r<sub>j</sub>). Weight each entry of a row by the column asset's weight.`,
   ...[0,1,2].map(i=>`Cov(r<sub>${i+1}</sub>, r<sub>p</sub>) = ${w.map((wj,j)=>`${fx(wj,2)}${pr(C[i][j])}`).join(' + ')} = <b>${fx(cp[i],6)}</b>`),
   `σ<sub>p</sub><sup>2</sup> = Σ w<sub>i</sub>Cov(r<sub>i</sub>, r<sub>p</sub>) = ${cp.map((c,i)=>`${fx(w[i],2)}${pr(c,6)}`).join(' + ')} = <b>${fx(vp,6)}</b> (σ<sub>p</sub> = ${pc(Math.sqrt(vp))}).`,
@@ -930,6 +969,56 @@ k_target:{mod:'capm',topic:'Portfolio beta',fn(){
   `β<sub>p</sub> = w<sub>A</sub>β<sub>A</sub> + (1 − w<sub>A</sub>)β<sub>B</sub>. Solve: w<sub>A</sub> = (β<sub>p</sub> − β<sub>B</sub>)/(β<sub>A</sub> − β<sub>B</sub>).`,
   `w<sub>A</sub> = (${fx(t,2)} − ${fx(bB,2)})/(${fx(bA,2)} − ${fx(bB,2)}) = <b>${pc(w)}</b>, and w<sub>B</sub> = ${pc(1-w)}.`]}}},
 
+/* ===== WORKOUT (multi-part, exam style) ===== */
+w_capm:{mod:'workout',topic:'CAPM pricing',fn(){
+  const rf=rnd(.02,.05,.005),em=rnd(.09,.13,.005),sm=rnd(.15,.22,.01),si=rnd(.25,.5,.01),rho=rnd(.35,.85,.05),b=rho*si/sm,k=rf+b*(em-rf);
+  const P0=rnd(30,150,1),D1=rnd(0,5,.25);let at=rnd(-.04,.04,.005);if(Math.abs(at)<.004)at=-.02;
+  const P1=Math.round((P0*(1+k+at)-D1)*100)/100,E=(D1+P1-P0)/P0,a=E-k,V=(D1+P1)/(1+k);
+  return{title:'CAPM: from risk to a buy/sell call',pts:15,
+  q:`<p>Stock X trades at ${money(P0)}. Analysts expect a ${money(D1)} dividend and a price of ${money(P1)} in one year. X has σ = ${pc(si,0)} and a correlation of ${fx(rho,2)} with the market. σ<sub>M</sub> = ${pc(sm,0)}, E(r<sub>M</sub>) = ${pc(em,1)}, r<sub>f</sub> = ${pc(rf,1)}.</p><p>Find (a) X's beta, (b) its required return, (c) its forecast expected return, (d) its alpha, and (e) its correct price V<sub>0</sub>. Then decide: buy or sell?</p>`,
+  parts:[{ask:'β =',unit:'',ans:b},{ask:'k =',unit:'%',ans:k*100},{ask:'E(r) =',unit:'%',ans:E*100},{ask:'α =',unit:'%',ans:a*100},{ask:'V<sub>0</sub> =',unit:'$',ans:V}],steps:[
+  `(a) β = ρσ<sub>i</sub>/σ<sub>M</sub> = ${fx(rho,2)}×${fx(si,2)}/${fx(sm,2)} = <b>${fx(b,4)}</b>.`,
+  `(b) SML: k = ${fx(rf,3)} + ${fx(b,4)}(${fx(em,3)} − ${fx(rf,3)}) = <b>${pc(k)}</b>.`,
+  `(c) Forecast: E(r) = (${fx(P1,2)} + ${fx(D1,2)} − ${fx(P0,2)})/${fx(P0,2)} = <b>${pc(E)}</b>.`,
+  `(d) α = E(r) − k = ${pc(E)} − ${pc(k)} = <b>${pc(a)}</b>.`,
+  `(e) V<sub>0</sub> = E(CF<sub>1</sub>)/(1 + k) = ${fx(P1+D1,2)}/${fx(1+k,4)} = <b>${money(V)}</b>. ${a>0?`P<sub>0</sub> = ${money(P0)} &lt; V<sub>0</sub> and α &gt; 0: underpriced, above the SML. <b>Buy.</b>`:`P<sub>0</sub> = ${money(P0)} &gt; V<sub>0</sub> and α &lt; 0: overpriced, below the SML. <b>Sell.</b>`}`]}}},
+w_mkt:{mod:'workout',topic:'Beta from a covariance matrix',fn(){
+  const w1=rnd(.3,.7,.05),w2=1-w1,s1=rnd(.15,.35,.01),s2=rnd(.12,.30,.01),rho=rnd(-.1,.6,.1),c12=r4(rho*s1*s2),v1=r4(s1*s1),v2=r4(s2*s2),rf=rnd(.02,.05,.005),em=rnd(.09,.13,.005);
+  const c1M=w1*v1+w2*c12,c2M=w1*c12+w2*v2,vM=w1*c1M+w2*c2M,b1=c1M/vM,b2=c2M/vM,k1=rf+b1*(em-rf);
+  const ct=x=>Math.max(.0002,Math.abs(x)*.01);
+  return{title:'A two-stock market: covariances, betas, required return',pts:15,
+  q:`<p>The market consists of Stock 1 (${pc(w1,0)} of market value) and Stock 2 (${pc(w2,0)}). Covariance matrix:</p>${tbl(['','Stock 1','Stock 2'],[['Stock 1',fx(v1,4),fx(c12,4)],['Stock 2',fx(c12,4),fx(v2,4)]])}<p>r<sub>f</sub> = ${pc(rf,1)}, E(r<sub>M</sub>) = ${pc(em,1)}. Find (a) Cov(r<sub>1</sub>, r<sub>M</sub>), (b) σ<sub>M</sub><sup>2</sup>, (c) β<sub>1</sub>, (d) β<sub>2</sub>, and (e) Stock 1's required return. Enter covariances and variances as decimals.</p>`,
+  parts:[{ask:'Cov(r<sub>1</sub>, r<sub>M</sub>) =',unit:'',ans:c1M,tol:ct(c1M)},{ask:'σ<sub>M</sub><sup>2</sup> =',unit:'',ans:vM,tol:ct(vM)},{ask:'β<sub>1</sub> =',unit:'',ans:b1},{ask:'β<sub>2</sub> =',unit:'',ans:b2},{ask:'k<sub>1</sub> =',unit:'%',ans:k1*100}],steps:[
+  `(a) Row trick with market weights: Cov(r<sub>1</sub>, r<sub>M</sub>) = ${fx(w1,2)}(${fx(v1,4)}) + ${fx(w2,2)}${pr(c12)} = <b>${fx(c1M,6)}</b>. Likewise Cov(r<sub>2</sub>, r<sub>M</sub>) = ${fx(w1,2)}${pr(c12)} + ${fx(w2,2)}(${fx(v2,4)}) = ${fx(c2M,6)}.`,
+  `(b) σ<sub>M</sub><sup>2</sup> = Σ w<sub>i</sub>Cov(r<sub>i</sub>, r<sub>M</sub>) = ${fx(w1,2)}(${fx(c1M,6)}) + ${fx(w2,2)}(${fx(c2M,6)}) = <b>${fx(vM,6)}</b>.`,
+  `(c) β<sub>1</sub> = ${fx(c1M,6)}/${fx(vM,6)} = <b>${fx(b1,4)}</b>.`,
+  `(d) β<sub>2</sub> = ${fx(c2M,6)}/${fx(vM,6)} = <b>${fx(b2,4)}</b>. Check: ${fx(w1,2)}(${fx(b1,4)}) + ${fx(w2,2)}(${fx(b2,4)}) = ${fx(w1*b1+w2*b2,4)} = 1 ✓`,
+  `(e) k<sub>1</sub> = ${fx(rf,3)} + ${fx(b1,4)}(${fx(em-rf,3)}) = <b>${pc(k1)}</b>.`]}}},
+w_cml:{mod:'workout',topic:'Capital Market Line',fn(){
+  const rf=rnd(.02,.05,.005),em=rnd(.09,.13,.005),sm=rnd(.15,.22,.01),W=rnd(20,200,10)*1000,sp=rnd(.06,.34,.01),S=(em-rf)/sm,y=sp/sm,E=rf+S*sp,tb=(1-y)*W;
+  return{title:'Building a complete portfolio on the CML',pts:15,
+  q:`<p>r<sub>f</sub> = ${pc(rf,1)}, E(r<sub>M</sub>) = ${pc(em,1)}, σ<sub>M</sub> = ${pc(sm,0)}. You have ${money(W)} and want an efficient portfolio with σ = ${pc(sp,0)}.</p><p>Find (a) the market Sharpe ratio, (b) the fraction of wealth in M, (c) your portfolio's expected return, (d) the dollars in T-bills (enter a negative number if you borrow), and (e) your portfolio's β.</p>`,
+  parts:[{ask:'Sharpe =',unit:'',ans:S,tol:.005},{ask:'y =',unit:'%',ans:y*100},{ask:'E(r<sub>p</sub>) =',unit:'%',ans:E*100},{ask:'T-bills =',unit:'$',ans:tb,tol:Math.max(5,Math.abs(tb)*.005)},{ask:'β<sub>p</sub> =',unit:'',ans:y}],steps:[
+  `(a) Sharpe = (${fx(em,3)} − ${fx(rf,3)})/${fx(sm,2)} = <b>${fx(S,4)}</b>. This is the slope of the CML.`,
+  `(b) σ<sub>p</sub> = yσ<sub>M</sub>, so y = ${fx(sp,2)}/${fx(sm,2)} = <b>${pc(y)}</b>.`,
+  `(c) E(r<sub>p</sub>) = ${fx(rf,3)} + ${fx(S,4)}×${fx(sp,2)} = <b>${pc(E)}</b>. Same thing: r<sub>f</sub> + y(E(r<sub>M</sub>) − r<sub>f</sub>).`,
+  `(d) T-bills = (1 − y)×${money(W)} = <b>${money(tb)}</b>. ${tb<0?'Negative means you <b>borrow</b> that amount at r<sub>f</sub> (right of M).':'Positive means you <b>lend</b> (left of M).'}`,
+  `(e) β<sub>p</sub> = y(1) + (1 − y)(0) = <b>${fx(y,4)}</b>.`]}}},
+w_reg:{mod:'workout',topic:'Fitting the SIM',fn(){return GEN.i_reg.fn(false)}},
+w_div:{mod:'workout',topic:'Diversification',fn(){
+  const P=GEN.d_contrib.fn(false);return P}},
+w_sim2:{mod:'workout',topic:'Single Index Model',fn(){
+  const b=[rnd(.6,1.5,.05),rnd(.8,1.8,.05)],se=[rnd(.2,.4,.01),rnd(.2,.45,.01)],sm=rnd(.15,.22,.01),vM=r4(sm*sm),w=rnd(.3,.7,.1),W=[w,1-w];
+  const v1=b[0]**2*vM+se[0]**2,R2=b[0]**2*vM/v1,cv=b[0]*b[1]*vM,bp=dot(W,b),vep=W[0]**2*se[0]**2+W[1]**2*se[1]**2,vp=bp*bp*vM+vep;
+  return{title:'SIM: risk of two stocks and a portfolio',pts:15,
+  q:`${tbl(['','Weight','β','σ<sub>e</sub>'],[['Stock 1',pc(W[0],0),fx(b[0],2),pc(se[0],0)],['Stock 2',pc(W[1],0),fx(b[1],2),pc(se[1],0)]])}<p>σ<sub>M</sub><sup>2</sup> = ${fx(vM,4)}. Assume the SIM holds. Find (a) Stock 1's total σ, (b) Stock 1's R-square, (c) Cov(R<sub>1</sub>, R<sub>2</sub>) as a decimal, (d) the portfolio β, and (e) the portfolio σ.</p>`,
+  parts:[{ask:'σ<sub>1</sub> =',unit:'%',ans:Math.sqrt(v1)*100},{ask:'R<sup>2</sup> =',unit:'%',ans:R2*100,tol:.3},{ask:'Cov =',unit:'',ans:cv,tol:Math.max(.0002,cv*.01)},{ask:'β<sub>p</sub> =',unit:'',ans:bp},{ask:'σ<sub>p</sub> =',unit:'%',ans:Math.sqrt(vp)*100}],steps:[
+  `(a) σ<sub>1</sub><sup>2</sup> = β<sup>2</sup>σ<sub>M</sub><sup>2</sup> + σ<sub>e</sub><sup>2</sup> = ${fx(b[0],2)}<sup>2</sup>(${fx(vM,4)}) + ${fx(se[0],2)}<sup>2</sup> = ${fx(b[0]**2*vM,6)} + ${fx(se[0]**2,4)} = ${fx(v1,6)}, so σ<sub>1</sub> = <b>${pc(Math.sqrt(v1))}</b>.`,
+  `(b) R<sup>2</sup> = systematic/total = ${fx(b[0]**2*vM,6)}/${fx(v1,6)} = <b>${pc(R2)}</b>.`,
+  `(c) Cov(R<sub>1</sub>, R<sub>2</sub>) = β<sub>1</sub>β<sub>2</sub>σ<sub>M</sub><sup>2</sup> = ${fx(b[0],2)}×${fx(b[1],2)}×${fx(vM,4)} = <b>${fx(cv,6)}</b>. Residual covariance is 0 under the SIM.`,
+  `(d) β<sub>p</sub> = ${fx(W[0],2)}(${fx(b[0],2)}) + ${fx(W[1],2)}(${fx(b[1],2)}) = <b>${fx(bp,4)}</b>.`,
+  `(e) σ<sub>e<sub>p</sub></sub><sup>2</sup> = ${fx(W[0],2)}<sup>2</sup>(${fx(se[0]**2,4)}) + ${fx(W[1],2)}<sup>2</sup>(${fx(se[1]**2,4)}) = ${fx(vep,6)}. σ<sub>p</sub><sup>2</sup> = ${fx(bp,4)}<sup>2</sup>(${fx(vM,4)}) + ${fx(vep,6)} = ${fx(vp,6)}, so σ<sub>p</sub> = <b>${pc(Math.sqrt(vp))}</b>.`]}}},
+
 /* ===== INDEX ===== */
 i_reg:{mod:'index',topic:'Fitting the SIM',fn(fixed){
   let RM,Ri;
@@ -946,8 +1035,8 @@ i_reg:{mod:'index',topic:'Fitting the SIM',fn(fixed){
   const fit=chart({id:'rf'+Math.random().toString(36).slice(2,7),x:[lo,hi],y:[ylo,yhi],xl:'Market excess return R<sub>M</sub>',yl:'Stock excess return',xf:t=>fx(t*100,0)+'%',yf:t=>fx(t*100,0)+'%',lines:[{p:[[lo,alpha+beta*lo],[hi,alpha+beta*hi]],c:'ln'}],pts:[...pts,{x:mb,y:yb,c:'pt',r:5,l:'(R̄M, R̄i)'}],h:260,label:'Line of best fit'});
   const askTxt={beta:'Estimate the stock’s beta.',alpha:'Estimate the stock’s alpha (as a %).',r2:'What percentage of the stock’s variance does the market explain (R-square)?',se:'What is the standard deviation of the residuals, σ<sub>e</sub> (use n − 1)?'}[ask];
   return{title:fixed?'Fitting the SIM: Stock J (lecture example)':'Fit the Single Index Model by hand',
-  q:`<p>Excess returns for ${fixed?'Stock J':'a stock'} and the market index over five periods:</p>${tbl(['t','R<sub>i,t</sub>','R<sub>M,t</sub>'],m.map((x,i)=>[i+1,fx(y[i],2),fx(x,2)]))}${scatter}<p>${askTxt}</p>`,
-  ask:A[0],unit:A[1],ans:A[2],tol:A[3],steps:[
+  q:`<p>Excess returns for ${fixed?'Stock J':'a stock'} and the market index over five periods:</p>${tbl(['t','R<sub>i,t</sub>','R<sub>M,t</sub>'],m.map((x,i)=>[i+1,fx(y[i],2),fx(x,2)]))}${scatter}<p>Find (a) β, (b) α as a %, (c) the residual standard deviation σ<sub>e</sub> using n − 1, and (d) R-square.</p>`,pts:15,
+  parts:[{ask:'β =',unit:'',ans:beta,tol:.01},{ask:'α =',unit:'%',ans:alpha*100,tol:.06},{ask:'σ<sub>e</sub> =',unit:'%',ans:Math.sqrt(ve)*100,tol:.06},{ask:'R<sup>2</sup> =',unit:'%',ans:R2*100,tol:.3}],steps:[
   `Averages: R̄<sub>i</sub> = (${y.map(v=>pr(v,2)).join(' + ')})/5 = <b>${fx(yb,4)}</b>; R̄<sub>M</sub> = (${m.map(v=>pr(v,2)).join(' + ')})/5 = <b>${fx(mb,4)}</b>.`,
   `Deviation table:${tbl(['t','R<sub>i</sub> − R̄<sub>i</sub>','R<sub>M</sub> − R̄<sub>M</sub>','(R<sub>i</sub> − R̄<sub>i</sub>)<sup>2</sup>','(R<sub>M</sub> − R̄<sub>M</sub>)<sup>2</sup>','product'],[...m.map((x,i)=>[i+1,fx(dy[i]),fx(dm[i]),fx(dy[i]**2,6),fx(dm[i]**2,6),fx(dy[i]*dm[i],6)]),{tot:1,cells:['Sum','0','0',`${fx(Syy,6)} = SST`,fx(Sxx,6),fx(Sxy,6)]}])}`,
   `Divide by n − 1 = 4: σ<sub>i</sub><sup>2</sup> = ${fx(Syy,6)}/4 = <b>${fx(vI,6)}</b> (σ<sub>i</sub> = ${pc(Math.sqrt(vI),3)}); σ<sub>M</sub><sup>2</sup> = ${fx(Sxx,6)}/4 = <b>${fx(vM,6)}</b> (σ<sub>M</sub> = ${pc(Math.sqrt(vM),3)}); Cov = ${fx(Sxy,6)}/4 = <b>${fx(cv,6)}</b>.`,
@@ -1064,7 +1153,7 @@ const MODS=[
  {id:'cml',t:'Capital Market Line',s:'Sessions 12–13'},
  {id:'capm',t:'CAPM & SML',s:'Sessions 14–16'},
  {id:'index',t:'Index Models',s:'Sessions 17–19'},
- {id:'mock',t:'Mock exam',s:'Timed, 20 questions'},
+ {id:'mock',t:'Mock exam',s:'16 MC + 4 workout · 100 pts'},
  {id:'formulas',t:'Formulas & flashcards',s:'Formula sheet rows'}];
 const LEARN=['tools','diversification','cml','capm','index'];
 
@@ -1075,7 +1164,7 @@ function renderNav(){
   document.getElementById('nav').innerHTML=MODS.map(m=>{let p='';if(LEARN.includes(m.id)){const[a,b]=objCount(m.id);const st=S.stats[m.id]||{c:0};p=`<span class="mp ${a===b?'done':''}">${a}/${b}</span>`;m.s2=`${st.c||0} solved`}return`<a href="#${m.id}" ${cur===m.id?'aria-current="page"':''}><span class="mt">${m.t}</span>${p}<span class="ms">${m.s}${m.s2?' · '+m.s2:''}</span></a>`}).join('');
   let a=0,b=0;LEARN.forEach(id=>{const[x,y]=objCount(id);a+=x;b+=y});document.getElementById('allbar').style.width=(b?a/b*100:0)+'%';
   const tiles=document.getElementById('plan-tiles');
-  tiles.innerHTML=`<div class="tile"><span class="eyebrow">Exam 2</span><span class="big" id="t-days"></span><span class="muted">Mon Nov 2 · 8:30 AM · WCBA 182</span></div><div class="tile"><span class="eyebrow">Objectives mastered</span><span class="big">${a}/${b}</span><div class="bar"><i style="width:${b?a/b*100:0}%"></i></div></div><div class="tile"><span class="eyebrow">Problems solved</span><span class="big">${LEARN.reduce((s,id)=>s+((S.stats[id]||{}).c||0),0)}</span><span class="muted">${LEARN.reduce((s,id)=>s+((S.stats[id]||{}).a||0),0)} checks so far</span></div>`;
+  tiles.innerHTML=`<div class="tile"><span class="eyebrow">Exam 2</span><span class="big" id="t-days"></span><span class="muted">Mon Nov 2 · 8:30 AM · WCBA 182</span></div><div class="tile"><span class="eyebrow">Objectives mastered</span><span class="big">${a}/${b}</span><div class="bar"><i style="width:${b?a/b*100:0}%"></i></div></div><div class="tile"><span class="eyebrow">Problems solved</span><span class="big">${[...LEARN,'workout'].reduce((s,id)=>s+((S.stats[id]||{}).c||0),0)}</span><span class="muted">${[...LEARN,'workout'].reduce((s,id)=>s+((S.stats[id]||{}).a||0),0)} checks so far</span></div>`;
   tick();
 }
 function tick(){
@@ -1094,20 +1183,24 @@ function route(){
 let seq=0;
 function parseNum(s){s=String(s).replace(/[−–]/g,'-').replace(/[,$%\s]/g,'');if(s==='')return NaN;return Number(s)}
 function makeCard(gid,mode,fixed){
-  const G=GEN[gid],el=document.createElement('article');el.className='card '+mode;const uid=`${mode}-${gid}-${seq++}`;let P,shown=0,solved=false;
+  const G=GEN[gid],el=document.createElement('article');el.className='card '+mode;const uid=`${mode}-${gid}-${seq++}`;let P,parts,shown=0,solved=false;
+  const ph=u=>u==='%'?'e.g. 12.34':u==='$'?'e.g. 45.67':'e.g. 1.234';
+  const fmtA=q=>q.unit==='%'?fx(q.ans,2)+'%':q.unit==='$'?money(q.ans):fx(q.ans,Math.abs(q.ans)<.1?6:4);
   el.render=function(){
     P=G.fn(fixed);shown=0;solved=false;el.P=P;
-    const lab=mode==='walk'?'Worked example':mode==='exam'?'Exam question':'Practice';
+    parts=P.parts||[{ask:P.ask,unit:P.unit,ans:P.ans,tol:P.tol}];el.parts=parts;const multi=parts.length>1;
+    const lab=mode==='walk'?'Worked example':mode==='exam'?`Workout problem · ${P.pts||15} points`:(multi?'Multi-part problem':'Practice');
     el.innerHTML=`<div class="card-head"><div><span class="eyebrow">${lab} · ${G.topic}</span><h4>${P.title}</h4></div>${mode==='practice'?'<button class="ghost new" type="button">New numbers</button>':''}</div>
     <div class="q">${P.q}</div>
-    <div class="ans-row"><label for="in-${uid}">${P.ask}</label>${P.unit==='$'?'<span class="unit">$</span>':''}<input id="in-${uid}" inputmode="decimal" autocomplete="off" placeholder="${P.unit==='%'?'e.g. 12.34':P.unit==='$'?'e.g. 45.67':'e.g. 1.234'}">${P.unit==='%'?'<span class="unit">%</span>':''}${mode!=='exam'?'<button class="primary check" type="button">Check</button>':''}</div>
+    <div class="parts">${parts.map((q,i)=>`<div class="ans-row">${multi?`<span class="pl">(${'abcdefgh'[i]})</span>`:''}<label for="in-${uid}-${i}">${q.ask}</label>${q.unit==='$'?'<span class="unit">$</span>':''}<input id="in-${uid}-${i}" inputmode="decimal" autocomplete="off" placeholder="${ph(q.unit)}">${q.unit==='%'?'<span class="unit">%</span>':''}${!multi&&mode!=='exam'?'<button class="primary check" type="button">Check</button>':''}</div>`).join('')}</div>
+    ${multi&&mode!=='exam'?'<div class="row"><button class="primary check" type="button">Check all parts</button></div>':''}
     <div class="fb" aria-live="polite"></div>
     <ol class="steps"></ol>
     <div class="step-ctrl" ${mode==='exam'?'hidden':''}><button class="ghost step-next" type="button"></button><button class="ghost step-all" type="button">Show full solution</button></div>`;
     upd();
     el.querySelector('.new')?.addEventListener('click',()=>el.render());
     el.querySelector('.check')?.addEventListener('click',()=>el.grade(true));
-    el.querySelector('input').addEventListener('keydown',e=>{if(e.key==='Enter'&&mode!=='exam')el.grade(true)});
+    el.querySelectorAll('input').forEach(inp=>inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&mode!=='exam')el.grade(true)}));
     el.querySelector('.step-next').addEventListener('click',()=>{shown=Math.min(P.steps.length,shown+1);upd()});
     el.querySelector('.step-all').addEventListener('click',()=>{shown=P.steps.length;upd()});
   };
@@ -1117,19 +1210,33 @@ function makeCard(gid,mode,fixed){
     b.textContent=shown>=N?'All steps shown':(mode==='walk'?`Next step (${shown+1} of ${N})`:`Hint: show step ${shown+1} of ${N}`);b.disabled=shown>=N;
     el.querySelector('.step-all').hidden=shown>=N;
   }
-  const fmtAns=()=>P.unit==='%'?fx(P.ans,2)+'%':P.unit==='$'?money(P.ans):fx(P.ans,4);
+  function checkPart(q,raw){
+    const v=parseNum(raw);if(isNaN(v))return{blank:true,ok:false};
+    const tol=q.tol??(q.unit==='%'?Math.max(.06,Math.abs(q.ans)*.006):q.unit==='$'?Math.max(.06,Math.abs(q.ans)*.002):Math.max(.01,Math.abs(q.ans)*.01));
+    if(Math.abs(v-q.ans)<=tol)return{ok:true};
+    if(q.unit==='%'&&Math.abs(v*100-q.ans)<=tol)return{ok:true,conv:true};
+    return{ok:false};
+  }
+  /* returns fraction of parts correct (0..1) */
   el.grade=function(record){
-    const v=parseNum(el.querySelector('input').value),fb=el.querySelector('.fb');
-    const tol=P.tol??(P.unit==='%'?Math.max(.06,Math.abs(P.ans)*.006):P.unit==='$'?Math.max(.06,Math.abs(P.ans)*.002):Math.max(.01,Math.abs(P.ans)*.01));
-    if(isNaN(v)){fb.className='fb no';fb.textContent='Enter a number first.';return false}
-    let ok=Math.abs(v-P.ans)<=tol,conv=false;
-    if(!ok&&P.unit==='%'&&Math.abs(v*100-P.ans)<=tol){ok=true;conv=true}
-    if(ok){fb.className='fb ok';fb.innerHTML=`Correct. Answer: <b>${fmtAns()}</b>.${conv?' (You typed a decimal; this box wants a percent, but the value is right.)':''}`}
-    else{fb.className='fb no';fb.innerHTML=mode==='exam'?`Incorrect. Answer: <b>${fmtAns()}</b>.`:`Not quite. Check your rounding, or reveal the next step.${shown>=P.steps.length?` Answer: <b>${fmtAns()}</b>.`:''}`}
-    if(record&&mode!=='walk'){const st=S.stats[G.mod]=S.stats[G.mod]||{a:0,c:0};st.a++;if(ok&&!solved){st.c++;solved=true}save();renderNav()}
-    return ok;
+    const inputs=[...el.querySelectorAll('.parts input')],fb=el.querySelector('.fb'),multi=parts.length>1;
+    const res=parts.map((q,i)=>checkPart(q,inputs[i].value));
+    if(mode!=='exam'&&res.every(r=>r.blank)){fb.className='fb no';fb.textContent='Enter a number first.';return 0}
+    res.forEach((r,i)=>{inputs[i].classList.toggle('ok',r.ok);inputs[i].classList.toggle('no',!r.ok)});
+    const nOk=res.filter(r=>r.ok).length,frac=nOk/parts.length,showAns=mode==='exam'||shown>=P.steps.length;
+    const conv=res.some(r=>r.conv)?' (Some answers were typed as decimals where a percent was asked. The value is right, but match the units on the exam.)':'';
+    if(!multi){const r=res[0];
+      if(r.ok){fb.className='fb ok';fb.innerHTML=`Correct. Answer: <b>${fmtA(parts[0])}</b>.${conv}`}
+      else{fb.className='fb no';fb.innerHTML=r.blank?`Not answered. Answer: <b>${fmtA(parts[0])}</b>.`:showAns?`Incorrect. Answer: <b>${fmtA(parts[0])}</b>.`:'Not quite. Check your rounding, or reveal the next step.'}}
+    else{
+      fb.className='fb '+(frac===1?'ok':'no');
+      fb.innerHTML=(frac===1?`All ${parts.length} parts correct.`:`${nOk} of ${parts.length} parts correct.`)+(mode==='exam'?` ${fx(frac*(P.pts||15),1)} of ${P.pts||15} points.`:'')+
+        (showAns||frac===1?`<br>Answers: ${parts.map((q,i)=>`(${'abcdefgh'[i]}) ${fmtA(q)}`).join(' · ')}`:' Red boxes are wrong. Reveal steps to find where it went off.')+conv;
+    }
+    if(record&&mode!=='walk'){const st=S.stats[G.mod]=S.stats[G.mod]||{a:0,c:0};st.a++;if(frac===1&&!solved){st.c++;solved=true}save();renderNav()}
+    return frac;
   };
-  el.reveal=function(){el.querySelector('.step-ctrl').hidden=false;el.querySelector('input').disabled=true};
+  el.reveal=function(){el.querySelector('.step-ctrl').hidden=false;el.querySelectorAll('.parts input').forEach(i=>i.disabled=true)};
   el.render();return el;
 }
 
@@ -1145,7 +1252,8 @@ function makeMCQ(m,mode){
 }
 
 /* ---------- mount ---------- */
-document.querySelectorAll('.practice').forEach(box=>{Object.keys(GEN).filter(g=>GEN[g].mod===box.dataset.mod).forEach(g=>box.appendChild(makeCard(g,'practice')))});
+const WORK=['w_capm','w_mkt','w_cml','w_div','w_sim2','w_reg'];
+document.querySelectorAll('.practice').forEach(box=>{(box.dataset.mod==='workout'?WORK:Object.keys(GEN).filter(g=>GEN[g].mod===box.dataset.mod)).forEach(g=>box.appendChild(makeCard(g,'practice')))});
 document.querySelectorAll('.worked').forEach(box=>box.appendChild(makeCard(box.dataset.gen,'walk',box.dataset.fixed==='1')));
 document.querySelectorAll('.mcqs').forEach(box=>(MCQ[box.dataset.mod]||[]).forEach(m=>box.appendChild(makeMCQ(m))));
 document.querySelectorAll('[data-objs] input').forEach(c=>{c.checked=!!S.obj[c.id];c.addEventListener('change',()=>{S.obj[c.id]=c.checked;save();renderNav()})});
@@ -1178,21 +1286,20 @@ function drawCS(){
 let mockCards=[],mockMcq=[],mockT0=0,mockTimer=null;
 function newMock(){
   const body=document.getElementById('mock-body');body.innerHTML='';document.getElementById('mock-result').innerHTML='';
-  const plan={diversification:2,cml:3,capm:4,index:3};mockCards=[];
-  Object.entries(plan).forEach(([mod,n])=>{shuffle(Object.keys(GEN).filter(g=>GEN[g].mod===mod)).slice(0,n).forEach(g=>mockCards.push(makeCard(g,'exam')))});
-  const pool=[];['diversification','cml','capm','index'].forEach(m=>MCQ[m].forEach(q=>pool.push(q)));mockMcq=shuffle(pool).slice(0,8).map(q=>makeMCQ(q,'exam'));
-  const h1=document.createElement('h2');h1.textContent='Part 1: Calculations';body.appendChild(h1);mockCards.forEach(c=>body.appendChild(c));
-  const h2=document.createElement('h2');h2.textContent='Part 2: Concepts';body.appendChild(h2);mockMcq.forEach(c=>body.appendChild(c));
+  const pool=[];['diversification','cml','capm','index'].forEach(m=>MCQ[m].forEach(q=>pool.push(q)));mockMcq=shuffle(pool).slice(0,16).map(q=>makeMCQ(q,'exam'));
+  mockCards=shuffle(WORK).slice(0,4).map(g=>makeCard(g,'exam'));
+  const h1=document.createElement('h2');h1.textContent='Part 1: Multiple choice (16 × 2.5 = 40 points)';body.appendChild(h1);mockMcq.forEach(c=>body.appendChild(c));
+  const h2=document.createElement('h2');h2.textContent='Part 2: Workout problems (4 × 15 = 60 points)';body.appendChild(h2);mockCards.forEach(c=>body.appendChild(c));
   document.getElementById('mock-foot').hidden=false;document.getElementById('mock-grade').disabled=false;
   mockT0=Date.now();clearInterval(mockTimer);mockTimer=setInterval(()=>{const s=Math.floor((Date.now()-mockT0)/1000),left=75*60-s;document.getElementById('mock-timer').textContent=`${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')} elapsed · ${left>0?Math.floor(left/60)+' min left':'time is up'}`},1000);
 }
 function gradeMock(){
-  clearInterval(mockTimer);let c=0,m=0;
-  mockCards.forEach(k=>{const inp=k.querySelector('input');if(inp.value.trim()===''){const fb=k.querySelector('.fb');fb.className='fb no';fb.innerHTML=`Not answered. Answer: <b>${k.P.unit==='%'?fx(k.P.ans,2)+'%':k.P.unit==='$'?money(k.P.ans):fx(k.P.ans,4)}</b>.`}else if(k.grade(false))c++;k.reveal()});
-  mockMcq.forEach(q=>{if(q.ok())m++;q.show()});
-  const tot=c+m,N=mockCards.length+mockMcq.length,pct=tot/N*100;
+  clearInterval(mockTimer);let mc=0,wo=0;
+  mockMcq.forEach(q=>{if(q.ok())mc++;q.show()});
+  const woParts=mockCards.map(k=>{const f=k.grade(false);k.reveal();wo+=f*(k.P.pts||15);return`${k.P.title}: ${fx(f*(k.P.pts||15),1)}/${k.P.pts||15}`});
+  const mcPts=mc*2.5,tot=mcPts+wo;
   document.getElementById('mock-grade').disabled=true;
-  document.getElementById('mock-result').innerHTML=`<div class="widget"><span class="eyebrow">Your score</span><span class="score">${tot}/${N} · ${fx(pct,0)}%</span><p>Calculations ${c}/${mockCards.length} · Concepts ${m}/${mockMcq.length} · Time ${document.getElementById('mock-timer').textContent.split(' ')[0]}</p><p class="muted">Open “Show full solution” on every miss and redo it on paper. Then go back to that module's practice and get two in a row right.</p></div>`;
+  document.getElementById('mock-result').innerHTML=`<div class="widget"><span class="eyebrow">Your score (raw, before any curve)</span><span class="score">${fx(tot,1)} / 100</span><p>Multiple choice: ${mc}/16 correct = ${fx(mcPts,1)}/40 · Workout: ${fx(wo,1)}/60 · Time: ${document.getElementById('mock-timer').textContent.split(' ')[0]}</p><ul>${woParts.map(x=>`<li>${x}</li>`).join('')}</ul><p class="muted">For every workout part you missed, open “Show full solution”, find the first step where your work differs, and redo the problem on paper. Then do that problem type again in the untimed section below with new numbers.</p></div>`;
   document.getElementById('mock-result').scrollIntoView({behavior:'smooth'});
 }
 document.getElementById('mock-new').addEventListener('click',newMock);
@@ -1238,6 +1345,20 @@ document.getElementById('fc-next').addEventListener('click',()=>{fi=(fi+1)%CARDS
 document.getElementById('fc-prev').addEventListener('click',()=>{fi=(fi-1+CARDS.length)%CARDS.length;flipped=false;drawFC()});
 document.getElementById('fc-shuf').addEventListener('click',()=>{CARDS=shuffle(CARDS);fi=0;flipped=false;drawFC()});
 drawFC();
+
+/* ---------- grade calculator ---------- */
+function TP(q,e){const x=e.slice().sort((a,b)=>a-b);return .055*q+.30*x[0]+.315*x[1]+.33*x[2]}
+const letter=t=>t>=90?'A':t>=80?'B':t>=70?'C':t>=60?'D':'F';
+function drawGC(){
+  const g=id=>+document.getElementById(id).value,q=g('gc-q'),e1=g('gc-e1'),e2=g('gc-e2'),e3=g('gc-e3');
+  ['q','e1','e2','e3'].forEach(k=>document.getElementById(`gc-${k}o`).textContent=g('gc-'+k));
+  const t=TP(q,[e1,e2,e3]);
+  document.getElementById('gc-out').innerHTML=`<div class="tile"><span class="eyebrow">Course points</span><span class="big">${fx(t,2)}</span></div><div class="tile"><span class="eyebrow">Letter</span><span class="big">${letter(t)}</span></div>`;
+  const need=target=>{if(TP(q,[e1,100,100])<target)return null;let lo=0,hi=100;for(let i=0;i<40;i++){const m=(lo+hi)/2;if(TP(q,[e1,m,m])>=target)hi=m;else lo=m}return hi};
+  const txt=[[90,'A'],[80,'B'],[70,'C']].map(([tg,l])=>{const n=need(tg);return n===null?`${l}: out of reach even with 100s`:n<=0?`${l}: already locked in`:`${l}: average about <b>${fx(Math.ceil(n*10)/10,1)}</b>`}).join(' · ');
+  document.getElementById('gc-need').innerHTML=`With this quiz score and Exam 1, you need on Exams 2 and 3 (same score on each): ${txt}.`;
+}
+['gc-q','gc-e1','gc-e2','gc-e3'].forEach(id=>document.getElementById(id).addEventListener('input',drawGC));drawGC();
 
 window.addEventListener('hashchange',route);route();setInterval(tick,60000);
 </script>
