@@ -119,6 +119,10 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .pl{font-family:var(--f-mono);font-size:13px;color:var(--muted);min-width:24px}
 .ans-row input.ok{border-color:var(--good)}
 .ans-row input.no{border-color:var(--bad)}
+.chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.st[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.pp-part{display:flex;flex-direction:column;gap:8px;padding-top:12px;border-top:1px solid var(--line)}
+.pp-part .ans-row label{min-width:9ch}
 .calc-out{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:10px}
 .calc-out .tile .big{font-size:24px}
 .fb{border-radius:8px;padding:8px 12px;font-size:14.5px}
@@ -262,11 +266,11 @@ svg.chart{width:100%;height:auto;display:block}
     <h2>Day-by-day schedule</h2>
     <div>
       <div class="plan-row"><span class="d">Tue Oct 27</span><div><a href="#tools">Exam 1 tools</a> refresher (60–90 min, and the most important session for you given Exam 1). Redo every practice card until you get it right twice in a row. Then <a href="#diversification">Diversification</a>. Email Dr. Dye for an appointment.</div></div>
-      <div class="plan-row"><span class="d">Wed Oct 28</span><div>Go to the last Index Models lecture. Tonight: <a href="#cml">Capital Market Line</a>, including the “Puzzle” (total vs. systematic risk).</div></div>
-      <div class="plan-row"><span class="d">Thu Oct 29</span><div><a href="#capm">CAPM</a> steps 1–4: β, the SML, and E(r) vs. k pricing. Do at least 6 pricing and alpha problems.</div></div>
+      <div class="plan-row"><span class="d">Wed Oct 28</span><div>Go to the last Index Models lecture. Tonight: <a href="#cml">Capital Market Line</a>, including the “Puzzle” (total vs. systematic risk), plus Practice set problem 65.</div></div>
+      <div class="plan-row"><span class="d">Thu Oct 29</span><div><a href="#capm">CAPM</a> steps 1–4: β, the SML, and E(r) vs. k pricing. Then <a href="#problems">Practice set</a> problems 66–84 (Dr. Dye’s own CAPM problems).</div></div>
       <div class="plan-row"><span class="d">Fri Oct 30</span><div>CAPM steps 5–7, then <a href="#index">Index Models</a> steps 1–4.</div></div>
-      <div class="plan-row"><span class="d">Sat Oct 31</span><div>Index Models steps 5–8. Redo the Stock J regression by hand <em>and</em> with calculator stats mode. Do the regression practice three times.</div></div>
-      <div class="plan-row"><span class="d">Sun Nov 1</span><div>Timed <a href="#mock">mock exam</a> in the real format (16 MC + 4 workout problems, 75 min). Review every miss, do the untimed workout problems you missed, run the <a href="#formulas">flashcards</a>, then take a second mock.</div></div>
+      <div class="plan-row"><span class="d">Sat Oct 31</span><div>Index Models steps 5–8, then <a href="#problems">Practice set</a> problems 86–97. Redo the Stock J regression by hand <em>and</em> with calculator stats mode.</div></div>
+      <div class="plan-row"><span class="d">Sun Nov 1</span><div>Timed <a href="#mock">mock exam</a> in the real format (16 MC + 4 workout problems, 75 min). Review every miss, do the untimed workout problems you missed, finish any <a href="#problems">Practice set</a> problems marked “Review again”, run the <a href="#formulas">flashcards</a>, then take a second mock.</div></div>
       <div class="plan-row exam"><span class="d">Mon Nov 2</span><div><b>Exam 2, 8:30 AM, WCBA 182.</b> One 10-minute flashcard pass. Bring your financial calculator; Excel is not allowed.</div></div>
     </div>
   </div>
@@ -661,6 +665,22 @@ svg.chart{width:100%;height:auto;display:block}
   <div class="block"><h2>Concept check</h2><div class="mcqs stack" data-mod="index"></div></div>
 </section>
 
+<!-- ============ PRACTICE SET ============ -->
+<section class="view" id="v-problems" data-view hidden>
+  <div class="head">
+    <span class="eyebrow">Dr. Dye's Practice Problems 26C · problems 65–99</span>
+    <h1>Practice set</h1>
+    <p class="lede">Every Exam 2 problem from the official practice packet: Diversification, CAPM and the Single Index Model. Type your answers to check them. Each part has the official solution, worked step by step.</p>
+  </div>
+  <div class="note prof"><b>How these answers were checked</b>The numbers and methods follow Dr. Dye's answer key. I recomputed every answer. Two small typos in the key are fixed here (problem 71's working and 87D), and neither changes what you'd write on an exam. Graphs are redrawn from the packet; where the original says “not drawn to scale”, only the labeled values matter.</div>
+  <div class="block">
+    <div class="row" id="pp-filter" role="group" aria-label="Filter problems by topic"></div>
+    <div class="row" id="pp-status" role="group" aria-label="Filter problems by status"></div>
+    <p class="muted" id="pp-count"></p>
+  </div>
+  <div class="stack" id="pp-list"></div>
+</section>
+
 <!-- ============ MOCK ============ -->
 <section class="view" id="v-mock" data-view hidden>
   <div class="head">
@@ -740,8 +760,8 @@ function chart(o){
   const W=o.w||560,H=o.h||300,L=58,R=18,T=18,B=46,[x0,x1]=o.x,[y0,y1]=o.y;
   const sx=v=>L+(v-x0)/(x1-x0)*(W-L-R),sy=v=>H-B-(v-y0)/(y1-y0)*(H-T-B);
   let s=`<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${o.label||'chart'}">`;
-  for(const t of ticks(y0,y1,o.yt||5)){s+=`<line class="grid" x1="${L}" x2="${W-R}" y1="${sy(t)}" y2="${sy(t)}"/><text class="tick" x="${L-8}" y="${sy(t)+4}" text-anchor="end">${o.yf(t)}</text>`}
-  for(const t of ticks(x0,x1,o.xt||6)){s+=`<line class="grid" x1="${sx(t)}" x2="${sx(t)}" y1="${T}" y2="${H-B}" opacity=".5"/><text class="tick" x="${sx(t)}" y="${H-B+17}" text-anchor="middle">${o.xf(t)}</text>`}
+  for(const [t,lb] of (o.ytk||ticks(y0,y1,o.yt||5).map(t=>[t,o.yf(t)]))){s+=`<line class="grid" x1="${L}" x2="${W-R}" y1="${sy(t)}" y2="${sy(t)}"/><text class="tick" x="${L-8}" y="${sy(t)+4}" text-anchor="end">${lb}</text>`}
+  for(const [t,lb] of (o.xtk||ticks(x0,x1,o.xt||6).map(t=>[t,o.xf(t)]))){s+=`<line class="grid" x1="${sx(t)}" x2="${sx(t)}" y1="${T}" y2="${H-B}" opacity=".5"/><text class="tick" x="${sx(t)}" y="${H-B+17}" text-anchor="middle">${lb}</text>`}
   s+=`<line class="axis" x1="${L}" x2="${W-R}" y1="${sy(Math.max(y0,Math.min(0,y1)))}" y2="${sy(Math.max(y0,Math.min(0,y1)))}"/><line class="axis" x1="${sx(Math.max(x0,Math.min(0,x1)))}" x2="${sx(Math.max(x0,Math.min(0,x1)))}" y1="${T}" y2="${H-B}"/>`;
   s+=`<text class="alab" x="${(L+W-R)/2}" y="${H-8}" text-anchor="middle">${o.xl}</text><text class="alab" transform="translate(14 ${(T+H-B)/2}) rotate(-90)" text-anchor="middle">${o.yl}</text>`;
   s+=`<defs><clipPath id="cp${o.id||'x'}"><rect x="${L}" y="${T}" width="${W-L-R}" height="${H-T-B}"/></clipPath></defs><g clip-path="url(#cp${o.id||'x'})">`;
@@ -1153,6 +1173,7 @@ const MODS=[
  {id:'cml',t:'Capital Market Line',s:'Sessions 12–13'},
  {id:'capm',t:'CAPM & SML',s:'Sessions 14–16'},
  {id:'index',t:'Index Models',s:'Sessions 17–19'},
+ {id:'problems',t:'Practice set',s:'Dye packet #65–99'},
  {id:'mock',t:'Mock exam',s:'16 MC + 4 workout · 100 pts'},
  {id:'formulas',t:'Formulas & flashcards',s:'Formula sheet rows'}];
 const LEARN=['tools','diversification','cml','capm','index'];
@@ -1161,7 +1182,7 @@ function save(){ST.set(S)}
 function objCount(id){const box=document.querySelector(`[data-objs="${id}"]`);if(!box)return[0,0];const c=[...box.querySelectorAll('input')];return[c.filter(x=>x.checked).length,c.length]}
 function renderNav(){
   const cur=(location.hash||'#plan').slice(1);
-  document.getElementById('nav').innerHTML=MODS.map(m=>{let p='';if(LEARN.includes(m.id)){const[a,b]=objCount(m.id);const st=S.stats[m.id]||{c:0};p=`<span class="mp ${a===b?'done':''}">${a}/${b}</span>`;m.s2=`${st.c||0} solved`}return`<a href="#${m.id}" ${cur===m.id?'aria-current="page"':''}><span class="mt">${m.t}</span>${p}<span class="ms">${m.s}${m.s2?' · '+m.s2:''}</span></a>`}).join('');
+  document.getElementById('nav').innerHTML=MODS.map(m=>{let p='';if(m.id==='problems'&&window.PP){const d=window.ppDone();p=`<span class="mp ${d===PP.length?'done':''}">${d}/${PP.length}</span>`}if(LEARN.includes(m.id)){const[a,b]=objCount(m.id);const st=S.stats[m.id]||{c:0};p=`<span class="mp ${a===b?'done':''}">${a}/${b}</span>`;m.s2=`${st.c||0} solved`}return`<a href="#${m.id}" ${cur===m.id?'aria-current="page"':''}><span class="mt">${m.t}</span>${p}<span class="ms">${m.s}${m.s2?' · '+m.s2:''}</span></a>`}).join('');
   let a=0,b=0;LEARN.forEach(id=>{const[x,y]=objCount(id);a+=x;b+=y});document.getElementById('allbar').style.width=(b?a/b*100:0)+'%';
   const tiles=document.getElementById('plan-tiles');
   tiles.innerHTML=`<div class="tile"><span class="eyebrow">Exam 2</span><span class="big" id="t-days"></span><span class="muted">Mon Nov 2 · 8:30 AM · WCBA 182</span></div><div class="tile"><span class="eyebrow">Objectives mastered</span><span class="big">${a}/${b}</span><div class="bar"><i style="width:${b?a/b*100:0}%"></i></div></div><div class="tile"><span class="eyebrow">Problems solved</span><span class="big">${[...LEARN,'workout'].reduce((s,id)=>s+((S.stats[id]||{}).c||0),0)}</span><span class="muted">${[...LEARN,'workout'].reduce((s,id)=>s+((S.stats[id]||{}).a||0),0)} checks so far</span></div>`;
@@ -1362,3 +1383,290 @@ function drawGC(){
 
 window.addEventListener('hashchange',route);route();setInterval(tick,60000);
 </script>
+<script>
+/* ================= PRACTICE SET (Dye Practice Problems 26C, #65–99) ================= */
+(function(){
+const T=(h,r,c)=>tbl(h,r,c);
+/* frontier curve through M, tangent to the CML (percent units) */
+function frontier(rf,sm,em,e0,eLo,eHi){const slope=(em-rf)/sm,k=sm/(slope*(em-e0)),s02=sm*sm-k*(em-e0)**2,pts=[];for(let e=eLo;e<=eHi+1e-9;e+=0.25)pts.push([Math.sqrt(Math.max(0,s02+k*(e-e0)**2)),e]);return pts}
+const pf=t=>t+'%';
+const chart78=()=>chart({id:'p78'+Math.random().toString(36).slice(2,6),x:[0,52],y:[0,22],xl:'σ',yl:'E(r)',xf:pf,yf:pf,
+  xtk:[[20,'20%'],[27,'27%'],[45,'45%']],ytk:[[2.5,'2.5%'],[12.5,'12.5%'],[16,'16%']],
+  lines:[{p:[[0,2.5],[44,24.5]],c:'ln'},{p:frontier(2.5,20,12.5,8,5,21),c:'lnm'},{p:[[0,16],[45,16]],c:'lnm dash'},{p:[[0,12.5],[20,12.5]],c:'lnm dash'},{p:[[27,0],[27,16]],c:'lnm dash'},{p:[[45,0],[45,16]],c:'lnm dash'},{p:[[20,0],[20,12.5]],c:'lnm dash'}],
+  pts:[{x:20,y:12.5,l:'M',dx:-16},{x:27,y:16,l:'A',dx:-14},{x:45,y:16,c:'pt2',l:'B'}],h:290,label:'CML with assets M, A and B'});
+const chart79=()=>chart({id:'p79'+Math.random().toString(36).slice(2,6),x:[0,52],y:[0,20],xl:'σ (not to scale)',yl:'E(r)',xf:pf,yf:pf,
+  xtk:[[18,'18%'],[30,'30%']],ytk:[[2,'2%'],[12,'12%']],
+  lines:[{p:[[0,2],[50,18.67]],c:'ln'},{p:frontier(2,30,12,9,6,18),c:'lnm'},{p:[[0,17],[45,17]],c:'lnm dash'},{p:[[0,12],[45,12]],c:'lnm dash'},{p:[[0,8],[45,8]],c:'lnm dash'},{p:[[18,0],[18,8]],c:'lnm dash'},{p:[[30,0],[30,12]],c:'lnm dash'},{p:[[45,0],[45,17]],c:'lnm dash'}],
+  pts:[{x:30,y:12,l:'M',dx:-16},{x:18,y:8,l:'C',dx:-16},{x:45,y:17,c:'pt2',l:'Z',dx:-16},{x:45,y:12,c:'pt2',l:'Y',dy:4},{x:45,y:8,c:'pt2',l:'X',dy:4}],h:290,label:'CML with assets C, M, X, Y and Z'});
+const chart85=()=>`<div class="grid2">${chart({id:'p85a',x:[0,45],y:[0,24],xl:'σ',yl:'E(r)',xf:pf,yf:pf,xtk:[[10,'10%'],[20,'20%'],[30,'30%'],[40,'40%']],ytk:[[5,'5%'],[10,'10%'],[15,'15%'],[20,'20%']],
+  lines:[{p:[[0,5],[36,23]],c:'ln'},{p:frontier(5,20,15,10,6,22),c:'lnm'},...[5,10,15,20].map(y=>({p:[[0,y],[40,y]],c:'lnm dash'})),{p:[[40,0],[40,20]],c:'lnm dash'}],
+  pts:[{x:0,y:5,l:'F',dy:14},{x:10,y:10,l:'U',dx:-14},{x:20,y:15,l:'M',dx:-16},{x:30,y:20,l:'V',dx:-14},{x:40,y:20,c:'pt2',l:'Z',dx:-14},{x:40,y:15,c:'pt2',l:'Y',dx:-14},{x:40,y:10,c:'pt2',l:'X',dx:-14},{x:40,y:5,c:'pt2',l:'W',dx:-16}],h:290,label:'Left chart: expected return vs standard deviation'})}
+  ${chart({id:'p85b',x:[0,1.8],y:[0,24],xl:'β',yl:'E(r)',xf:t=>fx(t,1),yf:pf,xtk:[[.5,'0.5'],[1,'1'],[1.5,'1.5']],ytk:[[5,'5%'],[10,'10%'],[15,'15%'],[20,'20%']],
+  lines:[{p:[[0,5],[1.8,23]],c:'ln'},...[5,10,15,20].map(y=>({p:[[0,y],[1.5,y]],c:'lnm dash'}))],
+  pts:[{x:0,y:5,l:'F, W',dy:16},{x:.5,y:10,l:'U, X',dy:16},{x:.5,y:15,c:'pt2',l:'J',dx:-12},{x:1,y:15,l:'M, Y',dy:16},{x:1.5,y:15,c:'pt2',l:'K',dy:16},{x:1.5,y:20,l:'V, Z',dy:16}],h:290,label:'Right chart: expected return vs beta'})}</div>`;
+const chart96=()=>chart({id:'p96',x:[-3,3],y:[-5,5],xl:'R<sub>M</sub> (%)',yl:'R<sub>J</sub> (%)',xf:t=>fx(t,0),yf:t=>fx(t,0),
+  lines:[{p:[[-2,0],[-2,-4]],c:'lnm dash'},{p:[[-2,-4],[0,-4]],c:'lnm dash'},{p:[[2,0],[2,4]],c:'lnm dash'},{p:[[0,4],[2,4]],c:'lnm dash'}],
+  pts:[{x:-2,y:0,c:'pt2'},{x:-2,y:-4,c:'pt2'},{x:2,y:0,c:'pt2'},{x:2,y:4,c:'pt2'}],h:280,label:'Four data points for Stock J'});
+
+const SCN=['I','II','III','IV'];
+window.PP=[
+/* ---------------- DIVERSIFICATION ---------------- */
+{n:65,t:'div',title:'Butch vs. Sundance: diversification and the Sharpe ratio',
+ q:`<p>The average standard deviation of return for an individual stock is 0.55 and the average correlation of pairs of stocks is 0.18. The risk-free rate is 3% and the risk premium of an average stock is 9%. Butch and Sundance both have equally weighted portfolios, but Butch's has 1,000 stocks and Sundance's has only 15.</p>`,
+ parts:[
+ {l:'A',q:'Calculate the Sharpe ratios of Butch’s and Sundance’s stock portfolios.',ins:[{ask:'Butch’s Sharpe =',unit:'',ans:.3848,tol:.002},{ask:'Sundance’s Sharpe =',unit:'',ans:.3378,tol:.002}],
+  sol:[`Average variance = 0.55<sup>2</sup> = 0.3025. Average covariance = ρσσ = 0.18(0.55)(0.55) = 0.05445.`,
+  `Equally weighted: σ<sub>p</sub><sup>2</sup> = (1/n)(0.3025) + ((n − 1)/n)(0.05445).`,
+  `Butch (n = 1,000): σ<sub>p</sub> = 0.2339. Sundance (n = 15): σ<sub>p</sub> = 0.2664.`,
+  `Same risk premium (0.09), so Sharpe = 0.09/σ: Butch <b>0.3848</b>, Sundance <b>0.3378</b>. Butch's is larger because he is more diversified.`]},
+ {l:'B',q:'Each forms a complete portfolio (stock portfolio + risk-free asset) with σ = 0.20. Calculate the expected return of each complete portfolio.',ins:[{ask:'Butch E(r) =',unit:'%',ans:10.70,tol:.03},{ask:'Sundance E(r) =',unit:'%',ans:9.76,tol:.03}],
+  sol:[`CAL: E(r) = r<sub>f</sub> + Sharpe × σ.`,`Butch: 0.03 + 0.3848(0.20) = <b>0.1070</b>. Sundance: 0.03 + 0.3378(0.20) = <b>0.0976</b>.`,`Same risk, but Butch earns more because his portfolio pays more per unit of risk.`]}]},
+
+/* ---------------- CAPM ---------------- */
+{n:66,t:'capm',title:'Expected vs. required return from prices',
+ q:`<p>Today, Asset A's intrinsic value is $48, but its price is only $45. The expected price of A one year from today is $52.65. Calculate A's expected return and required return. Is A overpriced or underpriced?</p>`,
+ parts:[{l:'',q:'',ins:[{ask:'E(r) =',unit:'%',ans:17},{ask:'k =',unit:'%',ans:9.6875}],text:'Underpriced',
+  sol:[`Price gives expected return: P<sub>0</sub> = E(CF<sub>1</sub>)/(1 + E(r)) ⇒ 45 = 52.65/(1 + E(r)) ⇒ E(r) = <b>17%</b>.`,`Intrinsic value gives required return: V<sub>0</sub> = E(CF<sub>1</sub>)/(1 + k) ⇒ 48 = 52.65/(1 + k) ⇒ k = <b>9.6875%</b>.`,`E(r) &gt; k (and P<sub>0</sub> &lt; V<sub>0</sub>): A is <b>underpriced</b>.`]}]},
+{n:67,t:'capm',title:'Price and intrinsic value from returns',
+ q:`<p>Analysts forecast the price of Stock B one year from today to be $450. Additionally, Stock B is expected to pay a dividend of $8 per share. B's expected return is 12% and its required return is 18%. Calculate B's current price and intrinsic value. Is B overpriced or underpriced?</p>`,
+ parts:[{l:'',q:'',ins:[{ask:'P<sub>0</sub> =',unit:'$',ans:408.9286},{ask:'V<sub>0</sub> =',unit:'$',ans:388.1356}],text:'Overpriced',
+  sol:[`E(CF<sub>1</sub>) = 450 + 8 = $458.`,`P<sub>0</sub> = 458/1.12 = <b>$408.93</b>.`,`V<sub>0</sub> = 458/1.18 = <b>$388.14</b>.`,`E(r) &lt; k and P<sub>0</sub> &gt; V<sub>0</sub>: B is <b>overpriced</b>.`]}]},
+{n:68,t:'capm',title:'Current price and required return',
+ q:`<p>Asset C is expected to be worth $85 one year from today. Today, C's expected return is 9.113% and its intrinsic value is $80. Calculate C's current price and required rate of return. Is C overpriced, underpriced, or correctly priced?</p>`,
+ parts:[{l:'',q:'',ins:[{ask:'P<sub>0</sub> =',unit:'$',ans:77.90089},{ask:'k =',unit:'%',ans:6.25}],text:'Underpriced',
+  sol:[`P<sub>0</sub> = 85/1.09113 = <b>$77.90</b>.`,`80 = 85/(1 + k) ⇒ k = <b>6.25%</b>.`,`E(r) &gt; k and P<sub>0</sub> &lt; V<sub>0</sub>: C is <b>underpriced</b>.`]}]},
+{n:69,t:'capm',title:'Expected price and intrinsic value',
+ q:`<p>The current price of Asset D is $500 and its expected return is 10%, with an expected dividend of $6 per share. D's required return is 12%. Calculate D's expected price and intrinsic value. Is D overpriced, underpriced, or correctly priced?</p>`,
+ parts:[{l:'',q:'',ins:[{ask:'E(P<sub>1</sub>) =',unit:'$',ans:544},{ask:'V<sub>0</sub> =',unit:'$',ans:491.0714}],text:'Overpriced',
+  sol:[`500 = (E(P<sub>1</sub>) + 6)/1.10 ⇒ E(P<sub>1</sub>) = <b>$544</b>.`,`V<sub>0</sub> = (544 + 6)/1.12 = <b>$491.07</b>.`,`E(r) &lt; k and P<sub>0</sub> &gt; V<sub>0</sub>: D is <b>overpriced</b>.`]}]},
+{n:70,t:'capm',title:'Required return, dividend and alpha',
+ q:`<p>The intrinsic value of Asset E is $900. Its current price is $1,000, with an expected return of 17% and an expected price of $1,150. Calculate E's required return and expected dividend. Define α ≡ E(r) − k. What is E's alpha?</p>`,
+ parts:[{l:'',q:'',ins:[{ask:'k =',unit:'%',ans:30},{ask:'E(Div<sub>1</sub>) =',unit:'$',ans:20},{ask:'α =',unit:'%',ans:-13}],
+  sol:[`1,000 = (1,150 + E(Div<sub>1</sub>))/1.17 ⇒ E(Div<sub>1</sub>) = <b>$20</b>.`,`900 = 1,170/(1 + k) ⇒ k = <b>30%</b>.`,`α = 0.17 − 0.30 = <b>−13%</b>. Negative alpha: E is overpriced (E(r) &lt; k, P<sub>0</sub> &gt; V<sub>0</sub>).`]}]},
+{n:71,t:'capm',title:'Portfolio variance three ways',
+ q:`<p>Here is the distribution of returns for stocks A, B and C. Portfolio X has 25% invested in A, 40% in B and 35% in C.</p>${T(['s','p<sub>s</sub>','r<sub>A,s</sub>','r<sub>B,s</sub>','r<sub>C,s</sub>'],[['I','0.10','−0.40','0.25','0.30'],['II','0.20','0.20','−0.10','0.10'],['III','0.35','0.50','0.20','−0.20'],['IV','0.35','0.30','−0.30','0.40']])}<p>Calculate the variance of Portfolio X three different ways.</p>`,
+ parts:[
+ {l:'A',q:'Definition of return variance: σ<sub>X</sub><sup>2</sup> = Σ p<sub>s</sub>[r<sub>X,s</sub> − E(r<sub>X</sub>)]<sup>2</sup>.',ins:[{ask:'E(r<sub>X</sub>) =',unit:'%',ans:10},{ask:'σ<sub>X</sub><sup>2</sup> =',unit:'',ans:.001045,tol:.00002}],
+  sol:[`Portfolio return in each state, e.g. state I: 0.25(−0.40) + 0.40(0.25) + 0.35(0.30) = 0.105. All four: 0.105, 0.045, 0.135, 0.095.`,`E(r<sub>X</sub>) = 0.10(0.105) + 0.20(0.045) + 0.35(0.135) + 0.35(0.095) = <b>0.10</b>.`,`σ<sub>X</sub><sup>2</sup> = 0.10(0.005)<sup>2</sup> + 0.20(−0.055)<sup>2</sup> + 0.35(0.035)<sup>2</sup> + 0.35(−0.005)<sup>2</sup> = <b>0.001045</b>.`]},
+ {l:'B',q:'Double summation (Markowitz): σ<sub>X</sub><sup>2</sup> = Σ Σ w<sub>i</sub>w<sub>j</sub>Cov(r<sub>i</sub>, r<sub>j</sub>). Start with Cov(r<sub>A</sub>, r<sub>B</sub>).',ins:[{ask:'Cov(r<sub>A</sub>, r<sub>B</sub>) =',unit:'',ans:-.0021,tol:.0001}],
+  sol:[`Means: r̄<sub>A</sub> = 0.28, r̄<sub>B</sub> = −0.03, r̄<sub>C</sub> = 0.12.`,`Cov(r<sub>A</sub>, r<sub>B</sub>) = 0.10(−0.68)(0.28) + 0.20(−0.08)(−0.07) + 0.35(0.22)(0.23) + 0.35(0.02)(−0.27) = <b>−0.0021</b>.`,`Full covariance matrix:${T(['','A','B','C'],[['A','0.0646','−0.0021','−0.0346'],['B','−0.0021','0.05285','−0.0469'],['C','−0.0346','−0.0469','0.0666']])}`,
+  `σ<sub>X</sub><sup>2</sup> = 0.25<sup>2</sup>(0.0646) + 0.40<sup>2</sup>(0.05285) + 0.35<sup>2</sup>(0.0666) + 2(0.25)(0.40)(−0.0021) + 2(0.25)(0.35)(−0.0346) + 2(0.40)(0.35)(−0.0469) = <b>0.001045</b>. (The key prints 0.0464 for A's variance in this line; it should be 0.0646.)`]},
+ {l:'C',q:'Weighted average of each asset’s covariance with the portfolio: σ<sub>X</sub><sup>2</sup> = Σ w<sub>i</sub>Cov(r<sub>i</sub>, r<sub>X</sub>).',ins:[{ask:'Cov(r<sub>A</sub>, r<sub>X</sub>) =',unit:'',ans:.0032,tol:.0001},{ask:'Cov(r<sub>B</sub>, r<sub>X</sub>) =',unit:'',ans:.0042,tol:.0001},{ask:'Cov(r<sub>C</sub>, r<sub>X</sub>) =',unit:'',ans:-.0041,tol:.0001}],
+  sol:[`Row trick: Cov(r<sub>A</sub>, r<sub>X</sub>) = 0.25(0.0646) + 0.40(−0.0021) + 0.35(−0.0346) = <b>0.0032</b>.`,`Cov(r<sub>B</sub>, r<sub>X</sub>) = 0.25(−0.0021) + 0.40(0.05285) + 0.35(−0.0469) = <b>0.0042</b>.`,`Cov(r<sub>C</sub>, r<sub>X</sub>) = 0.25(−0.0346) + 0.40(−0.0469) + 0.35(0.0666) = <b>−0.0041</b>.`,`σ<sub>X</sub><sup>2</sup> = 0.25(0.0032) + 0.40(0.0042) + 0.35(−0.0041) = <b>0.001045</b>. All three methods agree.`]}]},
+{n:72,t:'capm',title:'Backing out the dividend',
+ q:`<p>The current price of Pinnacle Company's common stock is $50. Everyone expects the price one year from now to be $55. The dividend, if any, will be paid one year from today. The required return is 10%, but investors expect a holding period return of 12% at its current price. Calculate Pinnacle's expected dividend.</p>`,
+ parts:[{l:'',q:'',ins:[{ask:'E(Div<sub>1</sub>) =',unit:'$',ans:1}],sol:[`E(CF<sub>1</sub>) = P<sub>0</sub>(1 + E(r)) = 50(1.12) = $56. (Use the <em>expected</em> return here, because it goes with the actual price.)`,`Dividend = 56 − 55 = <b>$1</b>.`]}]},
+{n:73,t:'capm',title:'CAPM with a constant-growth stock',
+ q:`<p>The risk-free rate is 3% and the market risk premium is 7%. An analyst collected the following data for Stock X: D<sub>1</sub> = $2, g = 2% in perpetuity, β<sub>X</sub> = 1.2. Today's price for Stock X (P<sub>0</sub>) is correct according to CAPM.</p><p class="muted">Uses V<sub>0</sub> = D<sub>1</sub>/(k − g), the constant-growth formula from Equity Valuation (it's on your formula sheet).</p>`,
+ parts:[
+ {l:'A',q:'What price does the analyst expect for Stock X one year from today (P<sub>1</sub>)?',ins:[{ask:'P<sub>1</sub> =',unit:'$',ans:21.702}],sol:[`k = 3% + 1.2(7%) = 11.4%.`,`P<sub>0</sub> = 2/(0.114 − 0.02) = $21.277.`,`Price grows at g: P<sub>1</sub> = 21.277(1.02) = <b>$21.70</b>.`]},
+ {l:'B',q:'Suppose you buy Stock X today and its price one year from today turns out to be $25. What will be your holding period return?',ins:[{ask:'HPR =',unit:'%',ans:26.9,tol:.1}],sol:[`HPR = (25 + 2)/21.277 − 1 = <b>26.9%</b>.`]}]},
+{n:74,t:'capm',title:'Price from alpha',
+ q:`<p>Assume CAPM holds. The price of Stock X is expected to be $90 one year from today, and analysts believe shareholders will receive a $1.50 dividend one year from today. Stock X's beta is 1.4, its alpha is −4%, the risk-free rate is 2% and the expected return on the market is 14%. What is the price of Stock X today?</p>`,
+ parts:[{l:'',q:'',ins:[{ask:'P<sub>0</sub> =',unit:'$',ans:79.70}],sol:[`Required: k = 0.02 + 1.4(0.14 − 0.02) = 18.8%.`,`α = E(r) − k ⇒ −0.04 = E(r) − 0.188 ⇒ E(r) = 14.8%.`,`0.148 = (91.50 − P<sub>0</sub>)/P<sub>0</sub> ⇒ P<sub>0</sub> = 91.50/1.148 = <b>$79.70</b>.`]}]},
+{n:75,t:'capm',title:'SML from two correctly priced assets',
+ q:`<p>Assets A and B are correctly priced in CAPM equilibrium. Calculate the required return of Asset C.</p>${T(['Asset','Beta','Expected return'],[['A','0.6','8%'],['B','1.6','18%'],['C','0.8','?']])}`,
+ parts:[{l:'',q:'',ins:[{ask:'k<sub>C</sub> =',unit:'%',ans:10}],sol:[`Correctly priced assets lie on the SML. Slope = MRP = (0.18 − 0.08)/(1.6 − 0.6) = 0.10.`,`Intercept: 0.08 = r<sub>f</sub> + 0.6(0.10) ⇒ r<sub>f</sub> = 0.02.`,`k<sub>C</sub> = 0.02 + 0.8(0.10) = <b>10%</b>.`]}]},
+{n:76,t:'capm',title:'SML when one asset is mispriced',
+ q:`<p>Asset A is correctly priced in CAPM equilibrium. The alpha of Asset B is −0.037. Calculate the required return of Asset C.</p>${T(['Asset','Beta','Expected return'],[['A','0.30','4.95%'],['B','1.75','13.575%'],['C','1.20','?']])}`,
+ parts:[{l:'',q:'',ins:[{ask:'k<sub>C</sub> =',unit:'%',ans:12.6}],sol:[`B is mispriced, so first find its <em>required</em> return: −0.037 = 0.13575 − k<sub>B</sub> ⇒ k<sub>B</sub> = 0.17275.`,`Slope = MRP = (0.17275 − 0.0495)/(1.75 − 0.30) = 0.085.`,`0.0495 = r<sub>f</sub> + 0.30(0.085) ⇒ r<sub>f</sub> = 0.024.`,`k<sub>C</sub> = 0.024 + 1.20(0.085) = <b>12.6%</b>.`]}]},
+{n:77,t:'capm',title:'Valuing a preferred stock with CAPM',
+ q:`<p>Assets A and B are correctly priced in CAPM equilibrium. Asset C is a preferred stock expected to pay a $2 annual dividend in perpetuity.</p>${T(['Asset','Beta','Expected return'],[['A','0.6','8%'],['B','1.6','18%'],['C','1','?']])}`,
+ parts:[
+ {l:'A',q:'Let V<sub>0</sub> be the equilibrium price of Asset C today. Calculate V<sub>0</sub>.',ins:[{ask:'V<sub>0</sub> =',unit:'$',ans:16.6667,tol:.02}],sol:[`SML slope = (0.18 − 0.08)/(1.6 − 0.6) = 0.10; r<sub>f</sub> = 0.08 − 0.6(0.10) = 0.02.`,`k<sub>C</sub> = 0.02 + 1(0.10) = 12%.`,`Perpetuity: V<sub>0</sub> = D/k = 2/0.12 = <b>$16.67</b>.`]},
+ {l:'B',q:'Suppose C’s actual price today is P<sub>0</sub> = $17.45 and its price in one year is expected to equal V<sub>0</sub>. What is C’s alpha?',ins:[{ask:'α<sub>C</sub> =',unit:'%',ans:-5,tol:.1}],sol:[`E(HPR) = (2 + 16.67)/17.45 − 1 = 7%.`,`α = 7% − 12% = <b>−5%</b>. Overpriced.`]}]},
+{n:78,t:'capm',title:'Reading the CML chart: A and B',
+ q:`<p>Use the chart to complete the table. If there is not enough information, write “Insufficient Information.” Assume all assets are correctly priced in CAPM equilibrium. Neither A nor B pays a dividend, and both are expected to be worth $70 one year from today.</p>${chart78()}`,
+ parts:[
+ {l:'',q:'Total risk (as variance) of A and B',ins:[{ask:'σ<sub>A</sub><sup>2</sup> =',unit:'',ans:.0729,tol:.0002},{ask:'σ<sub>B</sub><sup>2</sup> =',unit:'',ans:.2025,tol:.0002}],sol:[`Read σ off the chart: A = 27%, B = 45%. σ<sub>A</sub><sup>2</sup> = 0.27<sup>2</sup> = <b>0.0729</b>; σ<sub>B</sub><sup>2</sup> = 0.45<sup>2</sup> = <b>0.2025</b>.`]},
+ {l:'',q:'Beta of A and B',ins:[{ask:'β<sub>A</sub> = β<sub>B</sub> =',unit:'',ans:1.35}],sol:[`SML: 0.16 = 0.025 + β(0.125 − 0.025) ⇒ β = <b>1.35</b>.`,`Or, since A is on the CML: 0.16 = (1 − y)(0.025) + y(0.125) ⇒ y = 1.35 in M, so β = 1.35.`,`B has the same E(r), so in equilibrium it has the same β. Its extra σ is all firm-specific.`]},
+ {l:'',q:'P<sub>0</sub> of A and B',ins:[{ask:'P<sub>0</sub> =',unit:'$',ans:60.3448}],sol:[`Both are correctly priced with k = 16%: P<sub>0</sub> = 70/1.16 = <b>$60.34</b> for each.`]}]},
+{n:79,t:'capm',title:'CML + CAPM table: C, X, Y, Z',
+ q:`<p>Use the graph to complete the table. Assume all assets are correctly priced in CAPM equilibrium. The graph is not drawn to scale.</p>${chart79()}${T(['Asset','E(r)','σ','β','ρ<sub>i,M</sub>'],[['F','2%','0%','',''],['M','12%','30%','',''],['C','','18%','',''],['X','Same as C','Same as Z','',''],['Y','12%','Same as Z','',''],['Z','','','1.5','']])}`,
+ parts:[
+ {l:'',q:'Asset C',ins:[{ask:'E(r<sub>C</sub>) =',unit:'%',ans:8},{ask:'β<sub>C</sub> =',unit:'',ans:.6}],sol:[`C is on the CML. CML: E(r<sub>C</sub>) = 0.02 + [(0.12 − 0.02)/0.30](0.18) = <b>8%</b>.`,`CAPM: 0.08 = 0.02 + β<sub>C</sub>(0.10) ⇒ β<sub>C</sub> = <b>0.6</b>. On the CML, ρ<sub>C,M</sub> = 1.`]},
+ {l:'',q:'Asset Z (on the CML, β = 1.5)',ins:[{ask:'E(r<sub>Z</sub>) =',unit:'%',ans:17},{ask:'σ<sub>Z</sub> =',unit:'%',ans:45}],sol:[`CAPM: E(r<sub>Z</sub>) = 0.02 + 1.5(0.10) = <b>17%</b>.`,`CML: 0.17 = 0.02 + (0.10/0.30)σ<sub>Z</sub> ⇒ σ<sub>Z</sub> = <b>45%</b>. ρ<sub>Z,M</sub> = 1.`]},
+ {l:'',q:'Correlations of X and Y with the market',ins:[{ask:'ρ<sub>X,M</sub> =',unit:'',ans:.4,tol:.01},{ask:'ρ<sub>Y,M</sub> =',unit:'',ans:.6667,tol:.01}],sol:[`X: same E(r) as C, so β<sub>X</sub> = 0.6, and σ<sub>X</sub> = σ<sub>Z</sub> = 45%. β = ρσ<sub>i</sub>/σ<sub>M</sub> ⇒ 0.6 = ρ(0.45/0.30) ⇒ ρ<sub>X,M</sub> = <b>0.4</b>.`,`Y: E(r) = 12% ⇒ β<sub>Y</sub> = 1, σ<sub>Y</sub> = 45%. 1 = ρ(0.45/0.30) ⇒ ρ<sub>Y,M</sub> = <b>0.67</b>.`]}]},
+{n:80,t:'capm',title:'Alpha from NPV',
+ q:`<p>Assume r<sub>f</sub> = 4% and E(r<sub>M</sub>) = 16% in CAPM equilibrium. Asset X will mature one year from today and will make a single payment of $1,000 at that time. The beta of Asset X is 1.6 and the NPV of purchasing it today is $65. What is the alpha of Asset X?</p>`,
+ parts:[{l:'',q:'',ins:[{ask:'α<sub>X</sub> =',unit:'%',ans:10.72,tol:.1}],sol:[`Required return: k = 0.04 + 1.6(0.16 − 0.04) = 23.2%.`,`NPV uses k: 65 = −P<sub>0</sub> + 1,000/1.232 ⇒ P<sub>0</sub> = $746.69.`,`E(r) = 1,000/746.69 − 1 = 33.9%.`,`α = 0.339 − 0.232 = <b>10.7%</b>.`]}]},
+{n:81,t:'capm',title:'Complete the CAPM table',
+ q:`<p>Assume all five assets are correctly priced in the same CAPM equilibrium. Complete the table.</p>${T(['Asset','σ<sub>i</sub>','ρ<sub>i,M</sub>','β<sub>i</sub>','Required return'],[['A','40%','','0','4%'],['B','0%','','',''],['C','25%','1','1',''],['D','50%','0.2','','8.4%'],['E','40%','1','','']])}`,
+ parts:[
+ {l:'',q:'Assets A and B',ins:[{ask:'ρ<sub>A,M</sub> =',unit:'',ans:0,tol:.001},{ask:'β<sub>B</sub> =',unit:'',ans:0,tol:.001},{ask:'k<sub>B</sub> =',unit:'%',ans:4}],sol:[`σ<sub>B</sub> = 0, so B is the risk-free asset: ρ = 0, β = 0.`,`A has β = 0 too, so in equilibrium k<sub>B</sub> = k<sub>A</sub> = <b>4%</b>. That means r<sub>f</sub> = 4%.`,`β = ρσ<sub>A</sub>/σ<sub>M</sub>: 0 = ρ(0.40/0.25) ⇒ ρ<sub>A,M</sub> = <b>0</b>. (C is the market: β = 1 and ρ = 1, so σ<sub>M</sub> = 25%.)`]},
+ {l:'',q:'Assets C (the market) and D',ins:[{ask:'β<sub>D</sub> =',unit:'',ans:.4},{ask:'k<sub>C</sub> = E(r<sub>M</sub>) =',unit:'%',ans:15}],sol:[`β<sub>D</sub> = 0.2(0.50/0.25) = <b>0.4</b>.`,`CAPM for D: 0.084 = 0.04 + 0.4(E(r<sub>M</sub>) − 0.04) ⇒ E(r<sub>M</sub>) = <b>15%</b>.`]},
+ {l:'',q:'Asset E',ins:[{ask:'β<sub>E</sub> =',unit:'',ans:1.6},{ask:'k<sub>E</sub> =',unit:'%',ans:21.6}],sol:[`β<sub>E</sub> = 1(0.40/0.25) = <b>1.6</b>.`,`CAPM: 0.04 + 1.6(0.15 − 0.04) = <b>21.6%</b>. Since ρ = 1, the CML gives the same: 0.04 + (0.11/0.25)(0.40) = 21.6%.`]}]},
+{n:82,t:'capm',title:'Mispricing in dollars, and the beta that would fix it',
+ q:`<p>Assume equilibrium expected returns are given by CAPM. The risk-free rate is 3%, the market risk premium is 9%, the beta of Stock X is 1.5, and α<sub>X</sub> = 4%. Shareholders expect that, one year from today, the price of X will be E(P<sub>1</sub>) = $120 and X will distribute a $4 dividend.</p>`,
+ parts:[
+ {l:'A',q:'Is X correctly priced, overpriced, or underpriced? Calculate the difference today between X’s actual price and its correct price.',ins:[{ask:'V<sub>0</sub> − P<sub>0</sub> =',unit:'$',ans:3.53,tol:.03}],text:'Underpriced (α &gt; 0)',sol:[`k = 0.03 + 1.5(0.09) = 16.5%, so V<sub>0</sub> = 124/1.165 = $106.44.`,`E(r) = k + α = 20.5%, so P<sub>0</sub> = 124/1.205 = $102.90.`,`X is <b>underpriced</b> by 106.44 − 102.90 = <b>$3.54</b>. (Unrounded it is $3.53.)`]},
+ {l:'B',q:'“At P<sub>0</sub>, Stock X would be correctly priced if its beta were ____.”',ins:[{ask:'β =',unit:'',ans:1.9444}],sol:[`Set the required return equal to X's expected return: 0.205 = 0.03 + β(0.09) ⇒ β = <b>1.944</b>.`]}]},
+{n:83,t:'capm',title:'Alpha from price and true value',
+ q:`<p>A stock is currently priced at $90 and its expected return is 20%. The true value of the stock today is $100. What is this stock's alpha?</p>`,
+ parts:[{l:'',q:'',ins:[{ask:'α =',unit:'%',ans:12}],sol:[`E(CF<sub>1</sub>) = 90(1.20) = $108.`,`100 = 108/(1 + k) ⇒ k = 8%.`,`α = 20% − 8% = <b>12%</b>.`]}]},
+{n:84,t:'capm',title:'Back out E(r<sub>M</sub>) and β from alphas',
+ q:`<p>Assume equilibrium expected returns are specified by CAPM. E(HPR<sub>A</sub>) = E(HPR<sub>B</sub>) = 15%, but α<sub>A</sub> = +3% and α<sub>B</sub> = −3%. The risk-free rate is 3% and β<sub>A</sub> = 0.8. Calculate E(r<sub>M</sub>) and β<sub>B</sub>.</p>`,
+ parts:[{l:'',q:'',ins:[{ask:'E(r<sub>M</sub>) =',unit:'%',ans:14.25},{ask:'β<sub>B</sub> =',unit:'',ans:1.3333}],sol:[`k<sub>A</sub> = 15% − 3% = 12%. 0.12 = 0.03 + 0.8(E(r<sub>M</sub>) − 0.03) ⇒ E(r<sub>M</sub>) = <b>14.25%</b>.`,`k<sub>B</sub> = 15% − (−3%) = 18%. 0.18 = 0.03 + β<sub>B</sub>(0.1125) ⇒ β<sub>B</sub> = <b>1.333</b>.`]}]},
+{n:85,t:'capm',title:'Reading the CML and SML charts together',
+ q:`<p>Consider only assets J, K, U, V, W, X, Y and Z (ignore F and M).</p>${chart85()}`,
+ parts:[
+ {l:'A',q:'List, in alphabetical order, all assets perfectly correlated with the market.',text:'U, V',sol:[`Assets on the CML are mixes of F and M, so ρ = 1: <b>U and V</b>.`]},
+ {l:'B',q:'List all assets that are overpriced.',text:'K',sol:[`On the SML chart, K plots below the line (E(r) = 15% but β = 1.5 requires 20%): <b>K</b> is overpriced. J plots above the line, so it is underpriced.`]},
+ {l:'C',q:'List all assets that are correctly priced.',text:'U, V, W, X, Y, Z',sol:[`Everything on the SML: <b>U, V, W, X, Y, Z</b>.`]},
+ {l:'D',q:'E(r<sub>W</sub>) = r<sub>f</sub> even though σ<sub>W</sub> &gt; 0. Why are investors happy with a zero risk premium?',text:'β<sub>W</sub> = 0',sol:[`Everyone holds M, so no one is exposed to W's unique risk. β<sub>W</sub> = 0 means W has no systematic risk, so it earns no risk premium.`]},
+ {l:'E',q:'Assume J’s and K’s betas are correct, ρ<sub>J,M</sub> = 1/3 and ρ<sub>K,M</sub> = 3/4. Where do J and K plot on the left chart in equilibrium?',ins:[{ask:'σ<sub>J</sub> =',unit:'%',ans:30},{ask:'σ<sub>K</sub> =',unit:'%',ans:40}],sol:[`In equilibrium both sit on the SML: E(r<sub>J</sub>) = 10% (β = 0.5) and E(r<sub>K</sub>) = 20% (β = 1.5).`,`β = ρσ<sub>i</sub>/σ<sub>M</sub> with σ<sub>M</sub> = 20%: 0.5 = (1/3)σ<sub>J</sub>/0.20 ⇒ σ<sub>J</sub> = <b>30%</b>; 1.5 = (3/4)σ<sub>K</sub>/0.20 ⇒ σ<sub>K</sub> = <b>40%</b>.`,`So J plots at (30%, 10%) and K at (40%, 20%), both below the CML.`]}]},
+{n:98,t:'capm',title:'Preferred stock, round two',
+ q:`<p>Assets A and B are correctly priced in CAPM equilibrium. Asset C is a preferred stock expected to pay a $4 annual dividend in perpetuity.</p>${T(['Asset','Beta','Expected return'],[['A','0.4','0.056'],['B','1.6','0.164'],['C','0.7','?']])}`,
+ parts:[
+ {l:'A',q:'Calculate C’s equilibrium price V<sub>0</sub>.',ins:[{ask:'V<sub>0</sub> =',unit:'$',ans:48.1928}],sol:[`Slope = (0.164 − 0.056)/(1.6 − 0.4) = 0.09; r<sub>f</sub> = 0.056 − 0.4(0.09) = 0.02.`,`k<sub>C</sub> = 0.02 + 0.7(0.09) = 0.083.`,`V<sub>0</sub> = 4/0.083 = <b>$48.19</b>.`]},
+ {l:'B',q:'C’s actual price is P<sub>0</sub> = $46.270, and E(P<sub>1</sub>) = V<sub>0</sub>. What is C’s alpha?',ins:[{ask:'α<sub>C</sub> =',unit:'%',ans:4.5,tol:.06}],sol:[`E(HPR) = (4 + 48.193)/46.27 − 1 = 0.128.`,`α = 0.128 − 0.083 = <b>+4.5%</b>. Underpriced.`]}]},
+{n:99,t:'capm',title:'The A/B chart again, with R-square and unique risk',
+ q:`<p>Same chart as problem 78. Assume all assets are correctly priced in CAPM equilibrium. Neither A nor B pays a dividend; both are expected to be worth $70 in one year.</p>${chart78()}`,
+ parts:[
+ {l:'',q:'R-square of A and B',ins:[{ask:'R<sup>2</sup><sub>A</sub> =',unit:'',ans:1,tol:.005},{ask:'R<sup>2</sup><sub>B</sub> =',unit:'',ans:.36,tol:.005}],sol:[`A is on the CML, so ρ<sub>A,M</sub> = 1 and R<sup>2</sup> = <b>1</b>.`,`β<sub>B</sub> = 1.35 (same E(r) as A). 1.35 = ρ<sub>B,M</sub>(0.45/0.20) ⇒ ρ = 0.6 ⇒ R<sup>2</sup> = <b>0.36</b>.`]},
+ {l:'',q:'Unique risk (as variance) of A and B',ins:[{ask:'σ<sub>e,A</sub><sup>2</sup> =',unit:'',ans:0,tol:.0002},{ask:'σ<sub>e,B</sub><sup>2</sup> =',unit:'',ans:.1296,tol:.0003}],sol:[`A is on the CML, so it has no unique risk: <b>0</b>.`,`B: total − systematic = 0.2025 − 1.35<sup>2</sup>(0.04) = 0.2025 − 0.0729 = <b>0.1296</b>. Or (1 − 0.36)(0.2025).`]}]},
+
+/* ---------------- SINGLE INDEX MODEL ---------------- */
+{n:86,t:'sim',title:'A single residual',
+ q:`<p>Bart used 60 monthly returns to fit a security characteristic line for Stock Q. He found α = 2% and β = 1.5. For the fifth month, R<sub>M</sub> = −1% and R<sub>i</sub> = −4%. Calculate the residual for this observation.</p>`,
+ parts:[{l:'',q:'',ins:[{ask:'e<sub>5</sub> =',unit:'%',ans:-4.5}],sol:[`Actual = predicted + residual: −0.04 = 0.02 + 1.5(−0.01) + e.`,`e = −0.04 − 0.005 = <b>−4.5%</b>.`]}]},
+{n:87,t:'sim',title:'Comparing four regression outputs',
+ q:`<p>Selected regression results (40 observations each) for stocks W, X, Y and Z. Some cells were left blank in the original.</p>${T(['','W','X','Y','Z'],[['Multiple R','0.587','0.397','0.486','0.029'],['R Square','0.344','0.158','0.236','0.001'],['Standard Error','0.130','0.050','0.057','0.199'],['SS Regression','','0.018','','0.001'],['SS Residual','','0.094','','1.504'],['SS Total','','0.111','','1.505'],['Intercept','−0.013','−0.007','0.010','0.016'],['X Variable 1','2.972','0.678','0.999','0.182']])}`,
+ parts:[
+ {l:'A',q:'Which stock has the largest alpha?',text:'Z',sol:[`<b>Z</b>, intercept 0.016.`]},
+ {l:'B',q:'Which stock has the largest beta?',text:'W',sol:[`<b>W</b>, slope 2.972.`]},
+ {l:'C',q:'Which stock has the greatest systematic risk as a percentage of total risk?',text:'W',sol:[`<b>W</b>, R<sup>2</sup> = 0.344.`]},
+ {l:'D',q:'Which stock has the largest residual variance? Calculate it.',text:'Z',ins:[{ask:'σ<sub>e,Z</sub><sup>2</sup> =',unit:'',ans:.03856,tol:.0015}],sol:[`<b>Z</b>: SSE/(n − 1) = 1.504/39 = <b>0.0386</b>. (Excel's MSE, 0.040, uses n − 2 and is also accepted. The key prints 0.03864; it should be 0.03856.)`]},
+ {l:'E',q:'Which stock has the greatest total risk? How do you know?',text:'Z',sol:[`<b>Z</b>: SS Total = 1.505, by far the largest. (W's SST, backed out from its standard error, is only about 0.98.)`]}]},
+{n:88,t:'sim',title:'Incomplete regression output for Stock Q',
+ q:`<p>Excess annual returns for Stock Q regressed on excess returns for the market index, 36 observations. Returns are in decimal form, so −0.437 means −43.7%.</p>
+ <div class="grid2"><div>${T(['Regression statistics',''],[['Multiple R','0.417'],['R Square','0.174'],['Adjusted R Square','0.149'],['Standard Error','2.670'],['Observations','36']])}${T(['','df','SS','MS'],[['Regression','1','50.973','50.973'],['Residual','34','242.329','7.127'],['Total','35','293.303','']])}${T(['','Coefficients','Std. error','t Stat'],[['Intercept','0.020','0.448','0.045'],['X Variable 1','1.745','0.652','2.674']])}</div>
+ <div>${T(['Observation','Predicted Y','Residuals'],[['1','−0.437','0.307'],['2','0.229','−1.708'],['3','0.926','−1.826'],['4','0.701','−0.823'],['5','−0.353','0.722']])}</div></div>`,
+ parts:[
+ {l:'A',q:'What is the beta of Stock Q?',ins:[{ask:'β =',unit:'',ans:1.745}],sol:[`The X Variable 1 coefficient: <b>1.745</b>.`]},
+ {l:'B',q:'Stock Q’s unique risk is ____% of its total risk.',ins:[{ask:'share =',unit:'%',ans:82.6,tol:.1}],sol:[`1 − R<sup>2</sup> = 1 − 0.174 = <b>82.6%</b>.`]},
+ {l:'C',q:'Calculate Stock Q’s unique risk.',ins:[{ask:'σ<sub>e</sub><sup>2</sup> =',unit:'',ans:6.924,tol:.02}],sol:[`SSE/(n − 1) = 242.329/35 = <b>6.924</b>. (Excel's MSE = 7.127 uses n − 2.)`]},
+ {l:'D',q:'Calculate Stock Q’s return for observation 1.',ins:[{ask:'R<sub>Q,1</sub> =',unit:'',ans:-.13,tol:.002}],sol:[`Actual = predicted + residual = −0.437 + 0.307 = <b>−0.13</b>.`]},
+ {l:'E',q:'Over the sample period, was Q’s return greater than, less than, or equal to its CAPM required return?',text:'Greater',sol:[`<b>Greater</b>, because α = 0.020 &gt; 0.`]}]},
+{n:89,t:'sim',title:'Nine stocks: reading regression summaries',
+ q:`<p>Excess returns for each stock regressed on excess market returns, 36 observations, decimal form (AAPL's intercept 0.491 = 49.1%).</p>${T(['Asset','Intercept','Slope','SSE','SST','R-Square'],[['AAPL','0.491','1.50','3.824','6.946','0.450'],['BKS','−0.060','1.19','6.190','8.154','0.241'],['CAT','0.179','1.83','2.471','7.125','0.653'],['DIS','0.074','1.18','0.623','2.581','0.758'],['GOOG','0.171','1.10','3.268','4.970','0.342'],['GS','0.076','1.43','3.088','5.935','0.480'],['WMT','0.071','0.25','0.898','0.988','0.091'],['XOM','−0.005','0.35','0.885','1.054','0.160'],['YHOO','−0.041','0.84','6.932','7.911','0.124']])}`,
+ parts:[
+ {l:'',q:'Which stock has the largest beta? Largest alpha? Most highly correlated with the market? Most systematic risk (absolute)? Most unique risk (absolute)? Riskiest to a diversified investor? Riskiest standalone? Exceeded its CAPM required return by the most?',text:'CAT · AAPL · DIS · CAT · YHOO · CAT · BKS · AAPL',
+  sol:[`Largest beta: <b>CAT</b> (slope). Largest alpha: <b>AAPL</b> (intercept). Most correlated: <b>DIS</b> (R-square).`,`Most systematic risk, absolute: <b>CAT</b> (slope; σ<sub>M</sub><sup>2</sup> is the same for every stock). Most unique risk: <b>YHOO</b> (SSE).`,`Riskiest to a diversified investor: <b>CAT</b> (β). Riskiest standalone: <b>BKS</b> (SST). Beat its required return by the most: <b>AAPL</b> (α).`]},
+ {l:'A',q:'Over the sample period, R̄<sub>M</sub> = −0.0769. Calculate GOOG’s average return.',ins:[{ask:'R̄<sub>GOOG</sub> =',unit:'',ans:.0864,tol:.0005}],sol:[`R̄ = α + βR̄<sub>M</sub> = 0.171 + 1.10(−0.0769) = <b>0.0864</b> (8.64%).`]},
+ {l:'B',q:'Calculate GOOG’s residual variance.',ins:[{ask:'σ<sub>e</sub><sup>2</sup> =',unit:'',ans:.09337,tol:.0005}],sol:[`SSE/(n − 1) = 3.268/35 = <b>0.09337</b>. (MSE = 3.268/34 = 0.09612 also accepted.)`]},
+ {l:'C',q:'Calculate GOOG’s return variance.',ins:[{ask:'σ<sup>2</sup> =',unit:'',ans:.142,tol:.0005}],sol:[`SST/(n − 1) = 4.970/35 = <b>0.142</b>.`]}]},
+{n:90,t:'sim',title:'Fill in the SIM worksheet (A–G)',
+ q:`<p>Calculate the missing values A through G, then J's beta, alpha and R-square.</p>${T(['t','R<sub>J,t</sub>','R<sub>M,t</sub>','(R<sub>J</sub> − R̄<sub>J</sub>)<sup>2</sup>','(R<sub>M</sub> − R̄<sub>M</sub>)<sup>2</sup>','(R<sub>J</sub> − R̄<sub>J</sub>)(R<sub>M</sub> − R̄<sub>M</sub>)','α<sub>J</sub> + β<sub>J</sub>R<sub>M,t</sub>','e<sub>J,t</sub>','(e<sub>J,t</sub> − ē<sub>J</sub>)<sup>2</sup>'],[['1','0.12','0.06','0.0036','0.0001','0.0006','0.0660345','0.053966','0.0029123'],['2','−0.10','0.05','0.0256','0','0','<b>E</b>','−0.16','<b>G</b>'],['3','0.06','0.08','0','0.0009','<b>C</b>','0.0781034','−0.018103','0.0003277'],['4','0.17','0.10','<b>A</b>','0.0025','0.0055','0.0901724','0.079828','0.0063724'],['5','0.05','−0.04','0.0001','0.0081','0.0009','0.0056897','<b>F</b>','0.0019634'],{tot:1,cells:['Sum','0.30','0.25','not given','0.0116','<b>D</b>','','','not given']},['Avg / Var','0.06','0.05','Var 0.01035','Var <b>B</b>','Cov 0.00175','','','Var 0.0092940']])}`,
+ parts:[
+ {l:'',q:'Cells A–D',ins:[{ask:'A =',unit:'',ans:.0121,tol:.00005},{ask:'B =',unit:'',ans:.0029,tol:.00005},{ask:'C =',unit:'',ans:0,tol:.00005},{ask:'D =',unit:'',ans:.007,tol:.00005}],sol:[`A = (0.17 − 0.06)<sup>2</sup> = <b>0.0121</b>.`,`B = σ<sub>M</sub><sup>2</sup> = 0.0116/4 = <b>0.0029</b>.`,`C = (0.06 − 0.06)(0.08 − 0.05) = <b>0</b>.`,`D = 0.0006 + 0 + 0 + 0.0055 + 0.0009 = <b>0.0070</b>. Check: Cov = D/4 = 0.00175 ✓`]},
+ {l:'',q:'Cells E–G',ins:[{ask:'E =',unit:'',ans:.06,tol:.0002},{ask:'F =',unit:'',ans:.0443103,tol:.0002},{ask:'G =',unit:'',ans:.0256,tol:.00005}],sol:[`E (predicted, t = 2): actual = predicted + residual ⇒ −0.10 = E − 0.16 ⇒ E = <b>0.06</b>.`,`F (residual, t = 5) = 0.05 − 0.0056897 = <b>0.0443</b>.`,`G = (−0.16 − 0)<sup>2</sup> = <b>0.0256</b>. (Residuals average zero.)`]},
+ {l:'',q:'J’s beta, alpha and R-square',ins:[{ask:'β<sub>J</sub> =',unit:'',ans:.6034},{ask:'α<sub>J</sub> =',unit:'',ans:.02983,tol:.0003},{ask:'R<sup>2</sup> =',unit:'',ans:.102,tol:.002}],sol:[`β = Cov/σ<sub>M</sub><sup>2</sup> = 0.00175/0.0029 = <b>0.6034</b>.`,`α = R̄<sub>J</sub> − βR̄<sub>M</sub> = 0.06 − 0.6034(0.05) = <b>0.02983</b>.`,`R<sup>2</sup> = β<sup>2</sup>σ<sub>M</sub><sup>2</sup>/σ<sub>J</sub><sup>2</sup> = 0.6034<sup>2</sup>(0.0029)/0.01035 = <b>0.102</b>.`]}]},
+{n:91,t:'sim',title:'ConAgra from summary statistics',
+ q:`<p>Joe regressed 11 annual excess returns for ConAgra on excess market returns.</p>${T(['Statistic','Value'],[['Sum of squares, residual','0.39981'],['Sum of squares, total','0.56358'],['Cov(R<sub>i</sub>, R<sub>M</sub>)','0.02502'],['Average excess return (ConAgra)','0.03436'],['Average excess return (market)','−0.02372'],['Market variance','0.03824']])}`,
+ parts:[
+ {l:'A–C',q:'Variance of excess return, beta, alpha',ins:[{ask:'σ<sup>2</sup> =',unit:'',ans:.056358,tol:.0001},{ask:'β =',unit:'',ans:.6543},{ask:'α =',unit:'',ans:.04988,tol:.0003}],sol:[`σ<sup>2</sup> = SST/(n − 1) = 0.56358/10 = <b>0.056358</b>.`,`β = 0.02502/0.03824 = <b>0.6543</b>.`,`α = 0.03436 − 0.6543(−0.02372) = <b>0.04988</b>.`]},
+ {l:'D–G',q:'Systematic share, systematic risk, unique risk, correlation',ins:[{ask:'R<sup>2</sup> =',unit:'%',ans:29.05,tol:.1},{ask:'β<sup>2</sup>σ<sub>M</sub><sup>2</sup> =',unit:'',ans:.01637,tol:.0001},{ask:'σ<sub>e</sub><sup>2</sup> =',unit:'',ans:.03999,tol:.0001},{ask:'ρ =',unit:'',ans:.539,tol:.003}],sol:[`Systematic risk = 0.6543<sup>2</sup>(0.03824) = <b>0.01637</b>.`,`As a share: 0.01637/0.056358 = <b>29.05%</b> (or 1 − SSE/SST = 29.06%).`,`Unique = 0.056358 − 0.01637 = <b>0.03999</b> (= SSE/10).`,`ρ = √0.2905 = <b>0.539</b> (positive, like β).`]}]},
+{n:92,t:'sim',title:'Fill in the blacked-out Excel output',
+ q:`<p>Calculations to fit the SIM for Stock J (excess returns), followed by Excel output with cells A–I blacked out.</p>${T(['t','R<sub>J,t</sub>','R<sub>M,t</sub>','(R<sub>J</sub> − R̄<sub>J</sub>)<sup>2</sup>','(R<sub>M</sub> − R̄<sub>M</sub>)<sup>2</sup>','product','α<sub>J</sub> + β<sub>J</sub>R<sub>M,t</sub>','e<sub>J,t</sub>','e<sup>2</sup>'],[['1','−0.06','−0.05','0.011378','0.006136','0.008356','−0.050092','−0.009908','0.000098'],['2','0.16','0.09','0.012844','0.003803','0.006989','0.122838','0.037162','0.001381'],['3','0.06','0.04','0.000178','0.000136','0.000156','0.061078','−0.001078','0.000001'],['4','0.03','0','0.000278','0.000803','0.000472','0.011669','0.018331','0.000336'],['5','0.04','0.07','0.000044','0.001736','−0.000278','0.098134','−0.058134','0.003380'],['6','0.05','0.02','0.000011','0.000069','−0.000028','0.036373','0.013627','0.000186'],{tot:1,cells:['Sum','0.28','0.17','0.024733','0.012683','0.015667','','0','0.005382']},['Avg / Var','0.046667','0.028333','0.004947','0.002537','Cov 0.003133','','0','0.001076']])}
+ <div class="grid2"><div>${T(['Regression statistics',''],[['Multiple R','0.884542'],['R Square','<b>A</b>'],['Adjusted R Square','0.728019'],['Standard Error','0.036680'],['Observations','<b>B</b>']])}${T(['','df','SS','MS'],[['Regression','1','0.019352','0.019352'],['Residual','4','<b>F</b>','0.001345'],['Total','<b>C</b>','<b>G</b>','']])}${T(['','Coefficients','Std. error'],[['Intercept','<b>D</b>','0.017589'],['X Variable 1','<b>E</b>','0.325694']])}</div>
+ <div>${T(['Observation','Predicted Y','Residuals'],[['1','−0.050092','−0.009908'],['2','0.122838','<b>I</b>'],['3','0.061078','−0.001078'],['4','0.011669','0.018331'],['5','<b>H</b>','−0.058134'],['6','0.036373','0.013627']])}</div></div>`,
+ parts:[
+ {l:'',q:'Regression statistics and coefficients: A–E',ins:[{ask:'A =',unit:'',ans:.782415,tol:.0005},{ask:'B =',unit:'',ans:6,tol:.01},{ask:'C =',unit:'',ans:5,tol:.01},{ask:'D =',unit:'',ans:.011676,tol:.0002},{ask:'E =',unit:'',ans:1.235,tol:.003}],sol:[`A: R Square = Multiple R<sup>2</sup> = 0.884542<sup>2</sup> = <b>0.782415</b>.`,`B: <b>6</b> observations. C: total df = n − 1 = <b>5</b>.`,`E: β = Cov/σ<sub>M</sub><sup>2</sup> = 0.003133/0.002537 = <b>1.235</b>.`,`D: α = 0.046667 − 1.235(0.028333) = <b>0.011676</b>.`]},
+ {l:'',q:'ANOVA and residual output: F–I',ins:[{ask:'F =',unit:'',ans:.005382,tol:.00002},{ask:'G =',unit:'',ans:.024733,tol:.00002},{ask:'H =',unit:'',ans:.098134,tol:.0002},{ask:'I =',unit:'',ans:.037162,tol:.0002}],sol:[`F: SSE = Σ e<sup>2</sup> = <b>0.005382</b>. G: SST = Σ (R<sub>J</sub> − R̄<sub>J</sub>)<sup>2</sup> = <b>0.024733</b> (check: 0.019352 + 0.005382).`,`H: predicted = actual − residual = 0.04 − (−0.058134) = <b>0.098134</b>.`,`I: residual = actual − predicted = 0.16 − 0.122838 = <b>0.037162</b>.`]}]},
+{n:93,t:'sim',title:'Jedidiah’s three-observation SIM',
+ q:`<p>Jedidiah fit a SIM using only three annual returns. The slope of the line of best fit is 1.5 and the variance of the market index is 108 (in percent-squared units, i.e. 0.0108 in decimals).</p>${T(['r<sub>i</sub>','r<sub>M</sub>','r<sub>f</sub>','R<sub>i</sub>','R<sub>M</sub>'],[['17%','12%','2%','15%','10%'],['21','12','2','19','10'],['−8','−6','2','−10','−8']])}`,
+ parts:[
+ {l:'A',q:'Calculate the intercept of the line of best fit.',ins:[{ask:'α =',unit:'%',ans:2}],sol:[`R̄<sub>i</sub> = (15 + 19 − 10)/3 = 8%; R̄<sub>M</sub> = (10 + 10 − 8)/3 = 4%.`,`α = 0.08 − 1.5(0.04) = <b>2%</b>.`]},
+ {l:'B',q:'Calculate SSE for the stock.',ins:[{ask:'SSE =',unit:'',ans:.0008,tol:.00002}],sol:[`Residuals: e = R<sub>i</sub> − (0.02 + 1.5R<sub>M</sub>) = −0.02, +0.02, 0.`,`SSE = 0.0004 + 0.0004 + 0 = <b>0.0008</b>.`]},
+ {l:'C',q:'What percentage of the stock’s variability is explained by the index? (Use n − 1.)',ins:[{ask:'R<sup>2</sup> =',unit:'%',ans:98.38,tol:.1}],sol:[`σ<sub>i</sub><sup>2</sup> = ½[(0.07)<sup>2</sup> + (0.11)<sup>2</sup> + (−0.18)<sup>2</sup>] = 0.0247.`,`Systematic = 1.5<sup>2</sup>(0.0108) = 0.0243.`,`R<sup>2</sup> = 0.0243/0.0247 = <b>98.38%</b>.`]}]},
+{n:94,t:'sim',title:'A 36-observation Excel regression',
+ q:`<p>Excess returns for a stock regressed on excess market returns (36 observations).</p><div class="grid2"><div>${T(['Regression statistics',''],[['Multiple R','0.678984'],['R Square','0.461019'],['Adjusted R Square','0.445167'],['Standard Error','0.053197'],['Observations','36']])}${T(['','df','SS','MS'],[['Regression','1','0.0823005','0.0823'],['Residual','34','0.0962181','0.00283'],['Total','35','0.1785187','']])}${T(['','Coefficients','Std. error','t Stat'],[['Intercept','0.0352424','0.0091974','3.8317'],['X Variable 1','0.9229477','0.1711453','5.3927']])}</div>
+ <div>${T(['Obs.','Predicted Y','Residual'],[['8','0.068213','0.033683'],['9','0.017003','−0.000008'],['10','0.088186','−0.027656'],['11','0.051644','0.002481'],['12','0.001117','−0.089714']])}<p class="muted">Excerpt of the residual output (observations 8–12 of 36).</p></div></div>`,
+ parts:[
+ {l:'A',q:'What percentage of the stock’s risk is systematic?',ins:[{ask:'R<sup>2</sup> =',unit:'%',ans:46.1,tol:.1}],sol:[`R-square = <b>46.1%</b>.`]},
+ {l:'B',q:'What was the actual excess return for observation 10? (Round to x.xxx.)',ins:[{ask:'R<sub>10</sub> =',unit:'',ans:.0605,tol:.0011}],sol:[`Actual = predicted + residual = 0.088 + (−0.028) = <b>0.06</b> (0.0605 unrounded).`]},
+ {l:'C',q:'What is this stock’s unique risk?',ins:[{ask:'σ<sub>e</sub><sup>2</sup> =',unit:'',ans:.00275,tol:.0001}],sol:[`SSE/(n − 1) = 0.0962181/35 = <b>0.00275</b>. (MSE = 0.00283, or Standard Error<sup>2</sup>, also accepted.)`]},
+ {l:'D',q:'Is this stock’s systematic risk greater than, less than, or equal to the market’s?',text:'Less',sol:[`β = 0.9229 &lt; 1, so <b>less</b> systematic risk than the market.`]},
+ {l:'E',q:'Was the stock’s average return greater than, less than, or equal to its CAPM required return?',text:'Greater',sol:[`<b>Greater</b>, since α = 0.0352 &gt; 0.`]}]},
+{n:95,t:'sim',title:'Wal-Mart from summary output',
+ q:`<p>Sam regressed 20 annual excess returns of Wal-Mart on 20 annual excess returns of a market index. Over the sample, R̄<sub>M</sub> = −0.6%.</p>${T(['α<sub>i</sub>','β<sub>i</sub>','Sum of squared residuals','Total sum of squares','σ<sub>M</sub><sup>2</sup>'],[['1.2%','1.01','0.19692','0.24431','0.002449']])}`,
+ parts:[
+ {l:'A',q:'Standard deviation of Wal-Mart’s excess returns',ins:[{ask:'σ<sub>W</sub> =',unit:'%',ans:11.34,tol:.03}],sol:[`σ<sup>2</sup> = SST/(n − 1) = 0.24431/19 = 0.012858 ⇒ σ = <b>0.1134</b>.`]},
+ {l:'B',q:'Proportion of total risk that is firm-specific',ins:[{ask:'share =',unit:'%',ans:80.58,tol:.1}],sol:[`1 − β<sup>2</sup>σ<sub>M</sub><sup>2</sup>/σ<sup>2</sup> = 1 − 1.01<sup>2</sup>(0.002449)/0.1134<sup>2</sup> = <b>80.58%</b>. (SSE/SST = 80.6% is the same idea.)`]},
+ {l:'C',q:'Correlation of Wal-Mart with the index',ins:[{ask:'ρ =',unit:'',ans:.441,tol:.003}],sol:[`β = ρσ<sub>W</sub>/σ<sub>M</sub> ⇒ 1.01 = ρ(0.1134/0.04949) ⇒ ρ = <b>0.441</b>.`]},
+ {l:'D',q:'Average excess return for Wal-Mart',ins:[{ask:'R̄<sub>W</sub> =',unit:'%',ans:.594,tol:.01}],sol:[`R̄ = α + βR̄<sub>M</sub> = 0.012 + 1.01(−0.006) = <b>0.00594</b> (0.594%).`]},
+ {l:'E',q:'If CAPM is correct, the difference between its average return and its required return',ins:[{ask:'difference =',unit:'%',ans:1.2}],sol:[`That's exactly α = <b>1.2%</b>.`]}]},
+{n:96,t:'sim',title:'Fit the SIM from four points',
+ q:`<p>Use the four data points to fit a SIM for Stock J. Both axes are excess returns in percent (4 means 4% = 0.04).</p>${chart96()}`,
+ parts:[
+ {l:'',q:'Means and variances',ins:[{ask:'R̄<sub>J</sub> =',unit:'%',ans:0,tol:.01},{ask:'R̄<sub>M</sub> =',unit:'%',ans:0,tol:.01},{ask:'σ<sub>J</sub><sup>2</sup> =',unit:'',ans:.0010667,tol:.00002},{ask:'σ<sub>M</sub><sup>2</sup> =',unit:'',ans:.0005333,tol:.00002}],sol:[`Data (R<sub>M</sub>, R<sub>J</sub>): (−0.02, 0), (−0.02, −0.04), (0.02, 0), (0.02, 0.04). Both means are <b>0</b>.`,`σ<sub>J</sub><sup>2</sup> = (0 + 0.0016 + 0 + 0.0016)/3 = <b>0.001067</b>.`,`σ<sub>M</sub><sup>2</sup> = 4(0.0004)/3 = <b>0.000533</b>.`]},
+ {l:'',q:'Beta, alpha, R-square, and the residual when R<sub>M</sub> = 2% and R<sub>J</sub> = 4%',ins:[{ask:'β<sub>J</sub> =',unit:'',ans:1},{ask:'α<sub>J</sub> =',unit:'%',ans:0,tol:.01},{ask:'R<sup>2</sup> =',unit:'',ans:.5,tol:.005},{ask:'e =',unit:'%',ans:2}],sol:[`Cov = [(−0.02)(0) + (−0.02)(−0.04) + (0.02)(0) + (0.02)(0.04)]/3 = 0.000533. β = 0.000533/0.000533 = <b>1</b>.`,`α = R̄<sub>J</sub> − βR̄<sub>M</sub> = <b>0</b>.`,`R<sup>2</sup> = 1<sup>2</sup>(0.000533)/0.001067 = <b>0.5</b>.`,`0.04 = 0 + 1(0.02) + e ⇒ e = <b>2%</b>.`]}]},
+{n:97,t:'sim',title:'Same beta, different risk: Assets A and B',
+ q:`<p>Mo regressed excess returns for assets A and B on excess market returns (36 observations each).</p>${T(['','Asset A','Asset B'],[['Multiple R','0.2690','0.4877'],['R Square','0.0724','0.2378'],['Standard Error','0.2659','0.1329'],['SS Regression','0.1875','0.1875'],['SS Residual','2.4032','0.6008'],['SS Total','2.5906','0.7883'],['Intercept','0.0316','0.0316'],['X Variable 1','1.6193','1.6193']])}`,
+ parts:[
+ {l:'A–C',q:'Total, systematic and unique risk (use n − 1)',ins:[{ask:'Total A =',unit:'',ans:.0740,tol:.0002},{ask:'Total B =',unit:'',ans:.0225,tol:.0002},{ask:'Systematic (each) =',unit:'',ans:.00536,tol:.0001},{ask:'Unique A =',unit:'',ans:.0687,tol:.0002},{ask:'Unique B =',unit:'',ans:.0172,tol:.0002}],sol:[`Total: SST/35 → A 2.5906/35 = <b>0.0740</b>; B 0.7883/35 = <b>0.0225</b>.`,`Systematic: SS Reg/35 = 0.1875/35 = <b>0.0054</b> for both.`,`Unique: SSE/35 → A 2.4032/35 = <b>0.0687</b>; B 0.6008/35 = <b>0.0172</b>.`]},
+ {l:'D–E',q:'Systematic share of total risk, and the predicted R<sub>i</sub> if R<sub>M</sub> = 0.02',ins:[{ask:'R<sup>2</sup> A =',unit:'%',ans:7.24,tol:.1},{ask:'R<sup>2</sup> B =',unit:'%',ans:23.78,tol:.3},{ask:'Predicted R =',unit:'',ans:.06399,tol:.0002}],sol:[`R-square: A <b>7.24%</b>, B <b>23.78%</b> (or 0.0054/0.0740 and 0.0054/0.0225).`,`Same line for both: 0.0316 + 1.6193(0.02) = <b>0.06399</b>.`]},
+ {l:'F',q:'Which stock, if either, is riskier in a diversified portfolio?',text:'Neither: same risk',sol:[`<b>Same.</b> They have the same β, and a diversified investor isn't exposed to their unique risk.`]}]},
+];
+
+/* ---------- render ---------- */
+const TOP={div:'Diversification',capm:'CAPM',sim:'Single Index Model'};
+const order=PP.slice().sort((a,b)=>a.n-b.n);
+S.pp=S.pp||{};
+let fTopic='all',fStat='all';
+const list=document.getElementById('pp-list');
+const tolOf=q=>q.tol??(q.unit==='%'?Math.max(.06,Math.abs(q.ans)*.01):q.unit==='$'?Math.max(.02,Math.abs(q.ans)*.002):(q.ans===0?.0005:Math.abs(q.ans)*.015));
+const fmtQ=q=>q.unit==='%'?fx(q.ans,2)+'%':q.unit==='$'?money(q.ans):String(+q.ans.toPrecision(4)).replace('-',MINUS);
+order.forEach(P=>{
+  const el=document.createElement('article');el.className='card pp';el.id='pp'+P.n;el.dataset.topic=P.t;
+  el.innerHTML=`<div class="card-head"><div><span class="eyebrow">Problem ${P.n} · ${TOP[P.t]}</span><h4>${P.title}</h4></div>
+   <div class="row"><button class="ghost st" type="button" data-s="got" aria-pressed="false">Got it</button><button class="ghost st" type="button" data-s="review" aria-pressed="false">Review again</button></div></div>
+   <div class="q">${P.q}</div>
+   <div class="stack">${P.parts.map((pt,pi)=>`<div class="pp-part">
+     ${pt.q?`<p>${pt.l?`<b>${pt.l}.</b> `:''}${pt.q}</p>`:''}
+     ${(pt.ins||[]).length?`<div class="parts">${pt.ins.map((q,i)=>`<div class="ans-row"><label for="pp-${P.n}-${pi}-${i}">${q.ask}</label>${q.unit==='$'?'<span class="unit">$</span>':''}<input id="pp-${P.n}-${pi}-${i}" inputmode="decimal" autocomplete="off">${q.unit==='%'?'<span class="unit">%</span>':''}</div>`).join('')}</div>`:''}
+     <div class="row">${(pt.ins||[]).length?'<button class="primary ppcheck" type="button">Check</button>':''}<button class="ghost ppsol" type="button">${(pt.ins||[]).length?'Show solution':'Show answer'}</button></div>
+     <div class="fb" aria-live="polite"></div>
+     <ol class="steps" hidden>${pt.text?`<li><div><b>Answer:</b> ${pt.text}</div></li>`:''}${pt.sol.map(s=>`<li><div>${s}</div></li>`).join('')}</ol>
+   </div>`).join('')}</div>`;
+  el.querySelectorAll('.pp-part').forEach((box,pi)=>{
+    const pt=P.parts[pi],inputs=[...box.querySelectorAll('input')],fb=box.querySelector('.fb');
+    const check=()=>{
+      let n=0,blank=0;
+      inputs.forEach((inp,i)=>{const q=pt.ins[i],v=parseNum(inp.value);if(isNaN(v)){blank++;inp.classList.remove('ok','no');return}
+        const t=tolOf(q);let ok=Math.abs(v-q.ans)<=t;if(!ok&&q.unit==='%'&&Math.abs(v*100-q.ans)<=t)ok=true;if(!ok&&q.unit===''&&Math.abs(v)>=1&&Math.abs(q.ans)<1&&Math.abs(v/100-q.ans)<=t)ok=true;
+        inp.classList.toggle('ok',ok);inp.classList.toggle('no',!ok);if(ok)n++});
+      if(blank===inputs.length){fb.className='fb no';fb.textContent='Enter an answer first.';return}
+      const all=n===inputs.length;fb.className='fb '+(all?'ok':'no');
+      fb.innerHTML=all?`Correct.${inputs.length>1?' All '+inputs.length+' answers match.':''}`:`${n} of ${inputs.length} correct. Red boxes are off. Try again, or open the solution.`;
+      if(all&&!S.pp[P.n]){S.pp[P.n]='got';save();sync()}
+    };
+    box.querySelector('.ppcheck')?.addEventListener('click',check);
+    inputs.forEach(inp=>inp.addEventListener('keydown',e=>{if(e.key==='Enter')check()}));
+    const sb=box.querySelector('.ppsol'),steps=box.querySelector('.steps');
+    sb.addEventListener('click',()=>{steps.hidden=!steps.hidden;sb.textContent=steps.hidden?((pt.ins||[]).length?'Show solution':'Show answer'):'Hide solution';
+      if(!steps.hidden&&(pt.ins||[]).length)fb.innerHTML=(fb.innerHTML?fb.innerHTML+'<br>':'')+`Answer${pt.ins.length>1?'s':''}: ${pt.ins.map(q=>fmtQ(q)).join(' · ')}`,fb.className=fb.className.includes('ok')?'fb ok':'fb no'});
+  });
+  el.querySelectorAll('.st').forEach(b=>b.addEventListener('click',()=>{S.pp[P.n]=S.pp[P.n]===b.dataset.s?undefined:b.dataset.s;save();sync()}));
+  list.appendChild(el);
+});
+function chips(id,opts,get,set){const box=document.getElementById(id);box.innerHTML=opts.map(([v,l])=>`<button class="ghost chip" type="button" data-v="${v}">${l}</button>`).join('');box.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{set(b.dataset.v);sync()}));return()=>box.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===get())))}
+const cnt=t=>order.filter(p=>p.t===t).length;
+const s1=chips('pp-filter',[['all',`All topics (${order.length})`],['div',`Diversification (${cnt('div')})`],['capm',`CAPM (${cnt('capm')})`],['sim',`Single Index Model (${cnt('sim')})`]],()=>fTopic,v=>fTopic=v);
+const s2=chips('pp-status',[['all','Any status'],['todo','Not done yet'],['review','Review again'],['got','Got it']],()=>fStat,v=>fStat=v);
+function sync(){
+  let shown=0;
+  order.forEach(P=>{const el=document.getElementById('pp'+P.n),st=S.pp[P.n];
+    el.querySelectorAll('.st').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.s===st)));
+    const vis=(fTopic==='all'||P.t===fTopic)&&(fStat==='all'||(fStat==='todo'?!st:st===fStat));el.hidden=!vis;if(vis)shown++});
+  s1();s2();
+  const got=order.filter(P=>S.pp[P.n]==='got').length,rev=order.filter(P=>S.pp[P.n]==='review').length;
+  document.getElementById('pp-count').textContent=`Showing ${shown} of ${order.length} problems · ${got} got it · ${rev} marked for review`;
+  renderNav();
+}
+window.ppDone=()=>order.filter(P=>S.pp[P.n]==='got').length;
+sync();
+})();
+</script>
+
