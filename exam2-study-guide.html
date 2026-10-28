@@ -265,6 +265,15 @@ body.tutor-open .tutor-fab{display:none}
         <tr><td>3–5 workout problems</td><td>60 total</td><td>About 45 min</td><td>Multi-part workout problems on the Mock exam page</td></tr>
         <tr><td>Review</td><td></td><td>About 5 min</td><td>Re-check units: decimals vs. percents</td></tr>
       </tbody></table></div>
+    <div class="note prof"><b>Dr. Dye's exam rules (from his Exam 1 notes; expect the same Monday)</b>
+      <ul>
+        <li><b>Pencil only.</b> Using a pen costs 5 points. Bring an eraser and your calculator.</li>
+        <li><b>Show your work or calculator inputs on workout problems.</b> Answers that “appear out of nowhere” can get zero credit, even if they're right. Writing the formula and plugging in numbers earns partial credit even when the final number is wrong.</li>
+        <li>Multiple-choice answers count only on the Gradescope bubble sheet. Marks in the test booklet aren't graded.</li>
+        <li>The formula sheet is provided. Sign the Aggie Honor Code statement on it, and re-attach it if you detach it. Don't bring your own.</li>
+        <li>Programming formulas into your calculator counts as cheating. Using its built-in stats mode is fine.</li>
+        <li>Arrive early, sit in your seating-chart seat, and try not to leave the room during the exam.</li>
+      </ul></div>
     <p class="prose">Workout problems are 60% of the grade, and each one chains several steps (β → k → α → V<sub>0</sub>, or means → Cov → β → α → R<sup>2</sup>). One early slip can sink every later part. So the priority is getting the mechanics automatic, and the multi-part workout problems are built to train exactly that.</p>
   </div>
 
@@ -361,6 +370,23 @@ body.tutor-open .tutor-fab{display:none}
     </div>
   </div>
   <div class="block"><h2>Worked example</h2><div class="worked" data-gen="f_scen" data-fixed="1"></div></div>
+  <div class="block">
+    <h2>From your Exam 1 lectures</h2>
+    <p class="prose muted">These are Dr. Dye's own examples from the handouts in your notes, in the order he taught them. Try each part before revealing a step. The answers match his slides; I recomputed every one. Two of them answer questions you wrote in your margins (“What defines ρ?” and “HOW?”), and problem 50 explains why your answer didn't match the key.</p>
+    <div class="stack">
+      <div class="worked" data-gen="lec_cov"></div>
+      <div class="worked" data-gen="lec_pv"></div>
+      <div class="worked" data-gen="lec_3a"></div>
+      <div class="worked" data-gen="lec_g"></div>
+      <div class="worked" data-gen="lec_cal"></div>
+      <div class="worked" data-gen="lec_t"></div>
+      <div class="worked" data-gen="lec_sugar"></div>
+      <div class="worked" data-gen="lec_sigrid"></div>
+      <div class="worked" data-gen="lec_heidi"></div>
+      <div class="worked" data-gen="lec_p50"></div>
+      <div class="worked" data-gen="lec_p60"></div>
+    </div>
+  </div>
   <div class="block"><h2>Practice</h2><div class="practice stack" data-mod="tools"></div></div>
   <div class="block"><h2>Concept check</h2><div class="mcqs stack" data-mod="tools"></div></div>
 </section>
@@ -887,6 +913,88 @@ f_cal:{mod:'tools',topic:'CAL',fn(){
   `CAL: E(r<sub>P</sub>) = ${fx(rf,3)} + ${fx(S,4)}×${fx(sp,2)} = <b>${pc(rf+S*sp)}</b>.`,
   `Weight in T: y = σ<sub>P</sub>/σ<sub>T</sub> = ${fx(y,4)}. ${y>1?'That is more than 100%, so you borrow at r<sub>f</sub>.':'The rest goes in T-bills.'}`]}}},
 
+/* ===== Dye's Exam 1 lecture examples (fixed numbers, from the student's notes) ===== */
+lec_cov:{mod:'lecture',topic:'Variance & Covariance handout',fn(){return{title:'Assets A and B: covariance and correlation',
+  q:`<p>Use the probability distribution of returns for Assets A and B to calculate each asset's expected return and variance, and the covariance and correlation of the pair.</p>${tbl(['s','p<sub>s</sub>','r<sub>A,s</sub>','r<sub>B,s</sub>'],[['1','0.1','0.30','0.15'],['2','0.5','0.08','0.28'],['3','0.3','−0.05','0'],['4','0.1','−0.25','−0.15']])}`,pts:15,
+  parts:[{ask:'E(r<sub>A</sub>) =',unit:'%',ans:3},{ask:'E(r<sub>B</sub>) =',unit:'%',ans:14},{ask:'σ<sub>A</sub><sup>2</sup> =',unit:'',ans:.0183,tol:.0002},{ask:'Cov(r<sub>A</sub>, r<sub>B</sub>) =',unit:'',ans:.01525,tol:.0002},{ask:'ρ<sub>A,B</sub> =',unit:'',ans:.726,tol:.004}],steps:[
+  `Expected return = probability-weighted average: E(r<sub>A</sub>) = 0.1(0.30) + 0.5(0.08) + 0.3(−0.05) + 0.1(−0.25) = <b>0.03</b>. E(r<sub>B</sub>) = 0.1(0.15) + 0.5(0.28) + 0.3(0) + 0.1(−0.15) = <b>0.14</b>.`,
+  `Variance = weighted average <em>squared</em> deviation (one asset): σ<sub>A</sub><sup>2</sup> = 0.1(0.27)<sup>2</sup> + 0.5(0.05)<sup>2</sup> + 0.3(−0.08)<sup>2</sup> + 0.1(−0.28)<sup>2</sup> = <b>0.0183</b>. Same for B: 0.0241.`,
+  `Covariance = weighted average <em>product</em> of deviations (two assets): 0.1(0.27)(0.01) + 0.5(0.05)(0.14) + 0.3(−0.08)(−0.14) + 0.1(−0.28)(−0.29) = <b>0.01525</b>.`,
+  `ρ = Cov/(σ<sub>A</sub>σ<sub>B</sub>) = 0.01525/(√0.0183 × √0.0241) = <b>0.726</b>.`,
+  `<b>You asked in your notes: “What defines ρ?”</b> Covariance's size depends on how much each asset moves, so 0.01525 alone doesn't tell you if the link is strong. Correlation divides that out and puts the relationship on a fixed scale from −1 to +1: +1 means they always move together, 0 means no linear relationship, −1 means exact opposites. Two pairs can have the same ρ = +1 but very different covariances (Dr. Dye's panels A, B and C). This matters for Exam 2: β = ρσ<sub>i</sub>/σ<sub>M</sub>, and R<sup>2</sup> = ρ<sup>2</sup>.`]}}},
+lec_pv:{mod:'lecture',topic:'Portfolio Variance handout',fn(){return{title:'Example 1: a 40/60 portfolio of A and B, two ways',
+  q:`<p>Same assets as above (E(r<sub>A</sub>) = 0.03, E(r<sub>B</sub>) = 0.14, σ<sub>A</sub><sup>2</sup> = 0.0183, σ<sub>B</sub><sup>2</sup> = 0.0241, Cov = 0.01525). Portfolio P invests 40% in A and 60% in B. What are P's expected return and variance?</p>`,
+  parts:[{ask:'E(r<sub>P</sub>) =',unit:'%',ans:9.6},{ask:'σ<sub>P</sub><sup>2</sup> =',unit:'',ans:.018924,tol:.0001}],steps:[
+  `E(r<sub>P</sub>) = 0.4(0.03) + 0.6(0.14) = <b>0.096</b>.`,
+  `Double summation: σ<sub>P</sub><sup>2</sup> = 0.4<sup>2</sup>(0.0183) + 0.6<sup>2</sup>(0.0241) + 2(0.4)(0.6)(0.01525) = <b>0.018924</b>.`,
+  `Return-variance way: portfolio return in each state is 0.21, 0.20, −0.02, −0.19. Then σ<sub>P</sub><sup>2</sup> = 0.1(0.21 − 0.096)<sup>2</sup> + 0.5(0.20 − 0.096)<sup>2</sup> + 0.3(−0.02 − 0.096)<sup>2</sup> + 0.1(−0.19 − 0.096)<sup>2</sup> = <b>0.018924</b>. Same answer, which is how you know both are right.`]}}},
+lec_3a:{mod:'lecture',topic:'Portfolio Variance handout',fn(){return{title:'Example 2: three assets, and why the portfolio is safer than every stock in it',
+  q:`<p>Use the covariance matrix to find the variance of a portfolio invested 20% in A, 30% in B and 50% in C.</p>${tbl(['','A','B','C'],[['A','0.29','0.05','0.07'],['B','0.05','0.3125','0.0875'],['C','0.07','0.0875','0.3725']])}`,
+  parts:[{ask:'σ<sub>P</sub><sup>2</sup> =',unit:'',ans:.1791,tol:.0005},{ask:'σ<sub>P</sub> =',unit:'%',ans:42.32},{ask:'Cov(r<sub>A</sub>, r<sub>P</sub>) =',unit:'',ans:.108,tol:.0005}],steps:[
+  `Diagonal (each variance once): 0.2<sup>2</sup>(0.29) + 0.3<sup>2</sup>(0.3125) + 0.5<sup>2</sup>(0.3725).`,
+  `Off-diagonal (each covariance twice): + 2(0.2)(0.3)(0.05) + 2(0.2)(0.5)(0.07) + 2(0.3)(0.5)(0.0875).`,
+  `Total σ<sub>P</sub><sup>2</sup> = <b>0.1791</b>, so σ<sub>P</sub> = <b>42.32%</b>.`,
+  `<b>You wrote “HOW?” next to this:</b> on their own the stocks have σ = 53.85%, 55.90% and 61.03%, yet the portfolio is only 42.32%. Use the row trick: Cov(r<sub>A</sub>, r<sub>P</sub>) = 0.2(0.29) + 0.3(0.05) + 0.5(0.07) = <b>0.108</b>, far below A's standalone variance of 0.29. Likewise Cov(r<sub>B</sub>, r<sub>P</sub>) = 0.1475 and Cov(r<sub>C</sub>, r<sub>P</sub>) = 0.2265.`,
+  `Inside a portfolio, an asset's risk is its covariance with the portfolio, not its variance. These stocks have big variances but small covariances (0.05–0.0875) with each other, so much of each one's swings cancel out. σ<sub>P</sub><sup>2</sup> = 0.2(0.108) + 0.3(0.1475) + 0.5(0.2265) = 0.1791 ✓. This is the whole idea behind Exam 2: hold enough stocks and only the covariance (systematic) part survives, and β is just Cov(r<sub>i</sub>, r<sub>M</sub>)/σ<sub>M</sub><sup>2</sup>.`]}}},
+lec_g:{mod:'lecture',topic:'Combination Lines handout',fn(){return{title:'The minimum-variance portfolio G',
+  q:`<p>ρ<sub>A,B</sub> = +0.1.</p>${tbl(['Asset','σ','E(r)'],[['A','0.25','0.16'],['B','0.30','0.08']])}<p>Find the weight in A for the minimum-variance portfolio G, and G's expected return and standard deviation.</p>`,
+  parts:[{ask:'w<sub>A</sub>(min) =',unit:'%',ans:60},{ask:'E(r<sub>G</sub>) =',unit:'%',ans:12.8},{ask:'σ<sub>G</sub> =',unit:'%',ans:20.12}],steps:[
+  `Cov = ρσ<sub>A</sub>σ<sub>B</sub> = 0.1(0.25)(0.30) = 0.0075. Variances: 0.0625 and 0.09.`,
+  `w<sub>A</sub>(min) = (σ<sub>B</sub><sup>2</sup> − Cov)/(σ<sub>A</sub><sup>2</sup> + σ<sub>B</sub><sup>2</sup> − 2Cov) = (0.09 − 0.0075)/(0.0625 + 0.09 − 0.015) = <b>0.60</b>, so w<sub>B</sub> = 0.40. (The <em>other</em> asset's variance goes on top.)`,
+  `E(r<sub>G</sub>) = 0.6(0.16) + 0.4(0.08) = <b>0.128</b>.`,
+  `σ<sub>G</sub><sup>2</sup> = 0.6<sup>2</sup>(0.0625) + 0.4<sup>2</sup>(0.09) + 2(0.6)(0.4)(0.0075) = 0.0405, so σ<sub>G</sub> = <b>0.20125</b>. Its Sharpe ratio (with r<sub>f</sub> = 2%) is 0.5367, lower than the tangency portfolio's.`]}}},
+lec_t:{mod:'lecture',topic:'Optimal Portfolios handout',fn(){return{title:'Example 1A: find the tangency portfolio T',
+  q:`<p>Same A and B (ρ = +0.1), and now r<sub>f</sub> = 2%.</p>${tbl(['Asset','σ','E(r)'],[['F','0','0.02'],['A','0.25','0.16'],['B','0.30','0.08']])}<p>Find w<sub>A</sub>(tan), E(r<sub>T</sub>), σ<sub>T</sub> and T's Sharpe ratio.</p>`,
+  parts:[{ask:'w<sub>A</sub>(tan) =',unit:'%',ans:81.82},{ask:'E(r<sub>T</sub>) =',unit:'%',ans:14.545},{ask:'σ<sub>T</sub> =',unit:'%',ans:21.69},{ask:'S<sub>T</sub> =',unit:'',ans:.5784,tol:.002}],steps:[
+  `Excess returns: A 0.14, B 0.06. Cov = 0.0075.`,
+  `w<sub>A</sub>(tan) = [0.14(0.09) − 0.06(0.0075)] / [0.14(0.09) + 0.06(0.0625) − (0.14 + 0.06)(0.0075)] = <b>0.818</b>; w<sub>B</sub> = 0.182.`,
+  `E(r<sub>T</sub>) = 0.818(0.16) + 0.182(0.08) = <b>0.1455</b>.`,
+  `σ<sub>T</sub><sup>2</sup> = 0.818<sup>2</sup>(0.0625) + 0.182<sup>2</sup>(0.09) + 2(0.818)(0.182)(0.0075) = 0.04704, so σ<sub>T</sub> = <b>0.2169</b>.`,
+  `S<sub>T</sub> = (0.1455 − 0.02)/0.2169 = <b>0.5784</b>. That beats G's 0.5367: T has the steepest CAL. Exam 2 link: when everyone holds T, T is the market portfolio and this CAL is the CML.`]}}},
+lec_sugar:{mod:'lecture',topic:'Optimal Portfolios handout',fn(){return{title:'Example 1B: Sugar and Spice pick complete portfolios',
+  q:`<p>Use T from Example 1A (w<sub>A</sub> = 81.82%, E(r<sub>T</sub>) = 0.1455, σ<sub>T</sub> = 0.2169, S<sub>T</sub> = 0.5784, r<sub>f</sub> = 2%). Sugar has $5,000 and wants to earn 8%. Spice has $9,000 and wants σ = 30%.</p>`,
+  parts:[{ask:'Sugar σ<sub>C</sub> =',unit:'%',ans:10.37},{ask:'Sugar $ in F =',unit:'$',ans:2608.70,tol:6},{ask:'Spice E(r<sub>C</sub>) =',unit:'%',ans:19.35},{ask:'Spice $ in F =',unit:'$',ans:-3448.15,tol:8}],steps:[
+  `Everyone uses T's CAL: E(r<sub>C</sub>) = 0.02 + 0.5784σ<sub>C</sub>.`,
+  `Sugar: 0.08 = 0.02 + 0.5784σ<sub>C</sub> ⇒ σ<sub>C</sub> = <b>0.1037</b>. w<sub>T</sub> = σ<sub>C</sub>/σ<sub>T</sub> = 0.1037/0.2169 = 47.83%, so T gets $2,391.30 (A $1,956.52, B $434.78) and F gets <b>$2,608.70</b> (lending).`,
+  `Spice: w<sub>T</sub> = 0.30/0.2169 = 138.31%, so T gets $12,448.15 (A $10,184.85, B $2,263.30) and F gets <b>−$3,448.15</b>: she borrows.`,
+  `E(r<sub>C</sub>) = 0.02 + 0.5784(0.30) = <b>0.1935</b>. Same T for both, different complete portfolios: that's the separation property, which becomes the CML on Exam 2.`]}}},
+lec_cal:{mod:'lecture',topic:'Capital Allocation handout',fn(){return{title:'Ahmad and Benjamin on the CAL',
+  q:`<p>r<sub>f</sub> = 6%, E(r<sub>V</sub>) = 14%, σ<sub>V</sub> = 20%. Ahmad wants E(r<sub>C</sub>) = 12%. Benjamin wants σ<sub>C</sub> = 25%. Each has $1,000.</p>`,
+  parts:[{ask:'Ahmad σ<sub>C</sub> =',unit:'%',ans:15},{ask:'Ahmad w<sub>V</sub> =',unit:'%',ans:75},{ask:'Benjamin w<sub>V</sub> =',unit:'%',ans:125},{ask:'Benjamin E(r<sub>C</sub>) =',unit:'%',ans:16}],steps:[
+  `CAL: E(r<sub>C</sub>) = 0.06 + [(0.14 − 0.06)/0.20]σ<sub>C</sub> = 0.06 + 0.4σ<sub>C</sub>.`,
+  `Ahmad: 0.12 = 0.06 + 0.4σ<sub>C</sub> ⇒ σ<sub>C</sub> = <b>0.15</b>. σ<sub>C</sub> = w<sub>V</sub>σ<sub>V</sub> ⇒ w<sub>V</sub> = 0.15/0.20 = <b>0.75</b>: $750 in V, $250 in F. One year later: 250(1.06) + 750(1.14) = $1,120, a 12% return ✓.`,
+  `Benjamin: w<sub>V</sub> = 0.25/0.20 = <b>1.25</b>, w<sub>F</sub> = −0.25: he borrows $250 and puts $1,250 in V.`,
+  `E(r<sub>C</sub>) = −0.25(0.06) + 1.25(0.14) = <b>0.16</b>. Check: 1,250(1.14) − 250(1.06) = $1,160, a 16% return ✓.`]}}},
+lec_sigrid:{mod:'lecture',topic:'Optimal Portfolios handout',fn(){return{title:'Example 2: Sigrid wants 17%',
+  q:`<p>Sigrid has $7,500 and wants a 17% return. ρ<sub>A,B</sub> = −0.14, and she can borrow and lend at the risk-free rate.</p>${tbl(['Asset','σ','E(r)'],[['F','0','0.03'],['A','0.50','0.16'],['B','0.30','0.07']])}<p>How many dollars go into A, B and F? What is her portfolio's σ?</p>`,
+  parts:[{ask:'w<sub>A</sub>(tan) =',unit:'%',ans:49.62},{ask:'σ<sub>T</sub> =',unit:'%',ans:27.19},{ask:'σ<sub>C</sub> =',unit:'%',ans:44.95,tol:.1},{ask:'$ in A =',unit:'$',ans:6154.53,tol:15},{ask:'$ in B =',unit:'$',ans:6247.78,tol:15},{ask:'$ in F =',unit:'$',ans:-4902.31,tol:15}],steps:[
+  `Cov = −0.14(0.50)(0.30) = −0.021. Risk premiums: A 0.13, B 0.04.`,
+  `w<sub>A</sub>(tan) = [0.13(0.09) − 0.04(−0.021)] / [0.13(0.09) + 0.04(0.25) − (0.17)(−0.021)] = <b>0.4962</b>.`,
+  `E(r<sub>T</sub>) = 0.4962(0.16) + 0.5038(0.07) = 0.1147. σ<sub>T</sub><sup>2</sup> = 0.4962<sup>2</sup>(0.25) + 0.5038<sup>2</sup>(0.09) + 2(0.4962)(0.5038)(−0.021) = 0.0739 ⇒ σ<sub>T</sub> = <b>0.2719</b>.`,
+  `CAL: 0.17 = 0.03 + [(0.1147 − 0.03)/0.2719]σ<sub>C</sub> ⇒ σ<sub>C</sub> = <b>0.4495</b>. w<sub>T</sub> = 0.4495/0.2719 = 1.6536.`,
+  `T gets 1.6536 × $7,500 = $12,402.31: A <b>$6,154.53</b>, B <b>$6,247.78</b>. F gets <b>−$4,902.31</b> (borrowed). Check: −0.6536(0.03) + 1.6536(0.1147) = 0.17 ✓.`]}}},
+lec_heidi:{mod:'lecture',topic:'Exam 1 Notes bonus problem',fn(){return{title:'Heidi Ho: flipping a coin vs. the tangency portfolio',
+  q:`<p>Everyone can borrow and lend at 2%. Heidi has €50,000. Swiss (S) and Korean (K) stocks both have E(r) = 8% and σ = 20%, with ρ<sub>S,K</sub> = +0.25. She plans to flip a coin and put everything in one of them, for a Sharpe ratio of (0.08 − 0.02)/0.2 = 0.3.</p><p>(A) What is the best attainable Sharpe ratio? (B) If she'll tolerate σ = 20%, how much goes in S, K and the risk-free asset? (Amounts are in euros.)</p>`,
+  parts:[{ask:'Best Sharpe =',unit:'',ans:.3795,tol:.002},{ask:'€ in S (= € in K) =',unit:'$',ans:31623,tol:40},{ask:'€ in F =',unit:'$',ans:-13246,tol:40}],steps:[
+  `S and K are identical, so the tangency formula gives w<sub>S</sub> = w<sub>K</sub> = 0.5. (Try it: both terms in the numerator and denominator match.)`,
+  `σ<sub>T</sub><sup>2</sup> = 0.5<sup>2</sup>(0.04) + 0.5<sup>2</sup>(0.04) + 2(0.5)(0.5)(0.25)(0.2)(0.2) = 0.025 ⇒ σ<sub>T</sub> = 0.1581. E(r<sub>T</sub>) = 8%.`,
+  `Best Sharpe = (0.08 − 0.02)/0.1581 = <b>0.3795</b>, better than 0.3 because diversifying cuts σ without cutting return.`,
+  `For σ<sub>C</sub> = 0.20: w<sub>T</sub> = 0.20/0.1581 = 1.2649 ⇒ €63,246 in T, i.e. <b>€31,623</b> in each of S and K, and F = 50,000 − 63,246 = <b>−€13,246</b> (borrowed).`]}}},
+lec_p50:{mod:'lecture',topic:'Practice packet #50 (you flagged this one)',fn(){return{title:'Mr. Jones invests 127.55% in risky assets',
+  q:`<p>Mr. Jones has $20,000 to invest, and his optimal complete portfolio invests 127.55% in risky assets. Calculate the standard deviation and expected return of his optimal complete portfolio.</p>${tbl(['State','Probability','r<sub>A</sub>','r<sub>B</sub>','r<sub>F</sub>'],[['1','0.1','−0.15','−0.26','0.04'],['2','0.2','<b>−0.02</b>','0.32','0.04'],['3','0.3','0.13','0.30','0.04'],['4','0.4','0.15','−0.02','0.04']])}<div class="note trap"><b>Why your answer didn't match the key</b>The copy in your notes shows −0.20 for A in state 2. The practice packet and the answer key use <b>−0.02</b>. With −0.20 you get E(r<sub>A</sub>) = 4.4% instead of 8%, and everything after that is off.</div>`,
+  parts:[{ask:'E(r<sub>A</sub>) =',unit:'%',ans:8},{ask:'w<sub>A</sub>(tan) =',unit:'%',ans:66.67},{ask:'E(r<sub>T</sub>) =',unit:'%',ans:9.33},{ask:'σ<sub>T</sub> =',unit:'%',ans:10.22},{ask:'E(r<sub>C</sub>) =',unit:'%',ans:10.80},{ask:'σ<sub>C</sub> =',unit:'%',ans:13.04}],steps:[
+  `E(r<sub>A</sub>) = 0.1(−0.15) + 0.2(−0.02) + 0.3(0.13) + 0.4(0.15) = <b>0.08</b>. E(r<sub>B</sub>) = 0.12. σ<sub>A</sub><sup>2</sup> = 0.01, σ<sub>B</sub><sup>2</sup> = 0.04, Cov = 0.00352. r<sub>f</sub> = 0.04.`,
+  `w<sub>A</sub>(tan) = [0.04(0.04) − 0.08(0.00352)] / [0.04(0.04) + 0.08(0.01) − 0.12(0.00352)] = <b>2/3</b>.`,
+  `E(r<sub>T</sub>) = (2/3)(0.08) + (1/3)(0.12) = <b>0.0933</b>. σ<sub>T</sub><sup>2</sup> = (2/3)<sup>2</sup>(0.01) + (1/3)<sup>2</sup>(0.04) + 2(2/3)(1/3)(0.00352) = 0.010453 ⇒ σ<sub>T</sub> = <b>0.10224</b>.`,
+  `He borrows 27.55%: E(r<sub>C</sub>) = −0.2755(0.04) + 1.2755(0.0933) = <b>0.1080</b>; σ<sub>C</sub> = 1.2755(0.10224) = <b>0.1304</b>.`]}}},
+lec_p60:{mod:'lecture',topic:'Practice packet #60 (in your review notes)',fn(){return{title:'Perfectly negatively correlated I and J',
+  q:`<p>Assets I and J are perfectly negatively correlated (ρ = −1). I: E(r) = 23%, σ = 20%. J: E(r) = 8%, σ = 40%. Complete portfolio C lies on the CAL through I at σ = 40%. Calculate E(r<sub>C</sub>).</p>`,
+  parts:[{ask:'w<sub>I</sub>(min) =',unit:'%',ans:66.67},{ask:'r<sub>f</sub> = E(r<sub>G</sub>) =',unit:'%',ans:18},{ask:'E(r<sub>C</sub>) =',unit:'%',ans:28}],steps:[
+  `With ρ = −1, the minimum-variance portfolio G has zero risk. w<sub>I</sub>(min) = [0.16 − (−1)(0.2)(0.4)] / [0.04 + 0.16 − 2(−1)(0.2)(0.4)] = 0.24/0.36 = <b>2/3</b>.`,
+  `G is risk-free, so it must earn the risk-free rate: r<sub>f</sub> = (2/3)(0.23) + (1/3)(0.08) = <b>0.18</b>.`,
+  `C is on the CAL through I: σ<sub>C</sub> = w<sub>I</sub>σ<sub>I</sub> ⇒ 0.40 = w<sub>I</sub>(0.20) ⇒ w<sub>I</sub> = 2, w<sub>F</sub> = −1.`,
+  `E(r<sub>C</sub>) = −1(0.18) + 2(0.23) = <b>0.28</b>. Or: C and I have the same Sharpe ratio, (0.23 − 0.18)/0.20 = (E(r<sub>C</sub>) − 0.18)/0.40.`]}}},
+
 /* ===== diversification ===== */
 d_eq:{mod:'diversification',topic:'Diversification',fn(){
   const s=rnd(.25,.55,.05),rho=rnd(.1,.5,.05),n=pick([4,5,8,10,20,25,40,50]),aV=s*s,aC=rho*s*s,v=aV/n+(n-1)/n*aC,form=Math.random()<.5;
@@ -1167,6 +1275,9 @@ i_anova:{mod:'index',topic:'Regression output',fn(){
 /* ---------- concept questions ---------- */
 const MCQ={
 tools:[
+ {q:'(Dr. Dye’s Exam 1 Notes) Borrowing at the risk-free rate is equivalent to:',o:['Selling a stock short','Shorting the risk-free asset','Decreasing leverage','Diversifying'],a:1,e:'Borrowing means a negative weight in F: you are short the risk-free asset. It increases leverage (w<sub>T</sub> &gt; 1). On Exam 2 this is any point on the CML to the right of M.'},
+ {q:'(Dr. Dye’s Exam 1 Notes) The tangency portfolio’s risk premium is 8%. Photinia invested $2,000 in the tangency portfolio and $1,000 in the risk-free asset. Her complete portfolio’s σ is 20%. The Sharpe ratio of the tangency portfolio is:',o:['0.267','0.4','0.133','0.178','Impossible to determine'],a:0,e:'w<sub>T</sub> = 2,000/3,000 = 2/3. σ<sub>C</sub> = w<sub>T</sub>σ<sub>T</sub> ⇒ 0.20 = (2/3)σ<sub>T</sub> ⇒ σ<sub>T</sub> = 0.30. S<sub>T</sub> = 0.08/0.30 = 0.267.'},
+ {q:'(Dr. Dye’s Exam 1 Notes) Which are true? I. Without risk-free borrowing and lending, the global minimum-variance portfolio is optimal for all investors. II. With exactly two risky assets with ρ = −1 and risk-free borrowing and lending, the tangency portfolio is risk-free.',o:['I only','II only','Both I and II','Neither'],a:1,e:'I is false: without a risk-free asset, each investor picks their own point on the upper arm of the frontier, based on risk aversion. II is true per the key: with ρ = −1 the minimum-variance portfolio has zero risk, so it must earn r<sub>f</sub>, and the “tangency” point is that risk-free portfolio itself.'},
  {q:'Two stocks have ρ = 0.4, σ<sub>A</sub> = 20% and σ<sub>B</sub> = 30%. Cov(r<sub>A</sub>, r<sub>B</sub>) is:',o:['0.024','0.24','2.40','0.06'],a:0,e:'Cov = ρσ<sub>A</sub>σ<sub>B</sub> = 0.4 × 0.20 × 0.30 = 0.024. Always work in decimals.'},
  {q:'With historical (sample) data, the variance formula on your sheet divides by:',o:['n','n − 1','n − 2','The probabilities'],a:1,e:'Sample variance and covariance divide by n − 1. Probabilities are only for scenario problems.'},
  {q:'Which portfolio on the efficient frontier has the highest Sharpe ratio?',o:['Minimum-variance portfolio','Tangency portfolio','Highest-return portfolio','Equally weighted portfolio'],a:1,e:'The tangency portfolio gives the steepest CAL, which means the largest reward per unit of σ.'},
@@ -1741,7 +1852,12 @@ How to answer:
 - If they paste or attach a practice problem and ask for help, give the next step or a hint first, then offer the full solution. If they ask for the full answer, give it.
 - Use plain text with Unicode math (σ², β, ρ, Σ, subscripts like r_f or σ_M). Never use LaTeX or $ signs around math. You may use **bold**, short bullet lists and numbered steps.
 - When it helps, mention how it could show up on the exam (a multiple-choice trap or a workout-problem step).
-- If something isn't covered in this course or you're unsure what Dr. Dye expects, say so plainly instead of guessing.`;
+- If something isn't covered in this course or you're unsure what Dr. Dye expects, say so plainly instead of guessing.
+
+Dr. Dye's exam rules (from his Exam 1 notes; assume the same for Exam 2): pencil only (5-point penalty for ink); MC answers count only on the Gradescope bubble sheet; on workout problems, answers without work or calculator inputs can get zero credit, while writing the formula and substituting numbers earns partial credit even if the final number is wrong; the formula sheet is provided (sign the Aggie Honor Code statement); programming formulas into a calculator is cheating. Remind the student to show work when it's relevant.
+
+From the student's own Exam 1 notes (lecture examples they have seen, use them as reference points): Assets A/B scenario example (E(r_A) = 0.03, E(r_B) = 0.14, σ_A² = 0.0183, σ_B² = 0.0241, Cov = 0.01525, ρ = 0.726; 40/60 portfolio σ² = 0.018924); a 3-asset covariance-matrix example with weights 0.2/0.3/0.5 giving σ_p² = 0.1791 (σ_p = 42.32% while the assets have σ of 53.85%, 55.90%, 61.03%); min-variance G with ρ = 0.1, σ_A = 0.25, σ_B = 0.30, E = 0.16/0.08 → w_A = 0.60, E(r_G) = 0.128, σ_G = 0.20125; tangency with r_f = 0.02 → w_A = 0.818, E(r_T) = 0.1455, σ_T = 0.2169, S_T = 0.5784; Sugar/Spice complete portfolios; Sigrid (ρ = −0.14) example; Ahmad/Benjamin CAL example (r_f 6%, E(r_V) 14%, σ_V 20%); Heidi Ho bonus problem (best Sharpe 0.3795). Dr. Dye's teaching: an asset's risk on its own is its variance, but inside a portfolio its risk is its covariance with the portfolio; the tangency portfolio is the optimal risky portfolio for everyone, while the complete portfolio depends on risk aversion; borrowing at r_f = shorting the risk-free asset.
+Gaps the student flagged in their notes: they wrote "HOW?" next to the 3-asset example where the portfolio is less risky than every asset in it, and "What defines RHO?" next to correlation. On practice problem 50 their copy showed −0.20 instead of −0.02 for A's state-2 return. When these ideas come up, explain them carefully from the ground up.`;
 const KEY='finc351-tutor';
 const $=id=>document.getElementById(id);
 const fab=$('tutor-fab'),panel=$('tutor'),log=$('tutor-log'),form=$('tutor-form'),inp=$('tutor-in'),send=$('tutor-send'),stop=$('tutor-stop');
