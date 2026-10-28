@@ -102,6 +102,7 @@ table.wide td,table.wide th{white-space:normal;text-align:left}
 .card.walk{border-color:var(--accent)}
 .card-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
 .card-head>div{display:flex;flex-direction:column;gap:2px;min-width:0}
+.card-head>.row{flex-direction:row;align-items:center;gap:6px}
 .q{display:flex;flex-direction:column;gap:10px}
 .ans-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .ans-row label{font-family:var(--f-math);font-size:17px}
@@ -201,6 +202,38 @@ svg.chart{width:100%;height:auto;display:block}
   .frow{grid-template-columns:minmax(0,1fr)}
   .plan-row{grid-template-columns:minmax(0,1fr);gap:4px}
 }
+
+[hidden]{display:none!important}
+/* tutor drawer */
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.tutor-fab{position:fixed;z-index:20;right:calc(18px + env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));background:var(--accent);color:var(--accent-ink);border-radius:99px;padding:12px 18px;box-shadow:0 6px 20px rgba(0,0,0,.18)}
+.tutor-fab:hover{filter:brightness(1.08)}
+body.tutor-open .tutor-fab{display:none}
+.tutor{position:fixed;z-index:30;top:0;right:0;bottom:0;width:min(420px,100vw);background:var(--surface);border-left:1px solid var(--line);box-shadow:-8px 0 30px rgba(0,0,0,.12);display:flex;flex-direction:column;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);padding-right:env(safe-area-inset-right,0px)}
+.tutor-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:16px 16px 12px;border-bottom:1px solid var(--line)}
+.tutor-log{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;overscroll-behavior:contain}
+.tutor-empty{display:flex;flex-direction:column;gap:10px;font-size:14.5px}
+.tutor-starters{display:flex;flex-direction:column;gap:6px}
+.tutor-starters button{text-align:left;font-weight:500}
+.msg{border-radius:12px;padding:10px 13px;font-size:14.5px;line-height:1.55;display:flex;flex-direction:column;gap:6px;max-width:100%;overflow-wrap:anywhere}
+.msg ul,.msg ol{padding-left:1.2em}
+.msg code{font-family:var(--f-mono);font-size:.92em;background:var(--sunk);padding:0 4px;border-radius:4px}
+.msg.me{align-self:flex-end;background:var(--accent-soft);max-width:88%}
+.msg.me .tag{font-family:var(--f-mono);font-size:11px;color:var(--accent)}
+.msg.bot{align-self:stretch;background:var(--sunk)}
+.msg.err{background:var(--bad-soft);color:var(--bad)}
+.tutor-foot{border-top:1px solid var(--line);padding:12px 16px 14px;display:flex;flex-direction:column;gap:8px}
+.tutor-ctx{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:12.5px;background:var(--accent-soft);color:var(--accent);border-radius:8px;padding:6px 10px}
+.tutor-ctx span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.linkish{background:none;border:0;padding:0;color:inherit;text-decoration:underline;font-weight:500;font-size:12.5px}
+.tutor-form{display:flex;flex-direction:column;gap:8px}
+.tutor-form textarea{font:15px var(--f-body);resize:none;padding:9px 11px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);min-height:62px}
+.tutor-form textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.tutor-hint{font-size:12px}
+.ask-tutor{font-size:13px;padding:6px 11px}
+@media (min-width:1180px){body.tutor-open .shell{margin-right:420px}}
+@media (max-width:860px){.tutor-hint{display:none}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
@@ -732,6 +765,23 @@ svg.chart{width:100%;height:auto;display:block}
 </section>
 </main>
 </div>
+<button class="tutor-fab" type="button" id="tutor-fab" hidden aria-controls="tutor" aria-expanded="false">Ask a question</button>
+<aside class="tutor" id="tutor" aria-label="Study tutor" hidden>
+  <div class="tutor-head">
+    <div><span class="eyebrow">Tutor · FINC 351</span><h3>Ask anything</h3></div>
+    <div class="row"><button class="ghost" type="button" id="tutor-new">New chat</button><button class="ghost" type="button" id="tutor-close" aria-label="Close tutor">Close</button></div>
+  </div>
+  <div class="tutor-log" id="tutor-log" aria-live="polite"></div>
+  <div class="tutor-foot">
+    <div class="tutor-ctx" id="tutor-ctx" hidden><span id="tutor-ctx-label"></span><button type="button" class="linkish" id="tutor-ctx-x" aria-label="Remove attached problem">Remove</button></div>
+    <form id="tutor-form" class="tutor-form">
+      <label for="tutor-in" class="sr">Your question</label>
+      <textarea id="tutor-in" rows="2" placeholder="e.g. Why does a stock with β = 0 only earn the risk-free rate?"></textarea>
+      <div class="row"><button class="primary" type="submit" id="tutor-send">Send</button><button class="ghost" type="button" id="tutor-stop" hidden>Stop</button><span class="muted tutor-hint">Enter to send · Shift+Enter for a new line</span></div>
+    </form>
+  </div>
+</aside>
+
 
 <script>
 /* ---------- helpers ---------- */
@@ -1669,4 +1719,127 @@ window.ppDone=()=>order.filter(P=>S.pp[P.n]==='got').length;
 sync();
 })();
 </script>
+<script>
+/* ================= TUTOR (asks Claude through the sample capability) ================= */
+(function(){
+const RULES=`You are a patient, encouraging tutor for FINC 351 (Investment Analysis) at Texas A&M, taught by Dr. Richard (Tim) Dye. The student is preparing for Exam 2 on Monday, Nov 2, 2026 (16 multiple-choice questions worth 2.5 points each plus 3–5 workout problems worth 60 points; financial calculator allowed, no Excel). They scored 50 raw on Exam 1, so they need solid mechanics. No question is dumb: never make them feel judged, and never pad with praise either.
+
+Exam 2 topics: diversification, the Capital Market Line, CAPM and the Security Market Line, and the Single Index Model (SIM). They build on Exam 1 tools: E(r), variance, covariance, correlation, the double summation, Cov(r_i, r_p) = Σ w_j Cov(r_i, r_j), σ_p² = Σ w_i Cov(r_i, r_p), CAL, Sharpe ratio, minimum-variance and tangency weights.
+
+Use Dr. Dye's conventions exactly:
+- Sample (historical) variances and covariances divide by n − 1. Residual variance σ_e² = SSE/(n − 1), not n − 2 (Excel's standard error and MS residual use n − 2; he crosses those out).
+- E(r) from security analysis is a forecast: E(r) = [E(P1) + E(Div1) − P0]/P0. CAPM gives the required return k = r_f + β[E(r_M) − r_f], which is not a forecast. α ≡ E(r) − k. Correct price V0 = E(CF1)/(1 + k). P0 < V0 ⇔ E(r) > k ⇔ α > 0 ⇔ underpriced ⇔ buy ⇔ above the SML ⇔ NPV > 0.
+- β_i = Cov(r_i, r_M)/σ_M² = ρ_iM σ_i/σ_M. β_p = Σ w_i β_i (T-bills have β = 0). β_M = 1.
+- CML: E(r_p) = r_f + [(E(r_M) − r_f)/σ_M]σ_p, only for efficient portfolios (mixes of r_f and M, ρ = +1 with M). The SML prices every asset and uses β.
+- Equally weighted portfolio: σ_p² = (1/n)(avg variance) + ((n − 1)/n)(avg covariance) → avg covariance as n → ∞.
+- SIM uses excess returns R = r − r_f: R_i,t = α_i + β_i R_M,t + e_i,t. α_i = R̄_i − β_i R̄_M. σ_i² = β_i²σ_M² + σ_e² (total = systematic + firm-specific), equivalently SST/(n−1) = SSReg/(n−1) + SSE/(n−1). R² = β²σ_M²/σ_i² = SSReg/SST = ρ². Cov(R_i, R_j) = β_iβ_jσ_M² (residuals uncorrelated). Residual = actual − predicted. In Excel output, Multiple R = ρ, Intercept = α, X Variable 1 = β.
+- CAPM assumptions: price takers, one holding period, same assets incl. risk-free borrowing/lending, no taxes or transaction costs, mean-variance optimizers, homogeneous expectations.
+
+How to answer:
+- Start with the direct answer in one or two sentences, then explain. Keep it short unless they ask for depth.
+- For calculations, go step by step: name the formula, plug in numbers, show the result, and say what it means. Double-check arithmetic. Work in decimals (20% → 0.20, variance 0.04).
+- If they paste or attach a practice problem and ask for help, give the next step or a hint first, then offer the full solution. If they ask for the full answer, give it.
+- Use plain text with Unicode math (σ², β, ρ, Σ, subscripts like r_f or σ_M). Never use LaTeX or $ signs around math. You may use **bold**, short bullet lists and numbered steps.
+- When it helps, mention how it could show up on the exam (a multiple-choice trap or a workout-problem step).
+- If something isn't covered in this course or you're unsure what Dr. Dye expects, say so plainly instead of guessing.`;
+const KEY='finc351-tutor';
+const $=id=>document.getElementById(id);
+const fab=$('tutor-fab'),panel=$('tutor'),log=$('tutor-log'),form=$('tutor-form'),inp=$('tutor-in'),send=$('tutor-send'),stop=$('tutor-stop');
+let turns=[],ctx=null,busy=false,ctl=null,sample=null,blocked=false;
+try{turns=JSON.parse(localStorage.getItem(KEY)||'[]').filter(t=>t&&t.role&&t.content)}catch(e){turns=[]}
+const keep=()=>{try{localStorage.setItem(KEY,JSON.stringify(turns.slice(-30)))}catch(e){}};
+
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function md(src){
+  const inline=s=>esc(s).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/`([^`]+)`/g,'<code>$1</code>');
+  const out=[];let list=null;
+  const close=()=>{if(list){out.push(`</${list}>`);list=null}};
+  for(const raw of src.split('\n')){
+    const line=raw.trimEnd();let m;
+    if((m=line.match(/^\s*[-*•]\s+(.*)/))){if(list!=='ul'){close();out.push('<ul>');list='ul'}out.push(`<li>${inline(m[1])}</li>`)}
+    else if((m=line.match(/^\s*\d+[.)]\s+(.*)/))){if(list!=='ol'){close();out.push('<ol>');list='ol'}out.push(`<li>${inline(m[1])}</li>`)}
+    else if((m=line.match(/^#{1,4}\s+(.*)/))){close();out.push(`<p><b>${inline(m[1])}</b></p>`)}
+    else if(!line.trim()){close()}
+    else{close();out.push(`<p>${inline(line)}</p>`)}
+  }
+  close();return out.join('');
+}
+const STARTERS=['What’s the difference between E(r) and k?','Why is only systematic risk priced?','How do I get β from a covariance matrix?','Explain R-square like I’m five'];
+function render(){
+  if(!turns.length){
+    log.innerHTML=`<div class="tutor-empty"><p>Stuck on something? Ask in your own words. It knows Dr. Dye's notation, the formula sheet and every module here.</p><p class="muted">Tip: the <b>Ask tutor</b> button on any problem sends that problem along with your question.</p><div class="tutor-starters">${STARTERS.map(s=>`<button class="ghost" type="button">${esc(s)}</button>`).join('')}</div></div>`;
+    log.querySelectorAll('.tutor-starters button').forEach(b=>b.addEventListener('click',()=>{inp.value=b.textContent;ask()}));
+    return;
+  }
+  log.innerHTML=turns.map(t=>t.role==='user'?`<div class="msg me">${t.label?`<span class="tag">${esc(t.label)}</span>`:''}${md(t.shown||t.content)}</div>`:`<div class="msg bot">${md(t.content)}</div>`).join('');
+  log.scrollTop=log.scrollHeight;
+}
+function setCtx(c){ctx=c;$('tutor-ctx').hidden=!c;if(c)$('tutor-ctx-label').textContent='Attached: '+c.label}
+function open(){panel.hidden=false;fab.setAttribute('aria-expanded','true');document.body.classList.add('tutor-open');render();setTimeout(()=>inp.focus(),0)}
+function close(){panel.hidden=true;fab.setAttribute('aria-expanded','false');document.body.classList.remove('tutor-open');fab.focus()}
+const ERR={not_granted:'The tutor needs your permission to use Claude. Reload the page and choose Allow to turn it on.',sampling_disabled:'Claude isn’t available on this account right now.',rate_limited:'Too many questions at once, or you’ve hit a usage limit. Wait a minute, then send again.',session_expired:'Your claude.ai session expired. Sign in again, then reload this page.',refused:'Claude couldn’t answer that one. Try rewording the question.',empty_completion:'No answer came back. Try asking a bit differently.',prompt_too_large:'This chat got too long. Click “New chat” and ask again.',upstream_error:'The connection dropped. Send your question again.'};
+async function ask(){
+  const q=inp.value.trim();if(!q||busy||!sample||blocked)return;
+  const view=(document.querySelector('[data-view]:not([hidden]) h1')||{}).textContent||'';
+  let content=q;
+  if(ctx)content=`The student is working on this from the study guide (${ctx.label}):\n"""\n${ctx.text}\n"""\n\nTheir question: ${q}`;
+  else if(view)content=`(The student is on the “${view}” page of the study guide.)\n\n${q}`;
+  turns.push({role:'user',content,shown:q,label:ctx?ctx.label:''});setCtx(null);inp.value='';keep();render();
+  const bubble=document.createElement('div');bubble.className='msg bot';bubble.innerHTML='<p class="muted">Thinking…</p>';log.appendChild(bubble);log.scrollTop=log.scrollHeight;
+  busy=true;send.disabled=true;stop.hidden=false;ctl=new AbortController();
+  const hist=turns.slice(-20).map(t=>({role:t.role,content:t.content}));while(hist.length&&hist[0].role!=='user')hist.shift();
+  try{
+    const {text,truncated}=await sample([{role:'user',content:RULES},...hist],{cache:false,signal:ctl.signal,onText:({text})=>{bubble.innerHTML=md(text);log.scrollTop=log.scrollHeight}});
+    turns.push({role:'assistant',content:text+(truncated?'\n\n(Answer cut short. Ask me to continue.)':'')});keep();render();
+  }catch(e){
+    const partial=e&&e.text;
+    if(e&&e.code==='cancelled'){if(partial){turns.push({role:'assistant',content:partial+'\n\n(Stopped.)'});keep()}render()}
+    else{
+      if(partial&&e.code!=='refused'){turns.push({role:'assistant',content:partial+'\n\n(Interrupted.)'});keep()}
+      render();const n=document.createElement('div');n.className='msg err';n.textContent=ERR[e&&e.code]||ERR.upstream_error;log.appendChild(n);log.scrollTop=log.scrollHeight;
+      if(e&&(e.code==='not_granted'||e.code==='sampling_disabled'))blocked=true;
+    }
+  }finally{busy=false;stop.hidden=true;ctl=null;send.disabled=blocked}
+}
+form.addEventListener('submit',e=>{e.preventDefault();ask()});
+inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();ask()}});
+stop.addEventListener('click',()=>ctl?.abort());
+fab.addEventListener('click',()=>panel.hidden?open():close());
+$('tutor-close').addEventListener('click',close);
+$('tutor-new').addEventListener('click',()=>{ctl?.abort();turns=[];keep();setCtx(null);render()});
+$('tutor-ctx-x').addEventListener('click',()=>setCtx(null));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!panel.hidden)close()});
+
+/* "Ask tutor" on every problem card: attaches the problem text and the student's answers */
+function cardText(card){
+  const parts=[];
+  const h=card.querySelector('h4');if(h)parts.push(h.textContent);
+  const q=card.querySelector('.q');if(q)parts.push(q.innerText);
+  card.querySelectorAll('.pp-part > p').forEach(p=>parts.push(p.innerText));
+  const answers=[...card.querySelectorAll('input[inputmode="decimal"]')].map(i=>{const l=card.querySelector(`label[for="${i.id}"]`);return i.value.trim()?`${l?l.innerText:''} ${i.value}${i.classList.contains('ok')?' (marked correct)':i.classList.contains('no')?' (marked wrong)':''}`:''}).filter(Boolean);
+  if(answers.length)parts.push('Student’s answers so far: '+answers.join('; '));
+  const shown=[...card.querySelectorAll('.steps:not([hidden]) li')].map(li=>li.innerText);
+  if(shown.length)parts.push('Solution steps already revealed:\n'+shown.join('\n'));
+  return parts.join('\n\n').slice(0,6000);
+}
+function decorate(){
+  document.querySelectorAll('.card:not(.exam) .card-head').forEach(head=>{
+    if(head.querySelector('.ask-tutor'))return;
+    const b=document.createElement('button');b.type='button';b.className='ghost ask-tutor';b.textContent='Ask tutor';
+    b.addEventListener('click',()=>{const card=head.closest('.card');const eb=card.querySelector('.eyebrow');setCtx({label:(eb?eb.textContent:'Problem')+(card.querySelector('h4')?': '+card.querySelector('h4').textContent:''),text:cardText(card)});open();inp.placeholder='What part is confusing? e.g. “Why do I divide by σ_M²?”'});
+    const right=head.querySelector(':scope > .row')||head.querySelector(':scope > button');
+    if(right&&right.classList.contains('row'))right.prepend(b);
+    else if(right){const row=document.createElement('div');row.className='row';head.insertBefore(row,right);row.append(b,right)}
+    else{const row=document.createElement('div');row.className='row';row.append(b);head.append(row)}
+  });
+}
+const mo=new MutationObserver(()=>{if(sample)decorate()});
+
+Promise.resolve(window.claude?.use?.('sample')).then(fn=>{
+  if(!fn)return;
+  sample=fn;fab.hidden=false;decorate();mo.observe(document.querySelector('main'),{childList:true,subtree:true});
+}).catch(()=>{});
+})();
+</script>
+
 
