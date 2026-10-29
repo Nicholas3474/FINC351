@@ -243,7 +243,7 @@ body.tutor-open .tutor-fab{display:none}
   <p class="count" id="countdown">Exam 2: Mon, Nov 2, 8:30 AM</p>
   <div class="bar" title="Objectives checked off"><i id="allbar"></i></div>
   <nav class="mods" id="nav"></nav>
-  <p class="rail-foot">Progress is saved in this browser only.</p>
+  <p class="rail-foot" aria-live="polite">Progress is saved in this browser.</p>
 </aside>
 
 <main>
@@ -255,6 +255,7 @@ body.tutor-open .tutor-fab{display:none}
     <p class="lede">Everything since Exam 1: diversification, the Capital Market Line, CAPM pricing, and the Single Index Model. Each module walks you through the ideas in order, then gives you unlimited practice with fresh numbers and step-by-step solutions.</p>
   </div>
   <div class="tiles" id="plan-tiles"></div>
+  <p class="muted" id="sync-status" aria-live="polite"></p>
 
   <div class="block">
     <h2>What the exam looks like</h2>
@@ -1339,7 +1340,7 @@ const MODS=[
  {id:'formulas',t:'Formulas & flashcards',s:'Formula sheet rows'}];
 const LEARN=['tools','diversification','cml','capm','index'];
 
-function save(){ST.set(S)}
+function save(){S.savedAt=Date.now();ST.set(S);window.cloudPush?.()}
 function objCount(id){const box=document.querySelector(`[data-objs="${id}"]`);if(!box)return[0,0];const c=[...box.querySelectorAll('input')];return[c.filter(x=>x.checked).length,c.length]}
 function renderNav(){
   const cur=(location.hash||'#plan').slice(1);
@@ -1826,6 +1827,7 @@ function sync(){
   document.getElementById('pp-count').textContent=`Showing ${shown} of ${order.length} problems · ${got} got it · ${rev} marked for review`;
   renderNav();
 }
+window.ppSync=sync;
 window.ppDone=()=>order.filter(P=>S.pp[P.n]==='got').length;
 sync();
 })();
@@ -1861,9 +1863,12 @@ Gaps the student flagged in their notes: they wrote "HOW?" next to the 3-asset e
 const KEY='finc351-tutor';
 const $=id=>document.getElementById(id);
 const fab=$('tutor-fab'),panel=$('tutor'),log=$('tutor-log'),form=$('tutor-form'),inp=$('tutor-in'),send=$('tutor-send'),stop=$('tutor-stop');
-let turns=[],ctx=null,busy=false,ctl=null,sample=null,blocked=false;
+let turns=[],ctx=null,busy=false,ctl=null,sample=null,blocked=false,tAt=0;
+try{tAt=Number(localStorage.getItem(KEY+'-at'))||0}catch(e){}
 try{turns=JSON.parse(localStorage.getItem(KEY)||'[]').filter(t=>t&&t.role&&t.content)}catch(e){turns=[]}
-const keep=()=>{try{localStorage.setItem(KEY,JSON.stringify(turns.slice(-30)))}catch(e){}};
+const keep=()=>{tAt=Date.now();try{localStorage.setItem(KEY,JSON.stringify(turns.slice(-30)));localStorage.setItem(KEY+'-at',String(tAt))}catch(e){}window.cloudTutor?.(turns,tAt)};
+window.tutorState=()=>({turns,at:tAt});
+window.tutorApply=(t,at)=>{if(busy)return;turns=t.filter(x=>x&&x.role&&x.content);tAt=at;try{localStorage.setItem(KEY,JSON.stringify(turns));localStorage.setItem(KEY+'-at',String(at))}catch(e){}if(!panel.hidden)render()};
 
 const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function md(src){
@@ -1957,5 +1962,61 @@ Promise.resolve(window.claude?.use?.('sample')).then(fn=>{
 }).catch(()=>{});
 })();
 </script>
+<script>
+/* ================= ACCOUNT SYNC (db capability, private per-viewer documents) ================= */
+(function(){
+const foot=document.querySelector('.rail-foot');
+const say=t=>{if(foot)foot.textContent=t;const ss=document.getElementById('sync-status');if(ss)ss.textContent=t};
+let ref=null,tref=null,writing=false,again=false,timer=null,twriting=false,tagain=null;
+const cleanPP=pp=>{const o={};for(const k in (pp||{}))if(pp[k])o[k]=pp[k];return o};
+const body=()=>({v:1,savedAt:S.savedAt||Date.now(),obj:S.obj||{},stats:S.stats||{},pp:cleanPP(S.pp)});
+async function push(){
+  if(!ref)return;if(writing){again=true;return}
+  writing=true;
+  try{await ref.set(body());say('Progress saved to your claude.ai account.')}
+  catch(e){say('Couldn’t reach your account just now. Progress is saved in this browser.')}
+  finally{writing=false;if(again){again=false;push()}}
+}
+window.cloudPush=()=>{if(!ref)return;say('Saving…');clearTimeout(timer);timer=setTimeout(push,1200)};
+function apply(d){
+  S.obj=Object.assign({},d.obj||{});S.stats=JSON.parse(JSON.stringify(d.stats||{}));S.pp=Object.assign({},d.pp||{});S.savedAt=d.savedAt||0;
+  ST.set(S);
+  document.querySelectorAll('[data-objs] input').forEach(c=>{c.checked=!!S.obj[c.id]});
+  window.ppSync?.();renderNav();
+}
+async function pushTutor(turns,at){
+  if(!tref)return;if(twriting){tagain=[turns,at];return}
+  twriting=true;
+  const slim=turns.slice(-20).map(t=>({role:t.role,content:String(t.content).slice(0,5000),shown:t.shown?String(t.shown).slice(0,2000):'',label:t.label||''}));
+  try{await tref.set({v:1,savedAt:at,turns:slim})}catch(e){}
+  finally{twriting=false;if(tagain){const a=tagain;tagain=null;pushTutor(a[0],a[1])}}
+}
+window.cloudTutor=(turns,at)=>pushTutor(turns,at);
+(async()=>{
+  const cl=window.claude;
+  const [db,user]=await Promise.all([Promise.resolve(cl?.use?.('db')).catch(()=>null),Promise.resolve(cl?.use?.('user')).catch(()=>null)]);
+  if(!db||!user){say('Progress is saved in this browser only.');return}
+  const uid=await user.id().catch(()=>null);
+  if(!uid){say('Sign in to claude.ai to save progress to your account. For now it’s saved in this browser.');return}
+  ref=db.doc('data/users/'+uid+'/progress');tref=db.doc('data/users/'+uid+'/tutor');
+  say('Syncing…');
+  ref.onSnapshot(snap=>{
+    const local=S.savedAt||0;
+    if(!snap.exists){if(local)push();else say('Progress saves to your claude.ai account.');return}
+    const d=snap.data(),remote=d.savedAt||0;
+    if(remote>local)apply(d);else if(remote<local)push();
+    say('Progress saved to your claude.ai account.');
+  },()=>{ref=null;say('Progress is saved in this browser only.')});
+  tref.onSnapshot(snap=>{
+    const st=window.tutorState?.();if(!st)return;
+    if(!snap.exists){if(st.at&&st.turns.length)pushTutor(st.turns,st.at);return}
+    const d=snap.data();
+    if((d.savedAt||0)>st.at)window.tutorApply?.(Array.isArray(d.turns)?d.turns:[],d.savedAt);
+    else if((d.savedAt||0)<st.at)pushTutor(st.turns,st.at);
+  },()=>{tref=null});
+})();
+})();
+</script>
+
 
 
